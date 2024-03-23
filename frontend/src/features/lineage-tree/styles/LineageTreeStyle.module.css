@@ -1,0 +1,256 @@
+/* tree styles */
+
+.treeContainer {
+  height: 89vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+.treeContainer ul {
+  gap: 20px;
+  text-decoration: none;
+	list-style-type: none;
+  padding-top: 20px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+
+.treeContainer > ul {
+  text-decoration: none;
+	list-style-type: none;
+  padding-top: 0px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.treeContainer ul li {
+  width: auto;
+  text-decoration: none;
+  float: left;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+	padding: 20px 5px 0 5px;
+}
+
+ul li::before, ul li::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 50%;
+	border-top: 1px solid #ccc;
+  width: 55%;
+  height: 20px;
+}
+
+ul li::after{
+	right: auto; 
+  left: 50%;
+	border-left: 1px solid #ccc;
+}
+
+.treeContainer ul li:only-child::after, .treeContainer ul li:only-child::before {
+	display: none;
+}
+
+.treeContainer ul li:only-child{ padding-top: 0;}
+
+ul li:first-child::before, .treeContainer ul li:last-child::after{
+	border: 0 none;
+}
+
+.treeContainer ul li:last-child::before{
+	border-right: 1px solid #ccc;
+	border-radius: 0 5px 0 0;
+}
+
+.treeContainer ul li:first-child::after{
+	border-radius: 5px 0 0 0;
+}
+
+.treeContainer ul ul::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+	border-left: 1px solid #ccc;
+  width: 0;
+  height: 20px;
+}
+
+.treeContainer ul li div {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: min-content;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+	text-decoration: none;
+	color: #666;
+	font-family: arial, verdana, tahoma;
+	font-size: 11px;
+	transition: all 0.5s;
+  position: relative;
+  z-index: 1;
+}
+
+/* .treeContainer ul li div::after{
+  content: "";
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: #898585;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top:-7px;
+  right:-7px;
+  z-index: -1;
+} */
+
+
+.treeContainer ul li div:hover, .treeContainer ul li div:hover+ul li div {
+	background: #c8e4f8; 
+  color: #000; 
+  border: 1px solid #94a0b4;
+}
+
+.treeContainer li div:hover+ul li::after,
+.treeContainer li div:hover+ul li::before, 
+.treeContainer li div:hover+ul::before, 
+.treeContainer li div:hover+ul ul::before{
+	border-color:  #94a0b4;
+} 
+
+.treeContainer ul li div img {
+  height: 8rem;
+  width: 11rem;
+  object-fit: cover;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.nodeInfo {
+  background-color: white;
+
+  font-size: 1rem;
+  padding: 5px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+}
+
+
+.nodeInfo > svg{
+  position: absolute;
+  right: .4rem
+}
+
+
+
+
+
+
+/* tree info styles */
+
+.treeInfo {
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+  height: 5rem;
+  width: 100%;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: .5rem
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  width: 15rem;
+  min-width: 7rem;
+
+}
+
+.search svg {
+  cursor: pointer;
+  font-size: 1.3rem;
+  margin-right: .5rem;
+}
+
+.search input {
+  background-color: inherit;
+  border: 1px solid #94a0b4;
+  border-radius: 2px;
+  padding: .5rem .5rem;
+  width: 100%
+}
+
+.search input::placeholder {
+  color: #94a0b4;
+  font-size: 1rem;
+}
+
+
+.filterButton {
+  min-width: 5rem;
+  padding: .3rem;
+  font-size: 1rem;  
+  font-weight: 400;
+  background-color: #898585;
+  color: #eee;
+  text-align: center;
+}
+
+.filterButton svg {
+  font-size: 1rem;  
+  margin-right: .5rem;
+}
+
+.treeName {
+  font-size: 1.5rem;
+  min-width: 9rem;
+  max-width: 20rem;
+}
+
+.treeName svg {
+  cursor: pointer;
+  font-size: 1.3rem;
+  margin-right: .9rem;
+}
+
+
+@media (max-width: 700px) { 
+  .search {
+    width: auto;
+  }
+}
+
+@media (max-width: 620px) { 
+  .treeName {
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem; 
+    width: min-content;
+  }
+  
+  
+  .treeName svg {
+    cursor: pointer;
+    font-size: 1.2rem;
+
+  }
+}
