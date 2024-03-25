@@ -8,7 +8,7 @@ import image3 from '../../../assets/R.jpg'
 import image4 from '../../../assets/3564.jpg'
 import image5 from '../../../assets/Sceletium_tortuosum_01102003_Afrique_du_sud_2-by-H-Brisse-upload-by-Abalg-640x423.jpg'
 import image6 from '../../../assets/hearthstone_collective_kanna_sceletium_tortuosum_info_page_wild_kanna_growing_in_the_karoo_south_africa_680x.jpg'
-
+import { getNewId } from '../keyGen'
 const root = [{
   title: "parent",
   images: [image1, image2, image3],
@@ -20,36 +20,109 @@ const root = [{
   substrateNotes: "xyz",
   children: [
     {
+      title: "child 2",
+      image: image3,
+      _id: getNewId(),
+      children: [
+ 
+      ]
+    },
+
+    {
       title: "child 1",
       image: image2,
+      _id: getNewId(),
       children: [
+        
         {
           title: "grand child 1",
           image: image6,
+          _id: getNewId(),
           children: [
        
           ]
         },
-        
+        {
+          title: "grand child 1",
+          image: image6,
+          _id: getNewId(),
+          children: [
+       
+          ]
+        },
+        {
+          title: "grand child 1",
+          image: image6,
+          _id: getNewId(),
+          children: [
+            {
+              title: "child 2",
+              image: image3,
+              _id: getNewId(),
+              children: [
+         
+              ]
+            },  {
+              title: "child 2",
+              image: image3,
+              _id: getNewId(),
+              children: [
+         
+              ]
+            },  {
+              title: "child 2",
+              image: image3,
+              _id: getNewId(),
+              children: [
+         
+              ]
+            },
+          ]
+        },
       ]
     },
     {
       title: "child 2",
       image: image3,
+      _id: getNewId(),
       children: [
- 
+        {
+          title: "child 2",
+          image: image3,
+          _id: getNewId(),
+          children: [
+     
+          ]
+        },
+        {
+          title: "child 2",
+          image: image3,
+          _id: getNewId(),
+          children: [
+            {
+              title: "child 2",
+              image: image3,
+              _id: getNewId(),
+              children: [
+         
+              ]
+            },
+            {
+              title: "child 2",
+              image: image3,
+              _id: getNewId(),
+              children: [
+         
+              ]
+            },
+          ]
+        },
       ]
     },
     {
       title: "child 3",
       image: image4,
-      children: [
-   
-      ]
-    },
-    {
-      title: "child 4",
-      image: image5,
+      _id: getNewId(),
       children: [
    
       ]
