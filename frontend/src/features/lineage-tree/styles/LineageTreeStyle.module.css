@@ -1,9 +1,20 @@
 /* tree styles */
 
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 100;
+  }
+}
+
+
+
 .treeContainer {
-  height: 89vh;
   display: flex;
   flex-direction: column;
+  padding-top: 5rem;
   justify-content: center;
 }
 
@@ -37,7 +48,11 @@
   align-items: center;
   text-align: center;
   position: relative;
-	padding: 20px 5px 0 5px;
+	padding: 20px 0 0 0;
+}
+
+.child {
+  animation: fade-in 1s;
 }
 
 ul li::before, ul li::after {
@@ -85,14 +100,13 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
   height: 20px;
 }
 
-.treeContainer ul li > div {
-  background-color: white;
+.nodeContent { 
   display: flex;
   flex-direction: column;
   justify-content: center;
   width: min-content;
   align-items: center;
-  border: 1px solid #ccc;
+  border: 1px solid #000000;
   border-radius: 6px;
 	text-decoration: none;
 	color: #000000;
@@ -102,6 +116,7 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
   position: relative;
   z-index: 1;
 }
+
 
 /* .treeContainer ul li div::after{
   content: "";
@@ -130,20 +145,27 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
   z-index: -1;
 } */
 
-.treeContainer ul li div:hover, .treeContainer ul li div:hover+ul li div {
-	background: #c8e4f8; 
-	color: #000000;
-  border: 1px solid #94a0b4;
+.parentFocused {
+	background-color: #c8e4f8; 
 }
 
-.treeContainer li div:hover+ul li::after,
-.treeContainer li div:hover+ul li::before, 
-.treeContainer li div:hover+ul::before, 
-.treeContainer li div:hover+ul ul::before{
-	border-color:  #94a0b4;
+
+.parentUnFocused {
+	background-color: #ffffff; 
+}
+
+
+.pathFocused li::after,
+.pathFocused li::before, 
+.pathFocused::before, 
+.pathFocused.pathFocused::before {
+	border-color:  #94a0b4 !important;
 } 
 
-.treeContainer ul li div img {
+/* specificity issues in this file... */
+
+
+.treeContainer ul li .nodeContent img {
   height: 8rem;
   width: 11rem;
   object-fit: cover;
@@ -152,17 +174,16 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
 }
 
 .nodeInfo {
-  background-color: white;
   font-size: 1rem;
   padding: 5px .2rem;
   display: flex;
   align-items: center;
   justify-content:space-between;
   width: 100%;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+	transition: all 0.5s;
 }
-
-
-
 
 
 .nodeInfo button {
@@ -174,8 +195,7 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: .9
-  rem;
+  font-size: .9rem;
   color: #000000;
 }
 
@@ -189,6 +209,57 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
   
 }
 
+
+
+
+/* aggregate styles */
+
+.aggregateChildren {
+  display: grid;
+  grid-auto-columns: 44px;
+  grid-auto-flow: column;
+}
+
+.aggregateChildren .nodeContent {
+  transition: all 0.3s;
+}
+
+.nodeClosed {
+
+}
+
+
+.shaded {
+  z-index: 0;
+  opacity: 0;
+  visibility: hidden;
+
+}
+
+.aggregateChildren .nodeContent:hover {
+  transform: translateY(-50%) scale(1.1);
+  z-index: 999;
+}
+
+
+
+.siblingCounter {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  right: -.5rem;
+  top: -.5rem;
+}
+
+.childCounter {
+  
+}
+
+.fatherContainer {
+  position: absolute;
+  right: 0;
+}
 
 
 

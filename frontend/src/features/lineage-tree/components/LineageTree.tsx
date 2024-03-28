@@ -1,43 +1,130 @@
 import LineageTreeStyles from '../styles/LineageTreeStyle.module.css'
-import LineageNode from './LineageNode'
+import LineageGeneration from './LineageGeneration'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronLeft, faMagnifyingGlass, faSliders} from '@fortawesome/free-solid-svg-icons'
 import image1 from '../../../assets/13947.jpg'
 import image2 from '../../../assets/3267562ab45a1bf8b94660e0cbf2d9d7--cannabis.jpg'
 import image3 from '../../../assets/R.jpg'
-import image4 from '../../../assets/3564.jpg'
-import image5 from '../../../assets/Sceletium_tortuosum_01102003_Afrique_du_sud_2-by-H-Brisse-upload-by-Abalg-640x423.jpg'
 import image6 from '../../../assets/hearthstone_collective_kanna_sceletium_tortuosum_info_page_wild_kanna_growing_in_the_karoo_south_africa_680x.jpg'
 import { getNewId } from '../keyGen'
 const root = [{
   title: "parent",
-  images: [image1, image2, image3],
-  description: "ddw",
-  sunExposure: 12,
-  isClone: false,
-  supplementationLog: [],
-  substrate: [60, 40, 0],
-  substrateNotes: "xyz",
+  images: image1,
+  _id: getNewId(),
+
+  // description: "ddw",
+  // sunExposure: 12,
+  // isClone: false,
+  // supplementationLog: [],
+  // substrate: [60, 40, 0],
+  // substrateNotes: "xyz",
   children: [
     {
       title: "child 2",
       image: image3,
       _id: getNewId(),
+      father: {
+        title: "child 2",
+        image: image1,
+        _id: getNewId(),
+        children: [
+   
+        ]
+      },
       children: [
  
       ]
     },
+    {
+      title: "child 2",
+      image: image3,
+      _id: getNewId(),
+      father: {
+        title: "child 2",
+        image: image1,
+        _id: getNewId(),
+        children: [
+   
+        ]
+      },
+      children: [
+ 
+      ]
+    },
+    {
+      title: "child 2",
+      image: image3,
+      _id: getNewId(),
+      father: {
+        title: "child 2",
+        image: image1,
+        _id: getNewId(),
+        children: [
+   
+        ]
+      },
+      children: [
+ 
+      ]
+    },
+    {
+      title: "child 2",
+      image: image3,
+      _id: getNewId(),
+      father: {
+        title: "child 2",
+        image: image1,
+        _id: getNewId(),
+        children: [
+   
+        ]
+      },
+      children: [
+ 
+      ]
+    },   {
+      title: "child 2",
+      image: image3,
+      _id: getNewId(),
+      father: {
+        title: "child 2",
+        image: image1,
+        _id: getNewId(),
+        children: [
+   
+        ]
+      },
+      children: [
+ 
+      ]
+    },   
 
     {
       title: "child 1",
       image: image2,
       _id: getNewId(),
+      father: {
+        title: "child 2",
+        image: image1,
+        _id: getNewId(),
+        children: [
+   
+        ]
+      },
       children: [
         
         {
           title: "grand child 1",
           image: image6,
           _id: getNewId(),
+          father: {
+            title: "child 2",
+            image: image1,
+            _id: getNewId(),
+            children: [
+       
+            ]
+          },
           children: [
        
           ]
@@ -46,6 +133,14 @@ const root = [{
           title: "grand child 1",
           image: image6,
           _id: getNewId(),
+          father: {
+            title: "child 2",
+            image: image1,
+            _id: getNewId(),
+            children: [
+       
+            ]
+          },
           children: [
        
           ]
@@ -54,11 +149,27 @@ const root = [{
           title: "grand child 1",
           image: image6,
           _id: getNewId(),
+          father: {
+            title: "child 2",
+            image: image1,
+            _id: getNewId(),
+            children: [
+       
+            ]
+          },
           children: [
             {
               title: "child 2",
               image: image3,
               _id: getNewId(),
+              father: {
+                title: "child 2",
+                image: image1,
+                _id: getNewId(),
+                children: [
+           
+                ]
+              },
               children: [
          
               ]
@@ -66,6 +177,14 @@ const root = [{
               title: "child 2",
               image: image3,
               _id: getNewId(),
+              father: {
+                title: "child 2",
+                image: image1,
+                _id: getNewId(),
+                children: [
+           
+                ]
+              },
               children: [
          
               ]
@@ -73,6 +192,14 @@ const root = [{
               title: "child 2",
               image: image3,
               _id: getNewId(),
+              father: {
+                title: "child 2",
+                image: image1,
+                _id: getNewId(),
+                children: [
+           
+                ]
+              },
               children: [
          
               ]
@@ -85,11 +212,27 @@ const root = [{
       title: "child 2",
       image: image3,
       _id: getNewId(),
+      father: {
+        title: "child 2",
+        image: image1,
+        _id: getNewId(),
+        children: [
+   
+        ]
+      },
       children: [
         {
           title: "child 2",
           image: image3,
           _id: getNewId(),
+          father: {
+            title: "child 2",
+            image: image1,
+            _id: getNewId(),
+            children: [
+       
+            ]
+          },
           children: [
      
           ]
@@ -98,11 +241,27 @@ const root = [{
           title: "child 2",
           image: image3,
           _id: getNewId(),
+          father: {
+            title: "child 2",
+            image: image1,
+            _id: getNewId(),
+            children: [
+       
+            ]
+          },
           children: [
             {
               title: "child 2",
               image: image3,
               _id: getNewId(),
+              father: {
+                title: "child 2",
+                image: image1,
+                _id: getNewId(),
+                children: [
+           
+                ]
+              },
               children: [
          
               ]
@@ -111,6 +270,14 @@ const root = [{
               title: "child 2",
               image: image3,
               _id: getNewId(),
+              father: {
+                title: "child 2",
+                image: image1,
+                _id: getNewId(),
+                children: [
+           
+                ]
+              },
               children: [
          
               ]
@@ -119,14 +286,7 @@ const root = [{
         },
       ]
     },
-    {
-      title: "child 3",
-      image: image4,
-      _id: getNewId(),
-      children: [
-   
-      ]
-    }
+
   ]
 }]
 
@@ -152,7 +312,7 @@ const LineageTree = () => {
       </div>
     </div>
     <div className={LineageTreeStyles.treeContainer}>
-      <LineageNode children={root}/>
+      <LineageGeneration children={root}/>
     </div>
     </>
   )

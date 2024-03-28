@@ -1,10 +1,11 @@
 import React, { useRef, useState } from "react";
 import LineageTreeStyles from '../styles/LineageTreeStyle.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
+import {faEllipsisVertical, faPlus } from '@fortawesome/free-solid-svg-icons'
 import optionModalStyles from '../../../styles/optionsModalStyles.module.css'
 
 import image1 from '../../../assets/13947.jpg'
+import ButtonWithHoverLabel from "../../../components/ButtonWithHoverLabel";
 
 type Props = {
   title: string;
@@ -14,25 +15,40 @@ type Props = {
   handleHover: (id: string) => void;
   handleUnHover: () => void;
   isParentHovered: boolean;
+  activeOfAggregatesId?: string;
+  siblingCount?: number;
 }
 
 
 
-const LineageNode: React.FC<Props> = ({title, _id, image, handleNodeClick, handleHover, handleUnHover, isParentHovered}) => {
+const LineageAggregateNode: React.FC<Props> = ({title, _id, image, handleNodeClick, handleHover, handleUnHover, isParentHovered, activeOfAggregatesId, siblingCount}) => {
 
   const [optionsModalState, setOptionsModal] = useState<boolean>(false);
   const optionsModalRef = useRef<HTMLDivElement>(null)
 
-  const handleMoreInfoClick = (e: React.MouseEvent) => {
-        e.stopPropagation()
+  const [isHoveringSiblingCounter, setIsHoveringSiblingCounter] = useState<boolean>(false);
 
+
+
+  const handleMoreInfoClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
   }
 
+  const handleExpandSiblings = (e: React.MouseEvent) => {
+    e.stopPropagation()
+  }
 
   const handleOptionsClick = () => {
     setOptionsModal(optionsModalState => !optionsModalState)
   }
 
+  const handleMouseEnterSiblingCounter = () => {
+    setIsHoveringSiblingCounter(true)
+  }
+
+  const handleMouseLeaveSiblingCounter = () => {
+    setIsHoveringSiblingCounter(false)
+  }
   return (
     <div 
       onMouseEnter={() => handleHover(_id)} 
@@ -40,9 +56,27 @@ const LineageNode: React.FC<Props> = ({title, _id, image, handleNodeClick, handl
       onClick={(e) => handleNodeClick(_id, e)}
       className={
         `${LineageTreeStyles.nodeContent} 
-        ${isParentHovered ? LineageTreeStyles.parentFocusedContent : null}`
+        ${isParentHovered ? LineageTreeStyles.parentFocusedContent : null}
+        ${(activeOfAggregatesId && activeOfAggregatesId !== _id) ? LineageTreeStyles.shaded: ""}
+       `
       }
     >
+      {activeOfAggregatesId === _id &&
+        <ButtonWithHoverLabel
+          ariaLabel={`show siblings for node ${_id}`}
+          styles={`${LineageTreeStyles.siblingCounter}`}
+          onClick={handleExpandSiblings}
+          onMouseEnter={handleMouseEnterSiblingCounter}
+          onMouseLeave={handleMouseLeaveSiblingCounter}
+          label={"show siblings"}
+        > 
+        {isHoveringSiblingCounter 
+          ? <FontAwesomeIcon icon={faPlus} className={`fadeInElement`}
+        />
+          : siblingCount}
+        </ButtonWithHoverLabel>
+      }
+  
       {optionsModalState &&
         <div className={optionModalStyles.modal} ref={optionsModalRef}>
           <button aria-label={`more info`} className={optionModalStyles.modalBtn} onClick={handleMoreInfoClick}>More Info</button>
@@ -59,5 +93,5 @@ const LineageNode: React.FC<Props> = ({title, _id, image, handleNodeClick, handl
   )
 }
 
-export default LineageNode
+export default LineageAggregateNode
 
