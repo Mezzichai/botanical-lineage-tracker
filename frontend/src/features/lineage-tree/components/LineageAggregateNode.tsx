@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import LineageTreeStyles from '../styles/LineageTreeStyle.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faEllipsisVertical, faPlus, faX } from '@fortawesome/free-solid-svg-icons'
+import {faEllipsisVertical, faPlus} from '@fortawesome/free-solid-svg-icons'
 import optionModalStyles from '../../../styles/optionsModalStyles.module.css'
 
 import image1 from '../../../assets/13947.jpg'

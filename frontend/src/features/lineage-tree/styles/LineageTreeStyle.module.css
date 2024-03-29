@@ -215,13 +215,25 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
 
 .aggregateChildren {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  position: relative;
+  min-height: 165px;
 }
 
-.aggregateChildren .nodeContent {
 
+
+.aggregateChildren .nodeContent {
   transition: all 0.3s;
+}
+
+.nodeContainer:first-child {
+  position: relative;
+  margin-left: auto;
+}
+
+.nodeContainer {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .nodeClosed {

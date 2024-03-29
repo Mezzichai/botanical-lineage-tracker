@@ -68,15 +68,12 @@ const LineageGeneration: React.FC<Props> = ({children, isParentHovered = false})
   return  (
     <ul className={`${LineageTreeStyles.childrenContainer} ${isParentHovered ? LineageTreeStyles.pathFocused : null}`}>
       {children.length > 2 
-      ? <li className={`${LineageTreeStyles.child} fadeInElement`} ref={aggregateChildrenRef}>
-          <div 
-            className={`${LineageTreeStyles.aggregateChildren} ${activeNodeOfAggregates ? LineageTreeStyles.nodeClosed : null}`}
-            style={{paddingLeft: `${(children.length-1) * 132}px`}}
-          >
+      ? <li className={`${LineageTreeStyles.child} ${LineageTreeStyles.aggregateChildren} fadeInElement`} style={{width: `${133 + (children.length * 44)}px`}} ref={aggregateChildrenRef}>
             {children.map((node, index) => {
 
              return <div 
-             style={{transform: "translateX(-" + 132 * index + "px)"}}
+             style={{transform: "translateX(-" + 44 * index + "px)"}}
+             className={LineageTreeStyles.nodeContainer}
              >
                <LineageAggregateNode
                 key={index+node._id}
@@ -94,7 +91,7 @@ const LineageGeneration: React.FC<Props> = ({children, isParentHovered = false})
               </div>
             })}
         
-          </div>
+          {/* </div> */}
     
           {hoveredNode?.children.length ? (
             <LineageGeneration 
