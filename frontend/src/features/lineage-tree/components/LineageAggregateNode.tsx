@@ -1,11 +1,19 @@
 import React, { useRef, useState } from "react";
 import LineageTreeStyles from '../styles/LineageTreeStyle.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faEllipsisVertical, faPlus } from '@fortawesome/free-solid-svg-icons'
+import {faEllipsisVertical, faPlus, faX } from '@fortawesome/free-solid-svg-icons'
 import optionModalStyles from '../../../styles/optionsModalStyles.module.css'
 
 import image1 from '../../../assets/13947.jpg'
 import ButtonWithHoverLabel from "../../../components/ButtonWithHoverLabel";
+import LineageNode from "./LineageNode";
+type Child = {
+  title: string;
+  image?: string;
+  children: Child[];
+  father?: Child
+  _id: string
+}
 
 type Props = {
   title: string;
@@ -17,11 +25,12 @@ type Props = {
   isParentHovered: boolean;
   activeOfAggregatesId?: string;
   siblingCount?: number;
+  father?: Child
 }
 
 
 
-const LineageAggregateNode: React.FC<Props> = ({title, _id, image, handleNodeClick, handleHover, handleUnHover, isParentHovered, activeOfAggregatesId, siblingCount}) => {
+const LineageAggregateNode: React.FC<Props> = ({title, _id, image, handleNodeClick, handleHover, handleUnHover, isParentHovered, activeOfAggregatesId, siblingCount, father}) => {
 
   const [optionsModalState, setOptionsModal] = useState<boolean>(false);
   const optionsModalRef = useRef<HTMLDivElement>(null)
@@ -89,6 +98,21 @@ const LineageAggregateNode: React.FC<Props> = ({title, _id, image, handleNodeCli
           <FontAwesomeIcon icon={faEllipsisVertical} onClick={handleOptionsClick}/>
         </button>
       </span>
+      
+
+      {(activeOfAggregatesId === _id && father) &&
+          <div className={`${LineageTreeStyles.fatherContainer} fadeInElement`}>
+            <LineageNode 
+              image={father.image} 
+              _id={father._id || ""} 
+              title ={father.title || ""} 
+              handleNodeClick={handleNodeClick}
+              handleHover={handleHover} 
+              handleUnHover={handleUnHover}
+              isParentHovered={false}
+            />
+          </div>
+        }
     </div>
   )
 }

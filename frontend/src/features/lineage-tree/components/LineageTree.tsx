@@ -7,7 +7,8 @@ import image2 from '../../../assets/3267562ab45a1bf8b94660e0cbf2d9d7--cannabis.j
 import image3 from '../../../assets/R.jpg'
 import image6 from '../../../assets/hearthstone_collective_kanna_sceletium_tortuosum_info_page_wild_kanna_growing_in_the_karoo_south_africa_680x.jpg'
 import { getNewId } from '../keyGen'
-const root = [{
+const root = [
+  {
   title: "parent",
   images: image1,
   _id: getNewId(),
@@ -28,150 +29,67 @@ const root = [{
         image: image1,
         _id: getNewId(),
         children: [
-   
+          
         ]
       },
       children: [
- 
-      ]
-    },
-    {
-      title: "child 2",
-      image: image3,
-      _id: getNewId(),
-      father: {
-        title: "child 2",
-        image: image1,
-        _id: getNewId(),
-        children: [
-   
-        ]
-      },
-      children: [
- 
-      ]
-    },
-    {
-      title: "child 2",
-      image: image3,
-      _id: getNewId(),
-      father: {
-        title: "child 2",
-        image: image1,
-        _id: getNewId(),
-        children: [
-   
-        ]
-      },
-      children: [
- 
-      ]
-    },
-    {
-      title: "child 2",
-      image: image3,
-      _id: getNewId(),
-      father: {
-        title: "child 2",
-        image: image1,
-        _id: getNewId(),
-        children: [
-   
-        ]
-      },
-      children: [
- 
-      ]
-    },   {
-      title: "child 2",
-      image: image3,
-      _id: getNewId(),
-      father: {
-        title: "child 2",
-        image: image1,
-        _id: getNewId(),
-        children: [
-   
-        ]
-      },
-      children: [
- 
-      ]
-    },   
 
-    {
-      title: "child 1",
-      image: image2,
+      ]
+    },  {
+      title: "child 2",
+      image: image3,
       _id: getNewId(),
       father: {
         title: "child 2",
         image: image1,
         _id: getNewId(),
         children: [
-   
+          
         ]
       },
       children: [
+
+      ]
+    },  {
+      title: "child 2",
+      image: image3,
+      _id: getNewId(),
+      father: {
+        title: "child 2",
+        image: image1,
+        _id: getNewId(),
+        children: [
+          
+        ]
+      },
+      children: [
+        {
+          title: "child 2",
+          image: image3,
+          _id: getNewId(),
+          father: {
+            title: "child 2",
+            image: image1,
+            _id: getNewId(),
+            children: [
+              
+            ]
+          },
+          children: [
+            {
+              title: "child 2",
+              image: image3,
+              _id: getNewId(),
+              father: {
+                title: "child 2",
+                image: image1,
+                _id: getNewId(),
+                children: [
+                  
+                ]
+              },
+              children: [
         
-        {
-          title: "grand child 1",
-          image: image6,
-          _id: getNewId(),
-          father: {
-            title: "child 2",
-            image: image1,
-            _id: getNewId(),
-            children: [
-       
-            ]
-          },
-          children: [
-       
-          ]
-        },
-        {
-          title: "grand child 1",
-          image: image6,
-          _id: getNewId(),
-          father: {
-            title: "child 2",
-            image: image1,
-            _id: getNewId(),
-            children: [
-       
-            ]
-          },
-          children: [
-       
-          ]
-        },
-        {
-          title: "grand child 1",
-          image: image6,
-          _id: getNewId(),
-          father: {
-            title: "child 2",
-            image: image1,
-            _id: getNewId(),
-            children: [
-       
-            ]
-          },
-          children: [
-            {
-              title: "child 2",
-              image: image3,
-              _id: getNewId(),
-              father: {
-                title: "child 2",
-                image: image1,
-                _id: getNewId(),
-                children: [
-           
-                ]
-              },
-              children: [
-         
               ]
             },  {
               title: "child 2",
@@ -182,113 +100,127 @@ const root = [{
                 image: image1,
                 _id: getNewId(),
                 children: [
-           
+                  
                 ]
               },
               children: [
-         
-              ]
-            },  {
-              title: "child 2",
-              image: image3,
-              _id: getNewId(),
-              father: {
-                title: "child 2",
-                image: image1,
-                _id: getNewId(),
-                children: [
-           
-                ]
-              },
-              children: [
-         
-              ]
-            },
-          ]
-        },
-      ]
-    },
-    {
-      title: "child 2",
-      image: image3,
-      _id: getNewId(),
-      father: {
-        title: "child 2",
-        image: image1,
-        _id: getNewId(),
-        children: [
-   
-        ]
-      },
-      children: [
-        {
-          title: "child 2",
-          image: image3,
-          _id: getNewId(),
-          father: {
-            title: "child 2",
-            image: image1,
-            _id: getNewId(),
-            children: [
-       
-            ]
-          },
-          children: [
-     
-          ]
-        },
-        {
-          title: "child 2",
-          image: image3,
-          _id: getNewId(),
-          father: {
-            title: "child 2",
-            image: image1,
-            _id: getNewId(),
-            children: [
-       
-            ]
-          },
-          children: [
-            {
-              title: "child 2",
-              image: image3,
-              _id: getNewId(),
-              father: {
-                title: "child 2",
-                image: image1,
-                _id: getNewId(),
-                children: [
-           
-                ]
-              },
-              children: [
-         
-              ]
-            },
-            {
-              title: "child 2",
-              image: image3,
-              _id: getNewId(),
-              father: {
-                title: "child 2",
-                image: image1,
-                _id: getNewId(),
-                children: [
-           
-                ]
-              },
-              children: [
-         
+                {
+                  title: "child 2",
+                  image: image3,
+                  _id: getNewId(),
+                  father: {
+                    title: "child 2",
+                    image: image1,
+                    _id: getNewId(),
+                    children: [
+                      
+                    ]
+                  },
+                  children: [
+            
+                  ]
+                },  {
+                  title: "child 2",
+                  image: image3,
+                  _id: getNewId(),
+                  father: {
+                    title: "child 2",
+                    image: image1,
+                    _id: getNewId(),
+                    children: [
+                      
+                    ]
+                  },
+                  children: [
+            
+                  ]
+                },  {
+                  title: "child 2",
+                  image: image3,
+                  _id: getNewId(),
+                  father: {
+                    title: "child 2",
+                    image: image1,
+                    _id: getNewId(),
+                    children: [
+                      
+                    ]
+                  },
+                  children: [
+            
+                  ]
+                },
               ]
             },
           ]
-        },
-      ]
-    },
+        }, 
 
+         {
+          title: "child 2",
+          image: image3,
+          _id: getNewId(),
+          father: {
+            title: "child 2",
+            image: image1,
+            _id: getNewId(),
+            children: [
+              
+            ]
+          },
+          children: [
+            {
+              title: "child 2",
+              image: image3,
+              _id: getNewId(),
+              father: {
+                title: "child 2",
+                image: image1,
+                _id: getNewId(),
+                children: [
+                  
+                ]
+              },
+              children: [
+        
+              ]
+            },  {
+              title: "child 2",
+              image: image3,
+              _id: getNewId(),
+              father: {
+                title: "child 2",
+                image: image1,
+                _id: getNewId(),
+                children: [
+                  
+                ]
+              },
+              children: [
+        
+              ]
+            },  {
+              title: "child 2",
+              image: image3,
+              _id: getNewId(),
+              father: {
+                title: "child 2",
+                image: image1,
+                _id: getNewId(),
+                children: [
+                  
+                ]
+              },
+              children: [
+        
+              ]
+            },
+          ]
+        },
+      ]
+    },
   ]
-}]
+  }  
+]
 
 const LineageTree = () => {
   return (

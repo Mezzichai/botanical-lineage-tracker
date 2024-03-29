@@ -71,10 +71,14 @@ const LineageGeneration: React.FC<Props> = ({children, isParentHovered = false})
       ? <li className={`${LineageTreeStyles.child} fadeInElement`} ref={aggregateChildrenRef}>
           <div 
             className={`${LineageTreeStyles.aggregateChildren} ${activeNodeOfAggregates ? LineageTreeStyles.nodeClosed : null}`}
-            style={{paddingRight: 3 * 44}}
+            style={{paddingLeft: `${(children.length-1) * 132}px`}}
           >
-            {children.map((node, index) => (
-              <LineageAggregateNode
+            {children.map((node, index) => {
+
+             return <div 
+             style={{transform: "translateX(-" + 132 * index + "px)"}}
+             >
+               <LineageAggregateNode
                 key={index+node._id}
                 image={node.image} 
                 _id={node._id} 
@@ -85,21 +89,11 @@ const LineageGeneration: React.FC<Props> = ({children, isParentHovered = false})
                 isParentHovered={(node._id === hoveredNode?._id) || isParentHovered}
                 activeOfAggregatesId={activeNodeOfAggregates?._id}
                 siblingCount={children.length-1}
+                father={node?.children[0]?.father}
               />
-            ))}
-            {activeNodeOfAggregates?.children[0]?.father &&
-              <div className={`${LineageTreeStyles.fatherContainer} fadeInElement`}>
-                <LineageNode 
-                  image={activeNodeOfAggregates.children[0].father.image} 
-                  _id={activeNodeOfAggregates.children[0].father._id} 
-                  title ={activeNodeOfAggregates.children[0].father.title} 
-                  handleNodeClick={handleNodeClick}
-                  handleHover={handleHover} 
-                  handleUnHover={handleUnHover}
-                  isParentHovered={true}
-                />
               </div>
-            }
+            })}
+        
           </div>
     
           {hoveredNode?.children.length ? (

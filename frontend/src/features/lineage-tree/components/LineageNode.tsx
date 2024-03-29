@@ -25,7 +25,6 @@ const LineageNode: React.FC<Props> = ({title, _id, image, handleNodeClick, handl
 
   const handleMoreInfoClick = (e: React.MouseEvent) => {
         e.stopPropagation()
-
   }
 
 

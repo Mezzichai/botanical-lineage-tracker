@@ -21,6 +21,7 @@
 
 .treeContainer ul {
   gap: 20px;
+
   text-decoration: none;
 	list-style-type: none;
   padding-top: 20px;
@@ -40,7 +41,6 @@
 }
 
 .treeContainer ul li {
-  width: auto;
   text-decoration: none;
   float: left;
   display: flex;
@@ -104,7 +104,6 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: min-content;
   align-items: center;
   border: 1px solid #000000;
   border-radius: 6px;
@@ -215,12 +214,13 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
 /* aggregate styles */
 
 .aggregateChildren {
-  display: grid;
-  grid-auto-columns: 44px;
-  grid-auto-flow: column;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .aggregateChildren .nodeContent {
+
   transition: all 0.3s;
 }
 
@@ -230,17 +230,20 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
 
 
 .shaded {
-  z-index: 0;
+  z-index: -1;
   opacity: 0;
   visibility: hidden;
+  
 
 }
 
-.aggregateChildren .nodeContent:hover {
+.aggregateChildren > div > div:hover {
   transform: translateY(-50%) scale(1.1);
+}
+
+.aggregateChildren div:hover {
   z-index: 999;
 }
-
 
 
 .siblingCounter {
@@ -258,8 +261,38 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
 
 .fatherContainer {
   position: absolute;
-  right: 0;
+  left: 216px;
+  z-index: 999;
 }
+
+.nodeContent:hover > .fatherContainer::after, 
+.nodeContent:hover > .fatherContainer::before {
+  border-color: #94a0b4;
+} 
+
+
+.fatherContainer::before {
+  content: "";
+  border-bottom: 1px solid #ccc;
+  position: absolute;
+  top: 50%;
+  width: 43px;
+  right: 176px;
+  transform: rotate(25deg);
+
+}
+
+.fatherContainer::after {
+  content: "";
+  border-bottom: 1px solid #ccc;
+  position: absolute;
+  top: 50%;
+  width:43px;
+  right: 176px;
+  transform: rotate(-25deg);
+}
+
+
 
 
 
