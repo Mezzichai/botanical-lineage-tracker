@@ -20,6 +20,7 @@ const root = [
   // substrate: [60, 40, 0],
   // substrateNotes: "xyz",
   children: [
+
     {
       title: "child 2",
       image: image3,
@@ -33,36 +34,144 @@ const root = [
         ]
       },
       children: [
-
-      ]
-    },  {
-      title: "child 2",
-      image: image3,
-      _id: getNewId(),
-      father: {
-        title: "child 2",
-        image: image1,
-        _id: getNewId(),
-        children: [
-          
-        ]
-      },
-      children: [
-
-      ]
-    },  {
-      title: "child 2",
-      image: image3,
-      _id: getNewId(),
-      father: {
-        title: "child 2",
-        image: image1,
-        _id: getNewId(),
-        children: [
-          
-        ]
-      },
-      children: [
+        {
+          title: "child 3",
+          image: image3,
+          _id: getNewId(),
+          father: {
+            title: "child 2",
+            image: image1,
+            _id: getNewId(),
+            children: [
+              
+            ]
+          },
+          children: [
+            {
+              title: "child 2",
+              image: image3,
+              _id: getNewId(),
+              father: {
+                title: "child 2",
+                image: image1,
+                _id: getNewId(),
+                children: [
+                  
+                ]
+              },
+              children: [
+                
+              ]
+            }, {
+              title: "child 2",
+              image: image3,
+              _id: getNewId(),
+              father: {
+                title: "child 2",
+                image: image1,
+                _id: getNewId(),
+                children: [
+                  
+                ]
+              },
+              children: [
+                {
+                  title: "child 2",
+                  image: image3,
+                  _id: getNewId(),
+                  father: {
+                    title: "child 2",
+                    image: image1,
+                    _id: getNewId(),
+                    children: [
+                      
+                    ]
+                  },
+                  children: [
+                    
+                  ]
+                },
+                {
+                  title: "child 2",
+                  image: image3,
+                  _id: getNewId(),
+                  father: {
+                    title: "child 2",
+                    image: image1,
+                    _id: getNewId(),
+                    children: [
+                      
+                    ]
+                  },
+                  children: [
+                    
+                  ]
+                },
+              ]
+            }, {
+              title: "child 2",
+              image: image3,
+              _id: getNewId(),
+              father: {
+                title: "child 2",
+                image: image1,
+                _id: getNewId(),
+                children: [
+                  
+                ]
+              },
+              children: [
+                {
+                  title: "child 2",
+                  image: image3,
+                  _id: getNewId(),
+                  father: {
+                    title: "child 2",
+                    image: image1,
+                    _id: getNewId(),
+                    children: [
+                      
+                    ]
+                  },
+                  children: [
+                    
+                  ]
+                },
+                {
+                  title: "child 2",
+                  image: image3,
+                  _id: getNewId(),
+                  father: {
+                    title: "child 2",
+                    image: image1,
+                    _id: getNewId(),
+                    children: [
+                      
+                    ]
+                  },
+                  children: [
+                    
+                  ]
+                }, {
+                  title: "child 2",
+                  image: image3,
+                  _id: getNewId(),
+                  father: {
+                    title: "child 2",
+                    image: image1,
+                    _id: getNewId(),
+                    children: [
+                      
+                    ]
+                  },
+                  children: [
+                    
+                  ]
+                },
+              ]
+            },
+          ]
+        },
         {
           title: "child 2",
           image: image3,
@@ -89,9 +198,10 @@ const root = [
                 ]
               },
               children: [
-        
+                
               ]
-            },  {
+            },
+            {
               title: "child 2",
               image: image3,
               _id: getNewId(),
@@ -117,9 +227,10 @@ const root = [
                     ]
                   },
                   children: [
-            
+                    
                   ]
-                },  {
+                },
+                {
                   title: "child 2",
                   image: image3,
                   _id: getNewId(),
@@ -132,9 +243,10 @@ const root = [
                     ]
                   },
                   children: [
-            
+                    
                   ]
-                },  {
+                },
+                {
                   title: "child 2",
                   image: image3,
                   _id: getNewId(),
@@ -147,15 +259,44 @@ const root = [
                     ]
                   },
                   children: [
-            
+                    {
+                      title: "child 2",
+                      image: image3,
+                      _id: getNewId(),
+                      father: {
+                        title: "child 2",
+                        image: image1,
+                        _id: getNewId(),
+                        children: [
+                          
+                        ]
+                      },
+                      children: [
+                        
+                      ]
+                    },  {
+                      title: "child 2",
+                      image: image3,
+                      _id: getNewId(),
+                      father: {
+                        title: "child 2",
+                        image: image1,
+                        _id: getNewId(),
+                        children: [
+                          
+                        ]
+                      },
+                      children: [
+                        
+                      ]
+                    },
                   ]
                 },
               ]
             },
           ]
-        }, 
-
-         {
+        },
+        {
           title: "child 2",
           image: image3,
           _id: getNewId(),
@@ -181,9 +322,9 @@ const root = [
                 ]
               },
               children: [
-        
+                
               ]
-            },  {
+            }, {
               title: "child 2",
               image: image3,
               _id: getNewId(),
@@ -196,9 +337,24 @@ const root = [
                 ]
               },
               children: [
-        
+                {
+                  title: "child 2",
+                  image: image3,
+                  _id: getNewId(),
+                  father: {
+                    title: "child 2",
+                    image: image1,
+                    _id: getNewId(),
+                    children: [
+                      
+                    ]
+                  },
+                  children: [
+                    
+                  ]
+                },
               ]
-            },  {
+            }, {
               title: "child 2",
               image: image3,
               _id: getNewId(),
@@ -211,13 +367,123 @@ const root = [
                 ]
               },
               children: [
-        
+                {
+                  title: "child 2",
+                  image: image3,
+                  _id: getNewId(),
+                  father: {
+                    title: "child 2",
+                    image: image1,
+                    _id: getNewId(),
+                    children: [
+                      
+                    ]
+                  },
+                  children: [
+                    
+                  ]
+                }, {
+                  title: "child 2",
+                  image: image3,
+                  _id: getNewId(),
+                  father: {
+                    title: "child 2",
+                    image: image1,
+                    _id: getNewId(),
+                    children: [
+                      
+                    ]
+                  },
+                  children: [
+                    
+                  ]
+                },
               ]
             },
           ]
         },
       ]
     },
+    {
+      title: "child 3",
+      image: image3,
+      _id: getNewId(),
+      father: {
+        title: "child 2",
+        image: image1,
+        _id: getNewId(),
+        children: [
+          
+        ]
+      },
+      children: [
+        {
+          title: "child 2",
+          image: image3,
+          _id: getNewId(),
+          father: {
+            title: "child 2",
+            image: image1,
+            _id: getNewId(),
+            children: [
+              
+            ]
+          },
+          children: [
+            
+          ]
+        }, {
+          title: "child 2",
+          image: image3,
+          _id: getNewId(),
+          father: {
+            title: "child 2",
+            image: image1,
+            _id: getNewId(),
+            children: [
+              
+            ]
+          },
+          children: [
+            
+          ]
+        }, {
+          title: "child 2",
+          image: image3,
+          _id: getNewId(),
+          father: {
+            title: "child 2",
+            image: image1,
+            _id: getNewId(),
+            children: [
+              
+            ]
+          },
+          children: [
+            
+          ]
+        },
+        {
+          title: "child 2",
+          image: image3,
+          _id: getNewId(),
+          father: {
+            title: "child 2",
+            image: image1,
+            _id: getNewId(),
+            children: [
+              
+            ]
+          },
+          children: [
+            
+          ]
+        },
+        
+      ]
+    },
+ 
+    
   ]
   }  
 ]

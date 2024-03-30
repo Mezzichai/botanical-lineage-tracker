@@ -90,7 +90,7 @@ const LineageGeneration: React.FC<Props> = ({children}) => {
       ulChild?.offsetWidth || 0
     )
 
-    
+
   return  (
     <ul className={`${LineageTreeStyles.childrenContainer} `}>
       {children.length > 2 

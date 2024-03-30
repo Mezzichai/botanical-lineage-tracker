@@ -11,14 +11,11 @@ type Props = {
   image?: string;
   _id: string;
   handleNodeClick: (id: string, e?: React.MouseEvent) => void;
-  handleHover: (id: string) => void;
-  handleUnHover: () => void;
-  isParentHovered: boolean;
 }
 
 
 
-const LineageNode: React.FC<Props> = ({title, _id, image, handleNodeClick, handleHover, handleUnHover, isParentHovered}) => {
+const LineageNode: React.FC<Props> = ({title, _id, image, handleNodeClick}) => {
 
   const [optionsModalState, setOptionsModal] = useState<boolean>(false);
   const optionsModalRef = useRef<HTMLDivElement>(null)
@@ -34,12 +31,9 @@ const LineageNode: React.FC<Props> = ({title, _id, image, handleNodeClick, handl
 
   return (
     <div 
-      onMouseEnter={() => handleHover(_id)} 
-      onMouseLeave={handleUnHover} 
       onClick={(e) => handleNodeClick(_id, e)}
       className={
-        `${LineageTreeStyles.nodeContent} 
-        ${isParentHovered ? LineageTreeStyles.parentFocusedContent : null}`
+        `${LineageTreeStyles.nodeContent} `
       }
     >
       {optionsModalState &&
@@ -47,8 +41,9 @@ const LineageNode: React.FC<Props> = ({title, _id, image, handleNodeClick, handl
           <button aria-label={`more info`} className={optionModalStyles.modalBtn} onClick={handleMoreInfoClick}>More Info</button>
         </div>
       }
+
       <img src={image || image1} className={LineageTreeStyles.nodeImage}/>
-      <span className={`${LineageTreeStyles.nodeInfo} ${isParentHovered ? LineageTreeStyles.parentFocused: LineageTreeStyles.parentUnFocused}`}>
+      <span className={`${LineageTreeStyles.nodeInfo} `}>
         <p className={LineageTreeStyles.nodeTitle}>{title}</p>
         <button>
           <FontAwesomeIcon icon={faEllipsisVertical} onClick={handleOptionsClick}/>

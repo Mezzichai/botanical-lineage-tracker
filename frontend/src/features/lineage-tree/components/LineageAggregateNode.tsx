@@ -6,7 +6,6 @@ import optionModalStyles from '../../../styles/optionsModalStyles.module.css'
 
 import image1 from '../../../assets/13947.jpg'
 import ButtonWithHoverLabel from "../../../components/ButtonWithHoverLabel";
-import LineageNode from "./LineageNode";
 type Child = {
   title: string;
   image?: string;
@@ -22,7 +21,6 @@ type Props = {
   handleNodeClick: (id: string, e?: React.MouseEvent) => void;
   handleHover: (id: string) => void;
   handleUnHover: () => void;
-  isParentHovered: boolean;
   activeOfAggregatesId?: string;
   siblingCount?: number;
   father?: Child
@@ -30,7 +28,7 @@ type Props = {
 
 
 
-const LineageAggregateNode: React.FC<Props> = ({title, _id, image, handleNodeClick, handleHover, handleUnHover, isParentHovered, activeOfAggregatesId, siblingCount, father}) => {
+const LineageAggregateNode: React.FC<Props> = ({title, _id, image, handleNodeClick, handleHover, handleUnHover, activeOfAggregatesId, siblingCount}) => {
 
   const [optionsModalState, setOptionsModal] = useState<boolean>(false);
   const optionsModalRef = useRef<HTMLDivElement>(null)
@@ -65,9 +63,8 @@ const LineageAggregateNode: React.FC<Props> = ({title, _id, image, handleNodeCli
       onClick={(e) => handleNodeClick(_id, e)}
       className={
         `${LineageTreeStyles.nodeContent} 
-        ${isParentHovered ? LineageTreeStyles.parentFocusedContent : null}
-        ${(activeOfAggregatesId && activeOfAggregatesId !== _id) ? LineageTreeStyles.shaded: ""}
-       `
+         ${!activeOfAggregatesId ? LineageTreeStyles.aggregateNode : ""} 
+        `
       }
     >
       {activeOfAggregatesId === _id &&
@@ -92,27 +89,12 @@ const LineageAggregateNode: React.FC<Props> = ({title, _id, image, handleNodeCli
         </div>
       }
       <img src={image || image1} className={LineageTreeStyles.nodeImage}/>
-      <span className={`${LineageTreeStyles.nodeInfo} ${isParentHovered ? LineageTreeStyles.parentFocused: LineageTreeStyles.parentUnFocused}`}>
+      <span className={`${LineageTreeStyles.nodeInfo}`}>
         <p className={LineageTreeStyles.nodeTitle}>{title}</p>
         <button>
           <FontAwesomeIcon icon={faEllipsisVertical} onClick={handleOptionsClick}/>
         </button>
       </span>
-      
-
-      {(activeOfAggregatesId === _id && father) &&
-          <div className={`${LineageTreeStyles.fatherContainer} fadeInElement`}>
-            <LineageNode 
-              image={father.image} 
-              _id={father._id || ""} 
-              title ={father.title || ""} 
-              handleNodeClick={handleNodeClick}
-              handleHover={handleHover} 
-              handleUnHover={handleUnHover}
-              isParentHovered={false}
-            />
-          </div>
-        }
     </div>
   )
 }

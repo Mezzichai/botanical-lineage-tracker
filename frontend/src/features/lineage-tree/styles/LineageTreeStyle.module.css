@@ -33,6 +33,8 @@
 
 .treeContainer > ul {
   text-decoration: none;
+  transition: width 0.5s;
+
 	list-style-type: none;
   padding-top: 0px;
   position: relative;
@@ -43,6 +45,7 @@
 .treeContainer ul li {
   text-decoration: none;
   float: left;
+  transition: width 0.5s;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -153,13 +156,33 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
 	background-color: #ffffff; 
 }
 
+.treeContainer ul li .nodeContent:hover > .nodeInfo,
+.treeContainer ul li > .nodeContent:hover+ul li > .nodeContent > .nodeInfo,
+.treeContainer ul li > .nodeContent:hover+ul li > .nodeContainer > .nodeContent > .nodeInfo,
 
-.pathFocused li::after,
-.pathFocused li::before, 
-.pathFocused::before, 
-.pathFocused.pathFocused::before {
+.treeContainer ul li .nodeContainer:hover~ul li > .nodeContainer > .nodeContent > .nodeInfo,
+.treeContainer ul li .nodeContainer:hover~ul li > .nodeContent > .nodeInfo
+{
+	background-color: #c8e4f8; 
+}
+
+
+
+.treeContainer ul li > .nodeContent:hover+ul li::after,
+.treeContainer ul li > .nodeContent:hover+ul li::before,
+.treeContainer ul li > .nodeContent:hover+ul::before,
+.treeContainer ul li > .nodeContent:hover+ul ul::before,
+
+
+.treeContainer ul li .nodeContainer:hover~ul li::after,
+.treeContainer ul li .nodeContainer:hover~ul li::before,
+.treeContainer ul li .nodeContainer:hover~ul::before,
+.treeContainer ul li .nodeContainer:hover~ul ul::before
+
+{
 	border-color:  #94a0b4 !important;
-} 
+}
+
 
 /* specificity issues in this file... */
 
@@ -173,6 +196,8 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
 }
 
 .nodeInfo {
+  background-color: #ffffff; 
+
   font-size: 1rem;
   padding: 5px .2rem;
   display: flex;
@@ -219,21 +244,23 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
   min-height: 165px;
 }
 
-
-
 .aggregateChildren .nodeContent {
   transition: all 0.3s;
 }
 
-.nodeContainer:first-child {
-  position: relative;
-  margin-left: auto;
+.aggregateNode:hover {
+  transform: translateY(-50%) scale(1.1);
+
 }
 
+
+
 .nodeContainer {
+  transition: all 0.5s;
   position: absolute;
   top: 0;
-  right: 0;
+
+  z-index: 0;
 }
 
 .nodeClosed {
@@ -246,12 +273,9 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
   opacity: 0;
   visibility: hidden;
   
-
 }
 
-.aggregateChildren > div > div:hover {
-  transform: translateY(-50%) scale(1.1);
-}
+
 
 .aggregateChildren div:hover {
   z-index: 999;
@@ -273,8 +297,9 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
 
 .fatherContainer {
   position: absolute;
-  left: 216px;
+  top: 0;
   z-index: 999;
+  transform: translateX(197px);
 }
 
 .nodeContent:hover > .fatherContainer::after, 
@@ -285,22 +310,22 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
 
 .fatherContainer::before {
   content: "";
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #747474;
   position: absolute;
   top: 50%;
-  width: 43px;
-  right: 176px;
+  width: 21px;
+  right: 177px;
   transform: rotate(25deg);
 
 }
 
 .fatherContainer::after {
   content: "";
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #747474;
   position: absolute;
   top: 50%;
-  width:43px;
-  right: 176px;
+  width: 21px;
+  right: 177px;
   transform: rotate(-25deg);
 }
 
