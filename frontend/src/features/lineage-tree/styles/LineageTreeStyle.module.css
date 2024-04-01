@@ -33,7 +33,7 @@
 
 .treeContainer > ul {
   text-decoration: none;
-  transition: width 0.5s;
+  transition: width 0.3s;
 
 	list-style-type: none;
   padding-top: 0px;
@@ -45,7 +45,7 @@
 .treeContainer ul li {
   text-decoration: none;
   float: left;
-  transition: width 0.5s;
+  transition: width 0.3s;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -114,7 +114,7 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
 	color: #000000;
 	font-family: arial, verdana, tahoma;
 	font-size: 11px;
-	transition: all 0.5s;
+	transition: all 0.3s;
   position: relative;
   z-index: 1;
 }
@@ -206,7 +206,7 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
   width: 100%;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
-	transition: all 0.5s;
+	transition: all 0.3s;
 }
 
 
