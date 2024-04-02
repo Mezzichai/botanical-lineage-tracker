@@ -44,12 +44,44 @@
 }
 
 .fadeInElement {
-  animation: fade-in 1s;
+  animation: fade-in 300ms;
 }
+
+div .fadeInElement {
+  animation: fade-in 300ms;
+  visibility: visible;
+}
+
 
 .fadeInElementQuick {
   animation: fade-in .5s;
 }
+
+@keyframes fade-out {
+  from {
+    opacity: 100;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+
+.fadeOutElement {
+  animation: fade-out 300ms;
+}
+
+div .fadeOutElement {
+  animation: fade-out 300ms;
+  visibility: hidden;
+}
+
+.fadeOutElementQuick {
+  animation: fade-out .5s;
+}
+
+
+
 
 /* .logo {
   height: 6em;

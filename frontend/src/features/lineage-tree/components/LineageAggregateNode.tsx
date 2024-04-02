@@ -21,6 +21,7 @@ type Props = {
   handleNodeClick: (id: string, e?: React.MouseEvent) => void;
   handleHover: (id: string) => void;
   handleUnHover: () => void;
+  handleShowSiblings: () => void
   activeOfAggregatesId?: string;
   siblingCount?: number;
   father?: Child
@@ -28,7 +29,7 @@ type Props = {
 
 
 
-const LineageAggregateNode: React.FC<Props> = ({title, _id, image, handleNodeClick, handleHover, handleUnHover, activeOfAggregatesId, siblingCount}) => {
+const LineageAggregateNode: React.FC<Props> = ({title, _id, image, handleNodeClick, handleHover, handleUnHover, handleShowSiblings, activeOfAggregatesId, siblingCount}) => {
 
   const [optionsModalState, setOptionsModal] = useState<boolean>(false);
   const optionsModalRef = useRef<HTMLDivElement>(null)
@@ -43,6 +44,7 @@ const LineageAggregateNode: React.FC<Props> = ({title, _id, image, handleNodeCli
 
   const handleExpandSiblings = (e: React.MouseEvent) => {
     e.stopPropagation()
+    handleShowSiblings()
   }
 
   const handleOptionsClick = () => {

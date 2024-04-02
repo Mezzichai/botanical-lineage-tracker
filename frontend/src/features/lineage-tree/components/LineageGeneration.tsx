@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState, useMemo } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import LineageTreeStyles from '../styles/LineageTreeStyle.module.css'
 import LineageNode from "./LineageNode";
 import LineageAggregateNode from "./LineageAggregateNode";
@@ -16,44 +16,41 @@ type Child = {
 type Props = {
   children: Child[]
   invalidateParentWidth: (newULwidth:number | undefined) => void
+  shouldUnmount: boolean
 }
 
-const LineageGeneration: React.FC<Props> = ({children, invalidateParentWidth = ()=>{}}) => {
+const LineageGeneration: React.FC<Props> = ({children, invalidateParentWidth = ()=>{}, shouldUnmount}) => {
   
+  const [shouldActiveNodeChildrenUnmount, setShouldActiveNodeChildrenUnmount] = useState(false);
   const [activeNodeOfAggregates, setActiveNodeOfAggregates] = useState<Child>();
   const [hoveredNode, setHoveredNode] = useState<Child>();
   const [ulRefCB] = useInvalidateParentWidthRefCallback(invalidateParentWidth)
-  const [aggregateChildrenWidth, setAggregateChildrenWidth] = useState<number>(133 + (children.length * 44));
+
   const aggregateChildrenRef = useRef<HTMLLIElement | null>(null)
 
+  const childrenWithChildrenIds = children
+    .filter(child => child.children.length !== 0)
+    .map(child => child._id)
 
-
-  const childrenRef = useRef(children);
-  const childrenWithChildrenIds = useMemo(() => (
-      childrenRef.current
-      .filter(child => child.children.length !== 0)
-      .map(child => child._id)
-  ), []);
-
-  const doesHoveredOrActiveNodeHaveChildren = useMemo(() => (
+  const doesHoveredOrActiveNodeHaveChildren = 
     (activeNodeOfAggregates?._id && childrenWithChildrenIds.includes(activeNodeOfAggregates._id)) ||
     (childrenWithChildrenIds.includes(hoveredNode?._id || ""))
-  ), [])
 
+    
   const findWidthOfAggregateContainer = useCallback((newULwidth = 0)  => {
     const childUl = aggregateChildrenRef.current?.querySelector("ul")
-
     const liMinWidth = Math.max(
       133 + (children.length * 44), 
       childUl && doesHoveredOrActiveNodeHaveChildren ? 176 + 395 : 0,
-      newULwidth,
+      newULwidth
     )
     return liMinWidth
   }, [children.length, doesHoveredOrActiveNodeHaveChildren])
 
-  
   const invalidateWidth = useCallback((newULwidth: number | undefined) => {
-    setAggregateChildrenWidth(findWidthOfAggregateContainer(newULwidth))
+    if (aggregateChildrenRef?.current?.style.width) {
+      aggregateChildrenRef.current.style.width = `${findWidthOfAggregateContainer(newULwidth)}px`
+    }
   }, [findWidthOfAggregateContainer])
   
 
@@ -98,21 +95,38 @@ const LineageGeneration: React.FC<Props> = ({children, invalidateParentWidth = (
     }
   };
 
+  const handleUnfocusAggregateNode = () => {
+    setShouldActiveNodeChildrenUnmount(true);
+    setTimeout(() => {
+      setShouldActiveNodeChildrenUnmount(false);
+      setActiveNodeOfAggregates(() => undefined)
+    }, 300);  
+  };
+
   const handleHover = (id: string) => {
     setHoveredNode(children.find(child => child._id === id))
   };
 
   const handleUnHover = () => {
     setHoveredNode(undefined)
+    if (!activeNodeOfAggregates) {
+      setShouldActiveNodeChildrenUnmount(true);
+      setTimeout(() => {
+        setShouldActiveNodeChildrenUnmount(false);
+      }, 300);  
+    }
   };
     
   return  (
-    <ul className={`${LineageTreeStyles.childrenContainer}`} ref={useCallback((node: HTMLUListElement) => ulRefCB(node), [ulRefCB])}>
+    <ul 
+      className={`${LineageTreeStyles.childrenContainer} ${shouldUnmount ? 'fadeOutElement' : 'fadeInElement'}`}
+      ref={useCallback((node: HTMLUListElement) => ulRefCB(node), [ulRefCB])}
+    >
       {children.length > 2 
         ? <li 
             ref={aggregateChildrenRef} 
-            className={`${LineageTreeStyles.child} ${LineageTreeStyles.aggregateChildren} fadeInElement`}
-            style={{width: `${aggregateChildrenWidth}px`}} 
+            className={`${LineageTreeStyles.child} ${LineageTreeStyles.aggregateChildren}`}
+            style={{width: `${133 + (children.length * 44)}px`}} 
           >
             {/* needed to maintain the aggregate nodes height in document */}
             <div style={{position: "relative", height: "165.71px"}}></div>
@@ -120,8 +134,8 @@ const LineageGeneration: React.FC<Props> = ({children, invalidateParentWidth = (
             {children.map((node, index) => {
               return (
                 <>
-                  {(activeNodeOfAggregates?._id === node._id && node?.children[0]?.father) &&
-                    <div className={`${LineageTreeStyles.fatherContainer} fadeInElement`}>
+                  {(node?.children[0]?.father) &&
+                    <div className={`${LineageTreeStyles.fatherContainer} ${activeNodeOfAggregates?._id === node._id ? `fadeInElement` : "fadeOutElement"}`}>
                       <LineageNode 
                         image={node.children[0]?.father.image} 
                         _id={node.children[0].father._id || ""} 
@@ -149,6 +163,7 @@ const LineageGeneration: React.FC<Props> = ({children, invalidateParentWidth = (
                       activeOfAggregatesId={activeNodeOfAggregates?._id}
                       siblingCount={children.length-1}
                       father={node?.children[0]?.father}
+                      handleShowSiblings={handleUnfocusAggregateNode}
                     />
                   </div>
                 </>
@@ -157,12 +172,14 @@ const LineageGeneration: React.FC<Props> = ({children, invalidateParentWidth = (
 
             {hoveredNode?.children.length ? (
               <LineageGeneration 
+                shouldUnmount={shouldActiveNodeChildrenUnmount}
                 invalidateParentWidth={invalidateWidth}
                 children={hoveredNode.children} 
               /> 
             ) : (
             activeNodeOfAggregates?.children.length ? (
               <LineageGeneration 
+                shouldUnmount={shouldActiveNodeChildrenUnmount}
                 invalidateParentWidth={invalidateWidth}
                 children={activeNodeOfAggregates.children} 
               />
@@ -180,6 +197,7 @@ const LineageGeneration: React.FC<Props> = ({children, invalidateParentWidth = (
             />
             {node.children.length 
             ? <LineageGeneration 
+                shouldUnmount={shouldActiveNodeChildrenUnmount}
                 invalidateParentWidth={invalidateWidth}
                 children={node.children} 
               /> 

@@ -33,7 +33,7 @@ const LineageNode: React.FC<Props> = ({title, _id, image, handleNodeClick}) => {
     <div 
       onClick={(e) => handleNodeClick(_id, e)}
       className={
-        `${LineageTreeStyles.nodeContent} `
+        `${LineageTreeStyles.nodeContent}`
       }
     >
       {optionsModalState &&

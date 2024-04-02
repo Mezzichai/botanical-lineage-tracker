@@ -1,12 +1,14 @@
 import { useCallback, useRef } from "react"
 
 const useInvalidateParentWidthRefCallback = (callback: (newULwidth: number) => void): [React.RefCallback<HTMLUListElement>] => {
+  
+
   const ulRef = useRef<HTMLUListElement | null>(null)
   const setRef = useCallback((node: HTMLUListElement) => {
-    console.log("dwdw")
+
     const resizeObserver = new ResizeObserver((entries) => {
-      
-    const entry = entries[0]
+      const entry = entries[0]
+
       callback(entry.contentBoxSize[0].inlineSize)
     })
 

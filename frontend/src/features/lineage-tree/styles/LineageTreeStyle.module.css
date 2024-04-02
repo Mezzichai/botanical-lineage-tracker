@@ -21,7 +21,7 @@
 
 .treeContainer ul {
   gap: 20px;
-
+  
   text-decoration: none;
 	list-style-type: none;
   padding-top: 20px;
@@ -299,8 +299,12 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
   position: absolute;
   top: 0;
   z-index: 999;
+  visibility: hidden;
   transform: translateX(197px);
 }
+
+
+
 
 .nodeContent:hover > .fatherContainer::after, 
 .nodeContent:hover > .fatherContainer::before {
