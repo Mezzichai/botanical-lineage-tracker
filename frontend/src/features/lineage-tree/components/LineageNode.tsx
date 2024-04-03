@@ -21,7 +21,7 @@ const LineageNode: React.FC<Props> = ({title, _id, image, handleNodeClick}) => {
   const optionsModalRef = useRef<HTMLDivElement>(null)
 
   const handleMoreInfoClick = (e: React.MouseEvent) => {
-        e.stopPropagation()
+    e.stopPropagation()
   }
 
 

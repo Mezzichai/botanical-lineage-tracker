@@ -5,6 +5,7 @@ import { faChevronLeft, faMagnifyingGlass, faSliders} from '@fortawesome/free-so
 import image1 from '../../../assets/13947.jpg'
 import image3 from '../../../assets/R.jpg'
 import { getNewId } from '../keyGen'
+import { useCallback, useState } from 'react'
 const root = [
   {
   title: "parent",
@@ -700,8 +701,38 @@ const root = [
   ]
   }  
 ]
-
 const LineageTree = () => {
+
+  const [ulWidths, setUlWidths] = useState<number[]>([])
+
+  const handleChangeWidths = useCallback((width: number, depth?: number) => {
+    console.log(width, depth)
+
+    if (!depth) {
+      setUlWidths(prevUlWidths => { 
+        console.log(prevUlWidths)
+        return [width, ...prevUlWidths]
+      });
+      return 
+    }
+    
+    if (width <= 0) {
+      setUlWidths(prevUlWidths => prevUlWidths.slice(0, depth+1))
+    }
+
+    setUlWidths(prevulWidths => {
+      let widthsToBeUpdated = prevulWidths.slice(0, depth+1)
+      const preservedWidths = prevulWidths.slice(depth+1)
+      widthsToBeUpdated = widthsToBeUpdated.map((prevWidth) => {
+        if (prevWidth < width) {
+          return width
+        }
+        return prevWidth
+      })
+      return widthsToBeUpdated.concat(preservedWidths)
+    })
+  }, [])
+
   return (
     <>
     <div className={LineageTreeStyles.treeInfo}>
@@ -723,7 +754,7 @@ const LineageTree = () => {
       </div>
     </div>
     <div className={LineageTreeStyles.treeContainer}>
-      <LineageGeneration children={root}/>
+      <LineageGeneration children={root} ulWidths={ulWidths} handleChangeWidths={handleChangeWidths} depth={0}/>
     </div>
     </>
   )
