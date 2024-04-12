@@ -14,14 +14,16 @@
 .treeContainer {
   display: flex;
   flex-direction: column;
-  padding-top: 5rem;
   justify-content: center;
+  width: 100%;
+  /* overflow-x: scroll;
+  overflow-y: hidden; */
 }
 
 
 .treeContainer ul {
   gap: 20px;
-  
+
   text-decoration: none;
 	list-style-type: none;
   padding-top: 20px;
@@ -34,7 +36,6 @@
 .treeContainer > ul {
   text-decoration: none;
   transition: width 0.3s;
-
 	list-style-type: none;
   padding-top: 0px;
   position: relative;
@@ -43,6 +44,7 @@
 }
 
 .treeContainer ul li {
+  width: 100%;
   text-decoration: none;
   float: left;
   transition: width 0.3s;
@@ -52,6 +54,10 @@
   text-align: center;
   position: relative;
 	padding: 20px 0 0 0;
+}
+
+.aggregateChildren > ul {
+  width: 100%;
 }
 
 .child {
@@ -278,29 +284,33 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
 
 
 .aggregateChildren div:hover {
-  z-index: 999;
+  z-index: 997;
 }
 
 
 .siblingCounter {
   position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   right: -.5rem;
   top: -.5rem;
 }
 
-.childCounter {
-  
+.expandSiblingsButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.5rem;
+  width: 1.5rem;
+  border: 1px solid black;
+  border-radius: 25px;
 }
+
+
 
 .fatherContainer {
   position: absolute;
-  top: 0;
-  z-index: 999;
+  z-index: 0;
   visibility: hidden;
-  transform: translateX(197px);
+  transform: translateX(10px) translateY(-10px);
 }
 
 
@@ -311,7 +321,7 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
   border-color: #94a0b4;
 } 
 
-
+/* 
 .fatherContainer::before {
   content: "";
   border-bottom: 1px solid #747474;
@@ -333,102 +343,7 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
   transform: rotate(-25deg);
 }
 
+ */
 
 
 
-
-
-/* tree info styles */
-
-.treeInfo {
-  justify-content: space-between;
-  display: flex;
-  align-items: center;
-  height: 5rem;
-  width: 100%;
-}
-
-.filters {
-  display: flex;
-  align-items: center;
-  gap: .5rem
-}
-
-.search {
-  display: flex;
-  align-items: center;
-  width: 15rem;
-  min-width: 7rem;
-
-}
-
-.search svg {
-  cursor: pointer;
-  font-size: 1.3rem;
-  margin-right: .5rem;
-}
-
-.search input {
-  background-color: inherit;
-  border: 1px solid #94a0b4;
-  border-radius: 2px;
-  padding: .5rem .5rem;
-  width: 100%
-}
-
-.search input::placeholder {
-  color: #94a0b4;
-  font-size: 1rem;
-}
-
-
-.filterButton {
-  min-width: 5rem;
-  padding: .3rem;
-  font-size: 1rem;  
-  font-weight: 400;
-  background-color: #898585;
-  color: #eee;
-  text-align: center;
-}
-
-.filterButton svg {
-  font-size: 1rem;  
-  margin-right: .5rem;
-}
-
-.treeName {
-  font-size: 1.5rem;
-  min-width: 9rem;
-  max-width: 20rem;
-}
-
-.treeName svg {
-  cursor: pointer;
-  font-size: 1.3rem;
-  margin-right: .9rem;
-}
-
-
-
-@media (max-width: 700px) { 
-  .search {
-    width: auto;
-  }
-}
-
-@media (max-width: 620px) { 
-  .treeName {
-    display: flex;
-    align-items: center;
-    font-size: 1.1rem; 
-    width: min-content;
-  }
-  
-  
-  .treeName svg {
-    cursor: pointer;
-    font-size: 1.2rem;
-
-  }
-}

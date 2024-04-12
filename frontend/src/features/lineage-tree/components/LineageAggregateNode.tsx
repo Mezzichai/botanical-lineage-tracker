@@ -58,6 +58,7 @@ const LineageAggregateNode: React.FC<Props> = ({title, _id, image, handleNodeCli
   const handleMouseLeaveSiblingCounter = () => {
     setIsHoveringSiblingCounter(false)
   }
+
   return (
     <div 
       onMouseEnter={() => handleHover(_id)} 
@@ -71,17 +72,19 @@ const LineageAggregateNode: React.FC<Props> = ({title, _id, image, handleNodeCli
     >
       {activeOfAggregatesId === _id &&
         <ButtonWithHoverLabel
-          ariaLabel={`show siblings for node ${_id}`}
-          styles={`${LineageTreeStyles.siblingCounter}`}
-          onClick={handleExpandSiblings}
-          onMouseEnter={handleMouseEnterSiblingCounter}
-          onMouseLeave={handleMouseLeaveSiblingCounter}
+          positioningStyles={`${LineageTreeStyles.siblingCounter}`}
           label={"show siblings"}
         > 
-        {isHoveringSiblingCounter 
-          ? <FontAwesomeIcon icon={faPlus} className={`fadeInElement`}
-        />
-          : siblingCount}
+        <button 
+          className={LineageTreeStyles.expandSiblingsButton}
+          onClick={handleExpandSiblings} 
+          onMouseEnter={handleMouseEnterSiblingCounter}
+          onMouseLeave={handleMouseLeaveSiblingCounter}
+        >
+          {isHoveringSiblingCounter 
+           ? <FontAwesomeIcon icon={faPlus} className={`fadeInElement`} />
+           : siblingCount}
+        </button>
         </ButtonWithHoverLabel>
       }
   

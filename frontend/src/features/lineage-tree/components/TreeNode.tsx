@@ -10,12 +10,12 @@ type Props = {
   title: string;
   image?: string;
   _id: string;
-  handleNodeClick: (id: string, e?: React.MouseEvent) => void;
+  displayInfoCard: (cardId: string) => void
 }
 
 
 
-const LineageNode: React.FC<Props> = ({title, _id, image, handleNodeClick}) => {
+const TreeNode: React.FC<Props> = ({title, _id, image, displayInfoCard}) => {
 
   const [optionsModalState, setOptionsModal] = useState<boolean>(false);
   const optionsModalRef = useRef<HTMLDivElement>(null)
@@ -31,7 +31,7 @@ const LineageNode: React.FC<Props> = ({title, _id, image, handleNodeClick}) => {
 
   return (
     <div 
-      onClick={(e) => handleNodeClick(_id, e)}
+      onClick={() => displayInfoCard(_id)}
       className={
         `${LineageTreeStyles.nodeContent}`
       }
@@ -53,5 +53,5 @@ const LineageNode: React.FC<Props> = ({title, _id, image, handleNodeClick}) => {
   )
 }
 
-export default LineageNode
+export default TreeNode
 

@@ -1,0 +1,76 @@
+.cardContainer {
+  position:fixed;
+  width: 25rem;
+  height: 100%;
+  top: 0;
+  background-color: rgb(255, 255, 255);
+  z-index: 998;
+}
+
+.showCard {
+  right: 0;
+}
+
+.hideCard {
+  right: -25rem;
+  transition: right 0.2s;
+}
+
+.visibleCard {
+  opacity: 1;
+  transition: opacity 1s;
+  height: 100%;
+
+}
+
+.invisibleCard {
+  opacity: 0;
+  height: 100%;
+}
+
+
+
+.toggleInfoCardPosition {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: -1.55rem;
+}
+
+.toggleInfoCard {
+  width: 100%;
+  font-size: 2rem;
+  transform:scaleY(1.3);
+  padding-left: .2rem;
+
+}
+
+.closeInfoCard svg {
+  color: rgb(98, 96, 96);
+}
+
+
+
+
+.image {
+  max-height: 18rem;
+  width: 100%;
+  object-fit:cover;
+}
+
+.info {
+  text-align: left;
+  padding-left: .4rem;
+  padding-bottom: .4rem;
+  border-bottom: 1px solid rgb(194, 194, 194);
+}
+
+
+.group {
+  font-size: .8rem;
+  color:  #94a0b4;
+}
+
+.group > span:hover {
+  text-decoration: underline;
+}

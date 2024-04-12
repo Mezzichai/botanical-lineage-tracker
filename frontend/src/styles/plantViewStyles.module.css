@@ -1,0 +1,123 @@
+
+.viewInfo {
+  height: 5rem;
+  width: 100%;
+  padding: 0 1rem 0 1rem;
+}
+
+.viewHeader {
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+  height: 5rem;
+  width: 100%;
+}
+
+
+.viewSettings { 
+  width: auto;
+  display: flex;
+}
+
+.viewOption { 
+  padding: .5rem;
+  display: flex;
+  gap: .3rem;
+  border: 1px solid rgb(124, 124, 124)
+}
+
+.viewOptionSelected#treeButton {
+  border-right: 1px solid rgb(124, 124, 124);
+}
+
+.viewOptionSelected#gridButton {
+  border-left: 1px solid rgb(124, 124, 124);
+}
+
+#treeButton {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  border-right: none;
+}
+
+#gridButton {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-left: none;
+}
+
+.viewOptionSelected {
+  background-color: #d7d7d8;
+}
+
+.viewOption:hover { 
+  background-color: #d7d7d8;
+}
+
+
+.viewOption > svg {
+  height: 1.2rem;
+}
+
+.viewOption > .directSvg {
+ height: 1.5rem;
+}
+
+
+.search svg {
+  cursor: pointer;
+  font-size: 1.3rem;
+  margin-right: .5rem;
+}
+
+.search input {
+  background-color: inherit;
+  border: 1px solid #94a0b4;
+  border-radius: 2px;
+  padding: .5rem .5rem;
+  width: 100%
+}
+
+.search input::placeholder {
+  color: #94a0b4;
+  font-size: 1rem;
+}
+
+
+
+
+.plantName {
+  font-size: 1.5rem;
+  min-width: 9rem;
+  max-width: 20rem;
+}
+
+.plantName svg {
+  cursor: pointer;
+  font-size: 1.3rem;
+  margin-right: .9rem;
+}
+
+
+
+@media (max-width: 700px) { 
+  .search {
+    width: auto;
+  }
+}
+
+@media (max-width: 620px) { 
+  .plantName {
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem; 
+    width: min-content;
+  }
+  
+  
+  .plantName svg {
+    cursor: pointer;
+    font-size: 1.2rem;
+
+  }
+}

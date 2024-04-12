@@ -1,11 +1,10 @@
 import './App.css'
-import LineageTree from './features/lineage-tree/components/LineageTree'
+import PlantView from './pages/PlantView'
 
 function App() {
-
   return (
     <>
-      <LineageTree/>
+      <PlantView/>
     </>
   )
 }

@@ -1,33 +1,49 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { forwardRef, useCallback, useRef, useState } from "react";
 import LineageTreeStyles from '../styles/LineageTreeStyle.module.css'
-import LineageNode from "./LineageNode";
+import TreeNode from "./TreeNode";
 import LineageAggregateNode from "./LineageAggregateNode";
 import useInvalidateParentWidthRefCallback from "../hooks/useInvalidateParentWidthCallback";
+import { LineageNode } from "../types";
 
-type Child = {
-  title: string;
-  image?: string;
-  children: Child[];
-  father?: Child
-  _id: string
+
+type Props = {
+  children: LineageNode[];
+  invalidateParentWidth?: (newULwidth:number | undefined) => void;
+  widthTree: LineageNode[];
+  handleChangeWidths: (newWidth: number, ulParentId: string, oldWidth: number) => void;
+  shouldUnmount?: boolean;
+  refCallbackFromAggregateNodes?: (node: HTMLUListElement) => void;
+  displayInfoCard: (cardId: string) => void
   
 }
 
-type Props = {
-  children: Child[]
-  invalidateParentWidth?: (newULwidth:number | undefined) => void
-  depth: number
-  ulWidths: number[]
-  handleChangeWidths: (width: number, depth?: number) => void
-  changeParentWidth?: (width: number, isNew?: boolean) => void
-  shouldUnmount?: boolean
-}
-
-const LineageGeneration: React.FC<Props> = ({children, handleChangeWidths, depth, ulWidths, shouldUnmount, changeParentWidth}) => {
-console.log(ulWidths, depth)
+const LineageGeneration: React.FC<Props> = forwardRef(({children, handleChangeWidths, widthTree, shouldUnmount, refCallbackFromAggregateNodes, displayInfoCard}) => {
   const [shouldActiveNodeChildrenUnmount, setShouldActiveNodeChildrenUnmount] = useState(false);
-  const [activeNodeOfAggregates, setActiveNodeOfAggregates] = useState<Child>();
-  const [hoveredNode, setHoveredNode] = useState<Child>();
+  const [activeNodeOfAggregates, setActiveNodeOfAggregates] = useState<LineageNode>();
+  const [hoveredNode, setHoveredNode] = useState<LineageNode>();
+
+  let width: number | undefined;
+
+  function searchWidths(nodes: LineageNode[]): number | undefined{
+    if (nodes.length > 2) {
+      if (nodes[0]._id === children[0]._id) {
+        return nodes[0].width
+      }
+    }
+    for (let i = 0; i < nodes.length; i++) {
+      const search = searchWidths(nodes[i].children)
+      if (search) {
+        return search
+      }
+    }
+  }
+
+  if (children.length > 2) {
+    width = searchWidths(widthTree)
+  }
+  if (!width && activeNodeOfAggregates?._id) {
+    width = 176
+  }
 
   const aggregateChildrenRef = useRef<HTMLLIElement | null>(null)
 
@@ -40,24 +56,26 @@ console.log(ulWidths, depth)
   (childrenWithChildrenIds.includes(hoveredNode?._id || ""))
 
 
-  const findWidthOfAggregateContainer = useCallback((newULwidth = 0) => {
-    const childUl = aggregateChildrenRef.current?.querySelector("ul")
-    const liMinWidth = Math.max(
-      133 + (children.length * 44), 
+  const findWidthOfAggregateContainer = useCallback((newULwidth: number) => {
+    let liMinWidth = Math.max(
+      133 + (children.length * 44),
       doesHoveredOrActiveNodeHaveChildren ? 176 + 395 : 0,
-      newULwidth
+      newULwidth || 0
     )
+    if (newULwidth === 0) {
+      liMinWidth = 133 + (children.length * 44)
+    }
+    
     return liMinWidth
   }, [children.length, doesHoveredOrActiveNodeHaveChildren])
 
+  const aggregateNodesId = children[0]._id
+  const changeWidth = useCallback((newULwidth: number) => {
+    const newWidth = findWidthOfAggregateContainer(newULwidth)
+      handleChangeWidths(newWidth, aggregateNodesId, aggregateChildrenRef.current?.offsetWidth || 0)
+  }, [findWidthOfAggregateContainer, handleChangeWidths, aggregateNodesId])
 
-  const changeWidth = useCallback((newULwidth: number | undefined, isNew=true) => {
-    handleChangeWidths(findWidthOfAggregateContainer(newULwidth), depth > ulWidths.length-1 ? undefined : depth )
-  }, [findWidthOfAggregateContainer, handleChangeWidths, depth])
-
-
-  const [ulRefCB] = useInvalidateParentWidthRefCallback(changeParentWidth)
-
+  const [ulRefCB] = useInvalidateParentWidthRefCallback(changeWidth)
 
   const computeXPositioningInOrder = (childrenCount: number, offset: number) => {
     let positions: number[] = []
@@ -102,39 +120,67 @@ console.log(ulWidths, depth)
 
   const handleUnfocusAggregateNode = () => {
     setShouldActiveNodeChildrenUnmount(true);
+
     setTimeout(() => {
+      if (doesHoveredOrActiveNodeHaveChildren) {
+        changeWidth(0)
+      }
       setShouldActiveNodeChildrenUnmount(false);
-      // handleChangeWidths(0, depth);
       setActiveNodeOfAggregates(() => undefined);
     }, 300);  
   };
 
+
+  let hoverTimeout: number;
   const handleHover = (id: string) => {
-    setHoveredNode(children.find(child => child._id === id))
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout)
+    }
+    hoverTimeout = setTimeout(() => {
+      setHoveredNode(children.find(child => child._id === id))
+    }, 0);
   };
 
   const handleUnHover = () => {
-    setHoveredNode(undefined)
     if (!activeNodeOfAggregates) {
       setShouldActiveNodeChildrenUnmount(true);
-      setTimeout(() => {
-        // handleChangeWidths(0, depth);
+      hoverTimeout = setTimeout(() => {
+        if (doesHoveredOrActiveNodeHaveChildren) {
+          changeWidth(0)
+        }
+        setHoveredNode(undefined)
         setShouldActiveNodeChildrenUnmount(false);
       }, 300);  
+    } else {
+      setHoveredNode(undefined)
     }
   };
-    
+
+
+
+
+  type Props = {
+    ref?: (node: HTMLUListElement) => void;
+  }
+
+  const ulRefProp: Props = {};
+
+  if (refCallbackFromAggregateNodes) {
+    ulRefProp["ref"] = refCallbackFromAggregateNodes
+  }
+
+  const aggregateNodesChildUlRefCallback = useCallback((node: HTMLUListElement) => ulRefCB(node), [ulRefCB])
+  
   return  (
-    
     <ul 
       className={`${LineageTreeStyles.childrenContainer} ${shouldUnmount ? 'fadeOutElement' : 'fadeInElement'}`}
-      ref={useCallback((node: HTMLUListElement) => ulRefCB(node), [ulRefCB])}
+      {...ulRefProp}
     >
       {children.length > 2 
         ? <li 
             ref={aggregateChildrenRef} 
             className={`${LineageTreeStyles.child} ${LineageTreeStyles.aggregateChildren}`}
-            style={{width: `${ulWidths[depth] || 133 + (children.length * 44)}px`}} 
+            style={{width: `${width || 133 + (children.length * 44)}px`}} 
           >
             {/* needed to maintain the aggregate nodes height in document */}
             <div style={{position: "relative", height: "165.71px"}}></div>
@@ -144,11 +190,11 @@ console.log(ulWidths, depth)
                 <>
                   {(node?.children[0]?.father) &&
                     <div className={`${LineageTreeStyles.fatherContainer} ${activeNodeOfAggregates?._id === node._id ? `fadeInElement` : "fadeOutElement"}`}>
-                      <LineageNode 
+                      <TreeNode 
                         image={node.children[0]?.father.image} 
                         _id={node.children[0].father._id || ""} 
                         title ={node.children[0].father.title || ""} 
-                        handleNodeClick={handleNodeClick}
+                        displayInfoCard={displayInfoCard}                     
                       />
                     </div>
                   }
@@ -180,43 +226,52 @@ console.log(ulWidths, depth)
 
             {hoveredNode?.children.length ? (
               <LineageGeneration 
+                refCallbackFromAggregateNodes={aggregateNodesChildUlRefCallback}
                 shouldUnmount={shouldActiveNodeChildrenUnmount}
                 handleChangeWidths={handleChangeWidths}
-                changeParentWidth={changeWidth}
-                ulWidths={ulWidths}
-                depth={depth+1}
-                children={hoveredNode.children} 
+                widthTree={widthTree}
+                children={hoveredNode.children}
+                displayInfoCard={displayInfoCard}
               /> 
             ) : (
             activeNodeOfAggregates?.children.length ? (
               <LineageGeneration 
+                refCallbackFromAggregateNodes={aggregateNodesChildUlRefCallback}
                 shouldUnmount={shouldActiveNodeChildrenUnmount}
                 handleChangeWidths={handleChangeWidths}
-                changeParentWidth={changeWidth}
-                ulWidths={ulWidths}
-                depth={depth+1}
-                children={activeNodeOfAggregates.children} 
+                widthTree={widthTree}
+                children={activeNodeOfAggregates.children}
+                displayInfoCard={displayInfoCard}
               />
             ) : null)}
           </li>
 
         : children.map((node, index) => (
           <li className={`${LineageTreeStyles.child} fadeInElement`} key={node._id + index}>
-            <LineageNode 
+            {(node?.children[0]?.father) &&
+              <div className={`${LineageTreeStyles.fatherContainer} ${`fadeInElement`}`}>
+                <TreeNode 
+                  image={node.children[0]?.father.image} 
+                  _id={node.children[0].father._id || ""} 
+                  title ={node.children[0].father.title || ""} 
+                  displayInfoCard={displayInfoCard}                     
+                />
+              </div>
+            }
+            <TreeNode
               key={index+node._id}
               image={node.image} 
               _id={node._id} 
               title ={node.title} 
-              handleNodeClick={handleNodeClick}
+              displayInfoCard={displayInfoCard}
             />
             {node.children.length 
             ? <LineageGeneration 
                 shouldUnmount={shouldActiveNodeChildrenUnmount}
                 handleChangeWidths={handleChangeWidths}
-                changeParentWidth={changeWidth}
-                ulWidths={ulWidths}
-                depth={depth+1}
+                widthTree={widthTree}
                 children={node.children} 
+                displayInfoCard={displayInfoCard}
               /> 
             : null}
           </li>
@@ -224,7 +279,7 @@ console.log(ulWidths, depth)
       }
     </ul> 
   )
-}
+})
 
 export default LineageGeneration
 
