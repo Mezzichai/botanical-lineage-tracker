@@ -10,7 +10,7 @@ type Props = {
   title: string;
   image?: string;
   _id: string;
-  displayInfoCard: (cardId: string) => void
+  displayInfoCard?: (cardId: string) => void
 }
 
 
@@ -31,7 +31,7 @@ const TreeNode: React.FC<Props> = ({title, _id, image, displayInfoCard}) => {
 
   return (
     <span 
-      onClick={() => displayInfoCard(_id)}
+      onClick={displayInfoCard ? () => displayInfoCard(_id) : () => {}}
       className={
         `${LineageTreeStyles.nodeContent}`
       }
@@ -41,14 +41,27 @@ const TreeNode: React.FC<Props> = ({title, _id, image, displayInfoCard}) => {
           <button aria-label={`more info`} className={optionModalStyles.modalBtn} onClick={handleMoreInfoClick}>More Info</button>
         </div>
       }
-
-      <img src={image || image1} className={LineageTreeStyles.nodeImage}/>
-      <span className={`${LineageTreeStyles.nodeInfo} `}>
-        <p className={LineageTreeStyles.nodeTitle}>{title}</p>
-        <button>
-          <FontAwesomeIcon icon={faEllipsisVertical} onClick={handleOptionsClick}/>
-        </button>
-      </span>
+    {!_id ? (
+      <>
+        <img src={image || image1} className={LineageTreeStyles.nodeImage}/>
+        <span className={`${LineageTreeStyles.nodeInfo} `}>
+          <p className={LineageTreeStyles.nodeTitle}>{title}</p>
+          <button>
+            <FontAwesomeIcon icon={faEllipsisVertical} onClick={handleOptionsClick}/>
+          </button>
+        </span>
+      </>
+    ) : (
+      <>
+        <img src={image || image1} className={LineageTreeStyles.nodeImage}/>
+        <span className={`${LineageTreeStyles.nodeInfo} `}>
+          <p className={LineageTreeStyles.nodeTitle}>{title}</p>
+          <button>
+            <FontAwesomeIcon icon={faEllipsisVertical} onClick={handleOptionsClick}/>
+          </button>
+        </span>
+      </>
+    )}
     </span>
   )
 }

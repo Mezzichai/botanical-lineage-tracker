@@ -34,15 +34,21 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  left: -1.55rem;
+  left: -1.24rem;
+  padding: .1rem 0 ;
+  font-size: 1.8rem;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  border-left:1px solid black;
+  border-radius: 4px 0 0 4px ;
+  background-color: white;
 }
 
 .toggleInfoCard {
-  width: 100%;
-  font-size: 2rem;
-  transform:scaleY(1.3);
-  padding-left: .2rem;
-
+  
+  /* transform:scaleY(1.3);
+  
+  background-color: white; */
 }
 
 .closeInfoCard svg {
@@ -83,121 +89,3 @@
 }
 
 
-.microTreeContainer {
-  display: flex;
-  justify-content: center;
-}
-
-/* .microTreeContainer > ul > li > div > span::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  right: 50%;
-	border-top: 1px solid #ccc;
-  width: 55%;
-  height: 20px;
-} */
-
-
-.parentsContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.microTreeContainer ul {
-  gap: 20px;
-  /* width: auto; */
-  text-decoration: none;
-	list-style-type: none;
-  /* padding-top: 20px; */
-  position: relative;
-  display: flex;
-  justify-content: center;
-} 
-
-.microTreeContainer > ul {
-  text-decoration: none;
-  transition: width 0.3s;
-	list-style-type: none;
-  padding-top: 0px;
-  position: relative;
-  display: flex;
-  justify-content: center;
-} 
-
-/* .microTreeContainer  > ul ul::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-	border-left: 1px solid #ccc;
-  width: 0;
-  height: 20px;
-} */
-
-.microTreeContainer ul li {
-  width: auto;
-  text-decoration: none;
-  transition: width 0.3s;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  position: relative;
-	padding: 20px 0 0 0;
-}
-
-
-/* .microTreeContainer ul ul li::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-	border-left: 1px solid #ccc;
-  height: 20px;
-} */
-
-
-.microTreeContainer ul ul li::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 50%;
-	border-top: 1px solid #ccc;
-  width: 50%;
-  height: 20px;
-  border-right: 1px solid #ccc;
-  border-top-right-radius: 5px;
-}
-
-.microTreeContainer ul ul li::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 50%;
-	border-top: 1px solid #ccc;
-  width: 50%;
-  height: 20px;
-  border-right: 1px solid #ccc;
-  border-top-right-radius: 5px;
-}
-
-
-.parentsContainer {
-  position: relative;
-  padding-bottom: 20px;
-}
-
-.parentsContainer::after {
-  content: "";
-  position: absolute;
-  bottom: 0px;
-  left: 25%;
-	border-bottom: 1px solid #ccc;
-  width: 1%;
-  height: 20px;
-
-  border-left: 1px solid #ccc;
-  border-bottom-left-radius: 5px;
-}
