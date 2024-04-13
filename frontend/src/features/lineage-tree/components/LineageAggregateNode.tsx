@@ -66,7 +66,7 @@ const LineageAggregateNode: React.FC<Props> = ({title, _id, image, handleNodeCli
       onClick={(e) => handleNodeClick(_id, e)}
       className={
         `${LineageTreeStyles.nodeContent} 
-         ${!activeOfAggregatesId ? LineageTreeStyles.aggregateNode : ""} 
+         ${!activeOfAggregatesId ? LineageTreeStyles.aggregateNode : LineageTreeStyles.activeNodeOfAggregates} 
         `
       }
     >

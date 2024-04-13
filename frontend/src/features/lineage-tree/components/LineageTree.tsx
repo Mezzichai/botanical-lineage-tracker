@@ -16,6 +16,7 @@ type Props = {
 const LineageTree: React.FC<Props> = ({displayInfoCard, root}) => {
   const [widthTree, setWidthTree] = useState<LineageNode[]>(root)
   const handleChangeWidths = useCallback((newWidth: number, ulParentId: string, oldWidth: number) => {
+   
     setWidthTree(
         produce(prevState => {
           let amountToAddToParents: number;
@@ -33,10 +34,9 @@ const LineageTree: React.FC<Props> = ({displayInfoCard, root}) => {
               removeChildrenWidthHistory(node.children)
             }) 
           }
-
           function cascadeWidthUpdates(nodes:LineageNode[]) {
             if (nodes.length > 2 && nodes[0]._id === ulParentId) {
-              amountToAddToParents = newWidth - (nodes[0].width || oldWidth)
+              amountToAddToParents = newWidth - Math.max(nodes[0].width || oldWidth, 580)
               removeChildrenWidthHistory(nodes)
               nodes[0].width = newWidth
               return true
@@ -47,7 +47,6 @@ const LineageTree: React.FC<Props> = ({displayInfoCard, root}) => {
                 if (nodes.length === 2) {
                   doubleNodesExistBetweenGenerations = true
                 }
-        
                 if (nodes.length > 2) {
                   if (amountToAddToParents < 0 && nodes[0].widthUpdateHistory) {
 

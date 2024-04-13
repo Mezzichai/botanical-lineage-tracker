@@ -30,7 +30,7 @@ const TreeNode: React.FC<Props> = ({title, _id, image, displayInfoCard}) => {
   }
 
   return (
-    <div 
+    <span 
       onClick={() => displayInfoCard(_id)}
       className={
         `${LineageTreeStyles.nodeContent}`
@@ -49,7 +49,7 @@ const TreeNode: React.FC<Props> = ({title, _id, image, displayInfoCard}) => {
           <FontAwesomeIcon icon={faEllipsisVertical} onClick={handleOptionsClick}/>
         </button>
       </span>
-    </div>
+    </span>
   )
 }
 

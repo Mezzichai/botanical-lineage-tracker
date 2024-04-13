@@ -8,7 +8,8 @@ import Tab from '../../../components/Tab'
 import TabStyles from '../../../styles/tabStyles.module.css'
 import { getNewId } from '../../../utils/keyGen'
 import image3 from '../../../assets/3564.jpg'
-import LineageTree from '../../lineage-tree/components/LineageTree'
+import TreeNode from '../../lineage-tree/components/TreeNode'
+import LineageTreeStyles from '../../lineage-tree/styles/LineageTreeStyle.module.css'
 
 type Props = {
   displayInfoCard: (cardId: string) => void;
@@ -110,7 +111,38 @@ const InfoCard:React.FC<Props> = ({displayInfoCard, isInfoCardOpen, cardId, togg
         }
         {activeTab === "Relatives" &&
           <div className={InfoCardStyles.activeTabContents}>
-            <LineageTree displayInfoCard={changeInfoCard} root={root}/>
+            <div className={InfoCardStyles.microTreeContainer}>
+              <ul>
+                <li>
+                  <div className={InfoCardStyles.parentsContainer}>
+                    <TreeNode 
+                      image={root[0]?.image} 
+                      _id={root[0]._id || ""} 
+                      title ={root[0].title || ""} 
+                      displayInfoCard={displayInfoCard}                     
+                    />
+                    <div className={`${LineageTreeStyles.fatherContainer}  fadeInElement`}>
+                      <TreeNode 
+                        image={root[0]?.father.image} 
+                        _id={root[0].father._id || ""} 
+                        title ={root[0].father.title || ""} 
+                        displayInfoCard={displayInfoCard}                     
+                      />
+                    </div>
+                  </div>
+                  <ul>
+                    <li>
+                      <TreeNode 
+                        image={root[0].children[0].image} 
+                        _id={root[0].children[0]._id || ""} 
+                        title ={root[0].children[0].title || ""} 
+                        displayInfoCard={displayInfoCard}                     
+                      />
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
           </div>
         }
       </div>

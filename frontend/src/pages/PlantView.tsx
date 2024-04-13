@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 import LineageTree from '../features/lineage-tree/components/LineageTree'
 import GridView from '../features/grid-view/components/GridView'
 import InfoCard from '../features/InfoCard/components/InfoCard'
@@ -669,9 +669,6 @@ const root = [
             ]
           },
           children: [
-           
-        
-            
           ]
         },   {
           title: "child 3",
@@ -681,15 +678,9 @@ const root = [
             title: "child 2",
             image: image1,
             _id: getNewId(),
-            children: [
-              
-            ]
+            children: []
           },
-          children: [
-           
-        
-            
-          ]
+          children: []
         },
       ]
     },
@@ -697,10 +688,30 @@ const root = [
   }  
 ]
 
+// function initializeWidthTree(root) {
+//   function applyWidths(nodes) {
+//     for (let i = 0; i < nodes.length; i++) {
+//       if (nodes[i].children.length && nodes.length <= 2) {
+//         applyWidths(nodes[i].children)
+//         const childWidthSum = nodes[i].children.reduce((acc, child) => acc += child.width, 0)
+//         nodes[i].width = childWidthSum || 176 + 395;
+//       } else if (nodes.length > 2) {
+//         nodes[0].width = 133 + (nodes.length * 44)
+//       }
+//     }
+//     return [...nodes]
+//   }
+//   return applyWidths(root)
+// }
+// const treeWithWidths = initializeWidthTree(root);
+
+
+
 const PlantView = () => {
   const [view, setView] = useState<"tree" | "grid">("tree")
   const [isInfoCardOpen, setIsInfoCardOpen] = useState<boolean>(false)
   const [cardId, setInfoCardId]= useState<string>("")
+  // const [tree, setTree] = useState<LineageNode[]>(treeWithWidths)
 
   const displayInfoCard = useCallback((cardId: string) => {
     setIsInfoCardOpen(true)

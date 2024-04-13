@@ -1,6 +1,5 @@
 
 .viewInfo {
-  height: 5rem;
   width: 100%;
   padding: 0 1rem 0 1rem;
 }
@@ -22,6 +21,7 @@
 .viewOption { 
   padding: .5rem;
   display: flex;
+  align-items: center;
   gap: .3rem;
   border: 1px solid rgb(124, 124, 124)
 }

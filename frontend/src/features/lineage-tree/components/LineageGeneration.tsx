@@ -17,6 +17,12 @@ type Props = {
   
 }
 
+//todo: 
+// 1. add cascading hover effects (must use state for this)
+// 2. make it so after a node is selected, the width of the ul may become even smaller (done?)
+// 3. adjust for larger aggregate containers
+// 4. clean up change widths
+
 const LineageGeneration: React.FC<Props> = forwardRef(({children, handleChangeWidths, widthTree, shouldUnmount, refCallbackFromAggregateNodes, displayInfoCard}) => {
   const [shouldActiveNodeChildrenUnmount, setShouldActiveNodeChildrenUnmount] = useState(false);
   const [activeNodeOfAggregates, setActiveNodeOfAggregates] = useState<LineageNode>();
@@ -143,17 +149,11 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, handleChangeWi
 
   const handleUnHover = () => {
     if (!activeNodeOfAggregates) {
-      setShouldActiveNodeChildrenUnmount(true);
-      hoverTimeout = setTimeout(() => {
-        if (doesHoveredOrActiveNodeHaveChildren) {
-          changeWidth(0)
-        }
-        setHoveredNode(undefined)
-        setShouldActiveNodeChildrenUnmount(false);
-      }, 300);  
-    } else {
-      setHoveredNode(undefined)
+      if (doesHoveredOrActiveNodeHaveChildren) {
+        changeWidth(0)
+      }
     }
+    setHoveredNode(undefined)
   };
 
 
@@ -189,7 +189,7 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, handleChangeWi
               return (
                 <>
                   {(node?.children[0]?.father) &&
-                    <div className={`${LineageTreeStyles.fatherContainer} ${activeNodeOfAggregates?._id === node._id ? `fadeInElement` : "fadeOutElement"}`}>
+                    <div className={`${LineageTreeStyles.fatherContainer} ${LineageTreeStyles.fatherContainerOfActive} ${activeNodeOfAggregates?._id === node._id ? `fadeInElement` : "fadeOutElement"}`}>
                       <TreeNode 
                         image={node.children[0]?.father.image} 
                         _id={node.children[0].father._id || ""} 
@@ -247,24 +247,36 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, handleChangeWi
           </li>
 
         : children.map((node, index) => (
-          <li className={`${LineageTreeStyles.child} fadeInElement`} key={node._id + index}>
-            {(node?.children[0]?.father) &&
-              <div className={`${LineageTreeStyles.fatherContainer} ${`fadeInElement`}`}>
-                <TreeNode 
-                  image={node.children[0]?.father.image} 
-                  _id={node.children[0].father._id || ""} 
-                  title ={node.children[0].father.title || ""} 
-                  displayInfoCard={displayInfoCard}                     
-                />
-              </div>
-            }
-            <TreeNode
-              key={index+node._id}
-              image={node.image} 
-              _id={node._id} 
-              title ={node.title} 
-              displayInfoCard={displayInfoCard}
-            />
+          <li 
+            className={`${LineageTreeStyles.child} fadeInElement`} 
+            key={node._id + index} 
+          >
+            
+            <div className={LineageTreeStyles.parentsContainer}>
+              {/* need to maintain width */}
+              {(node?.children[0]?.father) &&
+                <span className={`${LineageTreeStyles.pseudoContainer}`}>
+                </span>
+              }
+              <TreeNode
+                key={index+node._id}
+                image={node.image} 
+                _id={node._id} 
+                title ={node.title} 
+                displayInfoCard={displayInfoCard}
+              />
+              {(node?.children[0]?.father) &&
+                <span className={`${LineageTreeStyles.fatherContainer} ${`fadeInElement`}`}>
+                  <TreeNode 
+                    image={node.children[0]?.father.image} 
+                    _id={node.children[0].father._id || ""} 
+                    title ={node.children[0].father.title || ""} 
+                    displayInfoCard={displayInfoCard}                     
+                  />
+                </span>
+              }
+            </div>
+        
             {node.children.length 
             ? <LineageGeneration 
                 shouldUnmount={shouldActiveNodeChildrenUnmount}
