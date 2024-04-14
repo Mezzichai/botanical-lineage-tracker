@@ -10,13 +10,16 @@
 }
 
 
-
+.panContainer {
+  min-height: 85vh;
+}
 .treeContainer {
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  width: 100%;
-  overflow-y: scroll;
+  align-items: center;
+  min-width: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 

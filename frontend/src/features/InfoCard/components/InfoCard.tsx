@@ -9,6 +9,7 @@ import TabStyles from '../../../styles/tabStyles.module.css'
 import { getNewId } from '../../../utils/keyGen'
 import image3 from '../../../assets/3564.jpg'
 import MiniLineageTree from './MiniLineageTree'
+import Substrate from './Substrate'
 
 type Props = {
   displayInfoCard: (cardId: string) => void;
@@ -100,12 +101,11 @@ const InfoCard:React.FC<Props> = ({displayInfoCard, isInfoCardOpen, cardId, togg
         }
         {activeTab === "Substrate" &&
           <div className={InfoCardStyles.activeTabContents}>
-            
+            <Substrate />
           </div>
         }
         {activeTab === "Water" &&
           <div className={InfoCardStyles.activeTabContents}>
-            
           </div>
         }
         {activeTab === "Relatives" &&

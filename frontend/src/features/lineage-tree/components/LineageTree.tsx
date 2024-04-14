@@ -4,6 +4,7 @@ import LineageGeneration from './LineageGeneration'
 import {useCallback, useState } from 'react'
 import {  produce } from 'immer'
 import {LineageNode} from '../types'
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 
 
@@ -80,9 +81,22 @@ const LineageTree: React.FC<Props> = ({displayInfoCard, root}) => {
 
 
   return (
-    <div className={LineageTreeStyles.treeContainer}>
-      <LineageGeneration children={root} widthTree={widthTree} handleChangeWidths={handleChangeWidths} displayInfoCard={displayInfoCard}/>
-    </div>
+    <TransformWrapper
+      initialScale={1}
+      maxScale={2}
+      minScale={.5}
+      >
+
+      <TransformComponent wrapperClass={LineageTreeStyles.panContainer} contentClass={LineageTreeStyles.treeContainer}>
+
+          <LineageGeneration children={root} widthTree={widthTree} handleChangeWidths={handleChangeWidths} displayInfoCard={displayInfoCard}/>
+
+      </TransformComponent>
+
+    </TransformWrapper>
+
+    
+
   )
 }
 
