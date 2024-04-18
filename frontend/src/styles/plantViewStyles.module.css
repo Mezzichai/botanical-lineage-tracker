@@ -2,6 +2,9 @@
 .viewInfo {
   width: 100%;
   padding: 0 1rem 0 1rem;
+  position: fixed;
+  z-index: 999;
+
 }
 
 .viewHeader {
@@ -13,12 +16,17 @@
 }
 
 
-.viewSettings { 
+.viewSettings {
+  z-index: 999;
   width: auto;
   display: flex;
+  position: fixed;
+  top: 5rem;
+
 }
 
 .viewOption { 
+
   padding: .5rem;
   display: flex;
   align-items: center;

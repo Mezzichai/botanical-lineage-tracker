@@ -9,25 +9,30 @@
   }
 }
 
-
 .panContainer {
-  min-height: 85vh;
+  min-height: 100vh;
+  max-height: 100vh;
+  max-width: 100%;
+  min-width: 100%;
 }
+
 .treeContainer {
   display: flex;
   justify-content: center;
-  align-items: center;
   min-width: 100%;
+
+  align-items: center;
   overflow-x: hidden;
   overflow-y: hidden;
 }
+
 
 
 .treeContainer ul {
   gap: 20px;
   text-decoration: none;
 	list-style-type: none;
-  padding-top: 20px;
+  padding-top: 40px;
   position: relative;
   display: flex;
   justify-content: center;
@@ -107,7 +112,7 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
   left: 50%;
 	border-left: 1px solid #ccc;
   width: 0;
-  height: 20px;
+  height: 40px;
 }
 
 
@@ -141,6 +146,7 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
 
 
 .nodeContent { 
+
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -245,7 +251,7 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
 }
 
 .aggregateChildren div:hover {
-  z-index: 997;
+  z-index: 999;
 }
 
 
@@ -288,6 +294,7 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
 }
 
 .parentsContainer {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -322,6 +329,47 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
 }
 
 
+
+.addChildPosition {
+  position: absolute;
+  bottom: -32px;
+  left: 53%;
+  z-index: 998;
+}
+
+.addFirstChildPosition {
+  position: absolute;
+  bottom: 31px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+}
+
+
+.addChild {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 1.5rem;
+  width: 1.5rem;
+  border: 1px solid black;
+  border-radius: 25px;
+  color: rgb(0, 0, 0);
+  background-color: rgb(255, 255, 255);
+  transition: 0.3s all;
+}
+
+
+
+
+.addChild:hover {
+  background-color: rgb(149, 239, 156);
+}
+
+
+.paddingForAddingChildren {
+  padding-bottom: 62px;
+}
 
 
 

@@ -12,3 +12,4 @@ export type LineageNode = {
   widthUpdateHistory?: WidthHistoryRecord[]
   father?: LineageNode;
 };
+

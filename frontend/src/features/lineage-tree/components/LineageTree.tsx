@@ -11,10 +11,13 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 type Props = {
   displayInfoCard: (cardId: string) => void
+  displayNewInfoCard: (motherId?: LineageNode, fatherId?: LineageNode) => void
+
   root: LineageNode[]
+
 }
 
-const LineageTree: React.FC<Props> = ({displayInfoCard, root}) => {
+const LineageTree: React.FC<Props> = ({displayInfoCard, root, displayNewInfoCard}) => {
   const [widthTree, setWidthTree] = useState<LineageNode[]>(root)
   const handleChangeWidths = useCallback((newWidth: number, ulParentId: string, oldWidth: number) => {
    
@@ -48,6 +51,8 @@ const LineageTree: React.FC<Props> = ({displayInfoCard, root}) => {
                 if (nodes.length === 2) {
                   doubleNodesExistBetweenGenerations = true
                 }
+
+                //fix issue with subtracting when not needed
                 if (nodes.length > 2) {
                   if (amountToAddToParents < 0 && nodes[0].widthUpdateHistory) {
 
@@ -84,15 +89,13 @@ const LineageTree: React.FC<Props> = ({displayInfoCard, root}) => {
     <TransformWrapper
       initialScale={1}
       maxScale={2}
-      minScale={.5}
-      >
-
+      minScale={.7}
+      minPositionX={-1000}
+      maxPositionX={1000}
+    >
       <TransformComponent wrapperClass={LineageTreeStyles.panContainer} contentClass={LineageTreeStyles.treeContainer}>
-
-          <LineageGeneration children={root} widthTree={widthTree} handleChangeWidths={handleChangeWidths} displayInfoCard={displayInfoCard}/>
-
+        <LineageGeneration children={root} widthTree={widthTree} handleChangeWidths={handleChangeWidths} displayInfoCard={displayInfoCard} displayNewInfoCard={displayNewInfoCard}/>
       </TransformComponent>
-
     </TransformWrapper>
 
     

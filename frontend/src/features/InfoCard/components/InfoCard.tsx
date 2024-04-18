@@ -62,7 +62,7 @@ const InfoCard:React.FC<Props> = ({displayInfoCard, isInfoCardOpen, cardId, togg
   }
 
   const changeInfoCard = () => {
-
+    
   }
 
   const tabs = ["Info", "Substrate", "Water", "Relatives"]

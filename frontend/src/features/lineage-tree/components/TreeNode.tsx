@@ -11,6 +11,7 @@ type Props = {
   image?: string;
   _id: string;
   displayInfoCard?: (cardId: string) => void
+
 }
 
 

@@ -4,11 +4,13 @@ import GridView from '../features/grid-view/components/GridView'
 import InfoCard from '../features/InfoCard/components/InfoCard'
 import SearchBar from '../components/SearchBar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronLeft, faTree } from '@fortawesome/free-solid-svg-icons'
+import { faChevronLeft, faT, faTree } from '@fortawesome/free-solid-svg-icons'
 import plantViewStyles from '../styles/plantViewStyles.module.css'
 import image1 from '../assets/13947.jpg'
 import image3 from '../assets/R.jpg'
 import { getNewId } from '../utils/keyGen'
+import NewInfoCard from '../features/InfoCard/components/NewInfoCard'
+import { LineageNode } from '../features/lineage-tree/types'
 
 const root = [
   {
@@ -688,38 +690,33 @@ const root = [
   }  
 ]
 
-// function initializeWidthTree(root) {
-//   function applyWidths(nodes) {
-//     for (let i = 0; i < nodes.length; i++) {
-//       if (nodes[i].children.length && nodes.length <= 2) {
-//         applyWidths(nodes[i].children)
-//         const childWidthSum = nodes[i].children.reduce((acc, child) => acc += child.width, 0)
-//         nodes[i].width = childWidthSum || 176 + 395;
-//       } else if (nodes.length > 2) {
-//         nodes[0].width = 133 + (nodes.length * 44)
-//       }
-//     }
-//     return [...nodes]
-//   }
-//   return applyWidths(root)
-// }
-// const treeWithWidths = initializeWidthTree(root);
-
-
 
 const PlantView = () => {
   const [view, setView] = useState<"tree" | "grid">("tree")
   const [isInfoCardOpen, setIsInfoCardOpen] = useState<boolean>(false)
+  const [isNewInfoCardOpen, setIsNewInfoCardOpen] = useState<boolean>(false)
+  const [parentsOfNewChild, setParentsOfNewChild] = useState<{mother?: LineageNode, father?: LineageNode}>({})
+
   const [cardId, setInfoCardId]= useState<string>("")
-  // const [tree, setTree] = useState<LineageNode[]>(treeWithWidths)
 
   const displayInfoCard = useCallback((cardId: string) => {
     setIsInfoCardOpen(true)
+    setIsNewInfoCardOpen(false)
     setInfoCardId(cardId)
+  }, [])
+
+  const displayNewInfoCard = useCallback((mother?: LineageNode, father?: LineageNode) => {
+    setIsNewInfoCardOpen(true)
+    setIsInfoCardOpen(false)
+    setParentsOfNewChild({mother, father})
   }, [])
 
   const toggleInfoCard = () => {
     setIsInfoCardOpen(prevState => !prevState)
+  }
+
+  const toggleNewInfoCard = () => {
+    setIsNewInfoCardOpen(prevState => !prevState)
   }
 
   const handleSearch = () => {
@@ -761,11 +758,14 @@ const PlantView = () => {
           </button>
         </div>
       </div>
-
+      
+      
       <InfoCard handleSearch={handleSearch} displayInfoCard={displayInfoCard} isInfoCardOpen={isInfoCardOpen} toggleInfoCard={toggleInfoCard} cardId={cardId}/>
+
+      <NewInfoCard isNewInfoCardOpen={isNewInfoCardOpen} toggleNewInfoCard={toggleNewInfoCard} parentsOfNewChild={parentsOfNewChild} />
       
       {view === "tree" 
-      ? <LineageTree displayInfoCard={displayInfoCard} root={root}/>
+      ? <LineageTree displayInfoCard={displayInfoCard} displayNewInfoCard={displayNewInfoCard} root={root}/>
       : <GridView/>
       }
     </>

@@ -4,6 +4,10 @@ import TreeNode from "./TreeNode";
 import LineageAggregateNode from "./LineageAggregateNode";
 import useInvalidateParentWidthRefCallback from "../hooks/useInvalidateParentWidthCallback";
 import { LineageNode } from "../types";
+import ButtonWithHoverLabel from "../../../components/ButtonWithHoverLabel";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+
 
 
 type Props = {
@@ -14,7 +18,7 @@ type Props = {
   shouldUnmount?: boolean;
   refCallbackFromAggregateNodes?: (node: HTMLUListElement) => void;
   displayInfoCard: (cardId: string) => void
-  
+  displayNewInfoCard: (motherId?: LineageNode, fatherId?: LineageNode) => void
 }
 
 //todo: 
@@ -23,7 +27,7 @@ type Props = {
 // 3. adjust for larger aggregate containers
 // 4. clean up change widths
 
-const LineageGeneration: React.FC<Props> = forwardRef(({children, handleChangeWidths, widthTree, shouldUnmount, refCallbackFromAggregateNodes, displayInfoCard}) => {
+const LineageGeneration: React.FC<Props> = forwardRef(({children, handleChangeWidths, widthTree, shouldUnmount, refCallbackFromAggregateNodes, displayInfoCard, displayNewInfoCard}) => {
   const [shouldActiveNodeChildrenUnmount, setShouldActiveNodeChildrenUnmount] = useState(false);
   const [activeNodeOfAggregates, setActiveNodeOfAggregates] = useState<LineageNode>();
   const [hoveredNode, setHoveredNode] = useState<LineageNode>();
@@ -137,7 +141,7 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, handleChangeWi
   };
 
 
-  let hoverTimeout: number;
+  let hoverTimeout:NodeJS.Timeout;
   const handleHover = (id: string) => {
     if (hoverTimeout) {
       clearTimeout(hoverTimeout)
@@ -156,7 +160,9 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, handleChangeWi
     setHoveredNode(undefined)
   };
 
-
+  const handleNewChild = (mother?:LineageNode, father?:LineageNode) => {
+    displayNewInfoCard(mother, father)
+  }
 
 
   type Props = {
@@ -220,6 +226,20 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, handleChangeWi
                       handleShowSiblings={handleUnfocusAggregateNode}
                     />
                   </div>
+                  {activeNodeOfAggregates?._id && (
+                    <ButtonWithHoverLabel
+                      positioningStyles={LineageTreeStyles.addChildPosition}
+                      label="Add child"
+                    >
+                      <button 
+                        className={LineageTreeStyles.addChild}
+                        onClick={() => handleNewChild({...node, children: []}, node?.children[0]?.father)}
+                        >
+                        <FontAwesomeIcon icon={faPlus} />
+                      </button>
+                    </ButtonWithHoverLabel>
+                  )}
+                 
                 </>
               )}
             )}    
@@ -232,6 +252,8 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, handleChangeWi
                 widthTree={widthTree}
                 children={hoveredNode.children}
                 displayInfoCard={displayInfoCard}
+                displayNewInfoCard={displayNewInfoCard}
+
               /> 
             ) : (
             activeNodeOfAggregates?.children.length ? (
@@ -242,6 +264,8 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, handleChangeWi
                 widthTree={widthTree}
                 children={activeNodeOfAggregates.children}
                 displayInfoCard={displayInfoCard}
+                displayNewInfoCard={displayNewInfoCard}
+
               />
             ) : null)}
           </li>
@@ -251,8 +275,7 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, handleChangeWi
             className={`${LineageTreeStyles.child} fadeInElement`} 
             key={node._id + index} 
           >
-            
-            <div className={LineageTreeStyles.parentsContainer}>
+            <div className={`${LineageTreeStyles.parentsContainer} ${!node.children.length ? LineageTreeStyles.paddingForAddingChildren : ""}`}>
               {/* need to maintain width */}
               {(node?.children[0]?.father) &&
                 <span className={`${LineageTreeStyles.pseudoContainer}`}>
@@ -265,6 +288,17 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, handleChangeWi
                 title ={node.title} 
                 displayInfoCard={displayInfoCard}
               />
+              <ButtonWithHoverLabel
+                positioningStyles={node.children.length ? LineageTreeStyles.addChildPosition : LineageTreeStyles.addFirstChildPosition}
+                label="Add child"
+              >
+                <button 
+                  className={LineageTreeStyles.addChild}
+                  onClick={() => handleNewChild({...node, children:[]}, node?.children[0]?.father)}
+                  >
+                  <FontAwesomeIcon icon={faPlus} />
+                </button>
+              </ButtonWithHoverLabel>
               {(node?.children[0]?.father) &&
                 <span className={`${LineageTreeStyles.fatherContainer} ${`fadeInElement`}`}>
                   <TreeNode 
@@ -284,6 +318,8 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, handleChangeWi
                 widthTree={widthTree}
                 children={node.children} 
                 displayInfoCard={displayInfoCard}
+                displayNewInfoCard={displayNewInfoCard}
+
               /> 
             : null}
           </li>

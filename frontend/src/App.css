@@ -90,8 +90,15 @@ div .fadeOutElement {
   animation: fade-out .5s;
 }
 
+.hide {
+  opacity: 0;
+  position: absolute;
+  left: -999px
+}
 
-
+textarea:focus, input:focus{
+  outline: none;
+}
 
 /* .logo {
   height: 6em;
