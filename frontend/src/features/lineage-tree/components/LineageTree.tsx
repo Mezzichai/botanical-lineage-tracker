@@ -3,7 +3,7 @@ import LineageGeneration from './LineageGeneration'
 
 import {useCallback, useState } from 'react'
 import {  produce } from 'immer'
-import {LineageNode} from '../types'
+import {LineageNode} from '../../../types'
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 
@@ -39,7 +39,7 @@ const LineageTree: React.FC<Props> = ({displayInfoCard, root, displayNewInfoCard
             }) 
           }
           function cascadeWidthUpdates(nodes:LineageNode[]) {
-            if (nodes.length > 2 && nodes[0]._id === ulParentId) {
+            if (nodes.length > 2 && nodes[0].id === ulParentId) {
               amountToAddToParents = newWidth - Math.max(nodes[0].width || oldWidth, 580)
               removeChildrenWidthHistory(nodes)
               nodes[0].width = newWidth

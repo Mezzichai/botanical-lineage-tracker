@@ -2,29 +2,32 @@ import { faCheck, faChevronDown, faChevronRight, faGear } from '@fortawesome/fre
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState } from 'react'
 import SelectedGroupStyles from '../styles/SelectedGroupStyles.module.css'
+import { Group } from '../../../types'
 
 type Props = {
-  selectedGroup: string
+  selectedGroup: Group
+  setGroup: React.Dispatch<React.SetStateAction<Group>>
 }
 
-const SelectedGroup: React.FC<Props> = ({selectedGroup}) => {
+const SelectedGroup: React.FC<Props> = ({selectedGroup, setGroup}) => {
   const [isGroupBeingChanged, setIsGroupBeingChanged] = useState(false)
   const [groupDropDownState, setGroupDropDownState] = useState(false)
-  const [group, setGroup] = useState(selectedGroup)
-  const [groupQuery, setGroupQuery] = useState("")
-  const [groupQueryResult, setGroupQueryResult] = useState(["dwdw", "131f", "advvac", ".[pwopo"])
+  const [groupQuery, setGroupQuery] = useState<string>("")
+  const [groupQueryResult, setGroupQueryResult] = useState<Group[]>([])
   const [hoveredResultIndex, setHoveredResultIndex] = useState(0)
 
 
 
-  const handleGroupSelect = (e) => {
-    setGroup(e.target.dataset.id)
-    setGroupDropDownState(false)
+  const handleGroupSelect = (e: React.MouseEvent<HTMLUListElement>) => {
+    const target = e.target as HTMLElement;
+    if (target.dataset.id) {
+      setGroup({id: target.dataset.id, name: target.textContent || ""});
+      setGroupDropDownState(false);
+    }
   }
+  
 
-
-
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     console.log(e.target);
   
     if (groupDropDownState) {
@@ -60,7 +63,7 @@ const SelectedGroup: React.FC<Props> = ({selectedGroup}) => {
   return (
     <span className={SelectedGroupStyles.group}>
       {!isGroupBeingChanged ? (
-        <span>({group})</span>
+        <span>({selectedGroup.name})</span>
       ) : (
         <div className={SelectedGroupStyles.selectionContainer} tabIndex={0} onKeyDown={(e) => handleKeyDown(e)}>
           <div className={SelectedGroupStyles.groupSelectionControls}>
@@ -68,7 +71,7 @@ const SelectedGroup: React.FC<Props> = ({selectedGroup}) => {
               className={`${SelectedGroupStyles.groupInput} ${groupDropDownState ? SelectedGroupStyles.active : ""}`} 
               onFocus={() => setGroupDropDownState(true)}
             >
-              {group}
+              {groupQuery}
             </div>
             <button className={SelectedGroupStyles.dropDownButton} onClick={() => setGroupDropDownState(prevState => !prevState)}>
               <FontAwesomeIcon icon={groupDropDownState ? faChevronDown : faChevronRight} />
@@ -77,7 +80,7 @@ const SelectedGroup: React.FC<Props> = ({selectedGroup}) => {
           {groupDropDownState &&
             <ul onClick={(e) => handleGroupSelect(e)} >
               {groupQueryResult.map((group, index)=>
-                <li className={hoveredResultIndex === index ? SelectedGroupStyles.activeResult : ""} data-id={group}>{group}</li>
+                <li className={hoveredResultIndex === index ? SelectedGroupStyles.activeResult : ""} data-id={group.id}>{group.name}</li>
               )}
             </ul>
           }

@@ -1,6 +1,8 @@
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import InfoCardStyles from '../styles/InfoCardStyles.module.css'
+import React from 'react';
+import { SubstrateEntry } from '../../../types';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -38,11 +40,17 @@ const pieOptions = {
     position: "right"
   },
 }
-const Substrate = () => {
+
+
+type Props = {
+  substrateValues: SubstrateEntry[], 
+  handleChangeSubstrate: () => void
+}
+const SubstrateChart:React.FC<Props> = ({substrateValues, handleChangeSubstrate}) => {
 
   return <div className={InfoCardStyles.pieChart}>
   <Pie data={data} options={pieOptions}/>
   </div>;
 }
 
-export default Substrate
+export default SubstrateChart

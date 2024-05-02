@@ -117,15 +117,15 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
 
 
 
-.treeContainer ul li .nodeContent:hover > .nodeInfo,
+/* .treeContainer ul li .nodeContent:hover > .nodeInfo,
 .treeContainer ul li > .nodeContent:hover+ul li > .nodeContent > .nodeInfo,
 .treeContainer ul li > .nodeContent:hover+ul li > .nodeContainer > .nodeContent > .nodeInfo,
 
 .treeContainer ul li .nodeContainer:hover~ul li > .nodeContainer > .nodeContent > .nodeInfo,
 .treeContainer ul li .nodeContainer:hover~ul li > .nodeContent > .nodeInfo
 {
-	background-color: #c8e4f8; 
-}
+} */
+
 
 
 
@@ -139,10 +139,26 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
 .treeContainer ul li .nodeContainer:hover~ul li::before,
 .treeContainer ul li .nodeContainer:hover~ul::before,
 .treeContainer ul li .nodeContainer:hover~ul ul::before
-
 {
 	border-color:  #94a0b4 !important;
 }
+
+
+.treeContainer ul li > .parentFocused+ul li::after,
+.treeContainer ul li > .parentFocused+ul li::before,
+.treeContainer ul li > .parentFocused+ul::before,
+.treeContainer ul li > .parentFocused+ul ul::before,
+
+
+.treeContainer ul li .nodeContainer:hover~ul li::after,
+.treeContainer ul li .nodeContainer:hover~ul li::before,
+.treeContainer ul li .nodeContainer:hover~ul::before,
+.treeContainer ul li .nodeContainer:hover~ul ul::before
+{
+	border-color:  #94a0b4 !important;
+}
+
+
 
 
 .nodeContent { 
@@ -162,7 +178,8 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
   z-index: 1;
 }
 
-.parentFocused {
+.parentFocused > .nodeContent .nodeInfo, 
+.parentFocused .nodeContainer .nodeInfo {
 	background-color: #c8e4f8; 
 }
 
@@ -284,6 +301,10 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
   z-index: 997;
   visibility: hidden;
   padding-left: 18px;
+}
+
+.fatherContainer:hover .nodeInfo {
+  background-color: #c8e4f8; 
 }
 
 

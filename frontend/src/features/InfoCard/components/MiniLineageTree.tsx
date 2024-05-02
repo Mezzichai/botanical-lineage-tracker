@@ -4,18 +4,19 @@ import LineageTreeStyles from '../../lineage-tree/styles/LineageTreeStyle.module
 import MiniLineageTreeStyles from '../styles/MiniLineageTreeStyles.module.css'
 import InfoCardStyles from '../styles/InfoCardStyles.module.css'
 import placeholder from '../../../assets/placeholder.jpeg'
-import { LineageNode } from '../../lineage-tree/types'
+import { Parent } from '../../../types'
 
 type Props = {
-  mother?: LineageNode
-  father?: LineageNode
+  mother?: Parent
+  father?: Parent
   child: {
     image: string,
-    title: string
+    name: string
   }
+  handleChangeParents: () => void
 }
 
-const MiniLineageTree:React.FC<Props> = ({mother, father, child}) => {
+const MiniLineageTree:React.FC<Props> = ({mother, father, child, handleChangeParents}) => {
   return (
     <div className={MiniLineageTreeStyles.microTreeContainer}>
       <ul>
@@ -29,8 +30,8 @@ const MiniLineageTree:React.FC<Props> = ({mother, father, child}) => {
               </span>
               <TreeNode 
                 image={mother?.image || placeholder} 
-                _id={mother?._id || ""} 
-                title ={mother?.title || "???"} 
+                _id={mother?.id || ""} 
+                name={mother?.name || "???"} 
               />
             </div>
             <div className={`${LineageTreeStyles.fatherContainer} fadeInElement`}>
@@ -41,8 +42,8 @@ const MiniLineageTree:React.FC<Props> = ({mother, father, child}) => {
               </span>
               <TreeNode 
                 image={father?.image || placeholder} 
-                _id={father?._id || ""} 
-                title ={father?.title || "???"} 
+                _id={father?.id || ""} 
+                name ={father?.name || "???"} 
               />
             </div>
           </div>
@@ -57,7 +58,7 @@ const MiniLineageTree:React.FC<Props> = ({mother, father, child}) => {
                 <TreeNode 
                   image={child?.image || placeholder} 
                   _id={""} 
-                  title ={child?.title || "???"} 
+                  name ={child?.name || "???"} 
                 />
               </div>
             </li>

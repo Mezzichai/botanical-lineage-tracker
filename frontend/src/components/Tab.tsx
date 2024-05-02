@@ -2,7 +2,7 @@ import React from 'react'
 import TabStyles from '../styles/tabStyles.module.css'
 type Props = {
   activeTab: string;
-  handleTabClick: (e: React.MouseEvent) => void;
+  handleTabClick: (e: React.MouseEvent<HTMLSpanElement>) => void;
   tabName: string;
 }
 const Tab:React.FC<Props> = ({activeTab, handleTabClick, tabName}) => {

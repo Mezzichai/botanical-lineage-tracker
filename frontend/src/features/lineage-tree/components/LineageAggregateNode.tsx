@@ -7,17 +7,17 @@ import optionModalStyles from '../../../styles/optionsModalStyles.module.css'
 import image1 from '../../../assets/13947.jpg'
 import ButtonWithHoverLabel from "../../../components/ButtonWithHoverLabel";
 type Child = {
-  title: string;
+  name: string;
   image?: string;
   children: Child[];
   father?: Child
-  _id: string
+  id: string
 }
 
 type Props = {
-  title: string;
+  name: string;
   image?: string;
-  _id: string;
+  id: string;
   handleNodeClick: (id: string, e?: React.MouseEvent) => void;
   handleHover: (id: string) => void;
   handleUnHover: () => void;
@@ -25,12 +25,12 @@ type Props = {
   activeOfAggregatesId?: string;
   siblingCount?: number;
   father?: Child
+
 }
 
 
 
-const LineageAggregateNode: React.FC<Props> = ({title, _id, image, handleNodeClick, handleHover, handleUnHover, handleShowSiblings, activeOfAggregatesId, siblingCount}) => {
-
+const LineageAggregateNode: React.FC<Props> = ({name, id, image, handleNodeClick, handleHover, handleUnHover, handleShowSiblings, activeOfAggregatesId, siblingCount}) => {
   const [optionsModalState, setOptionsModal] = useState<boolean>(false);
   const optionsModalRef = useRef<HTMLDivElement>(null)
 
@@ -61,16 +61,16 @@ const LineageAggregateNode: React.FC<Props> = ({title, _id, image, handleNodeCli
 
   return (
     <div 
-      onMouseEnter={() => handleHover(_id)} 
+      onMouseEnter={() => handleHover(id)} 
       onMouseLeave={handleUnHover} 
-      onClick={(e) => handleNodeClick(_id, e)}
+      onClick={(e) => handleNodeClick(id, e)}
       className={
         `${LineageTreeStyles.nodeContent} 
          ${!activeOfAggregatesId ? LineageTreeStyles.aggregateNode : LineageTreeStyles.activeNodeOfAggregates} 
-        `
+         `
       }
     >
-      {activeOfAggregatesId === _id &&
+      {activeOfAggregatesId === id &&
         <ButtonWithHoverLabel
           positioningStyles={`${LineageTreeStyles.siblingCounter}`}
           label={"show siblings"}
@@ -95,7 +95,7 @@ const LineageAggregateNode: React.FC<Props> = ({title, _id, image, handleNodeCli
       }
       <img src={image || image1} className={LineageTreeStyles.nodeImage}/>
       <span className={`${LineageTreeStyles.nodeInfo}`}>
-        <p className={LineageTreeStyles.nodeTitle}>{title}</p>
+        <p className={LineageTreeStyles.nodeTitle}>{name}</p>
         <button>
           <FontAwesomeIcon icon={faEllipsisVertical} onClick={handleOptionsClick}/>
         </button>

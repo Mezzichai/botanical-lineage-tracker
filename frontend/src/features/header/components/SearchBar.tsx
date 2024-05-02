@@ -1,9 +1,10 @@
-import React, { useState, useRef,} from 'react'
+import { useState, useRef,} from 'react'
 import SearchBarStyles from '../styles/searchBarStyles.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faSliders } from '@fortawesome/free-solid-svg-icons'
-import ButtonWithHoverLabel from './ButtonWithHoverLabel'
+import ButtonWithHoverLabel from '../../../components/ButtonWithHoverLabel'
 import SearchFilters from './SearchFilters'
+import { useParams } from '@tanstack/react-router'
 
 
 const SearchBar = () => {
@@ -12,7 +13,8 @@ const SearchBar = () => {
   const [searchInput, setSearchInput] = useState('');
   const [filters, setFilters] = useState([]);
   const [filtersVisibility, setFilterVisibility] = useState<boolean>(false)
-  
+  const { speciesNameParam } = useParams({ strict: false})
+
   //  const handleConfirmSearch = () => {
   //   if (searchInput !== "") {
   //     const searchParams = new URLSearchParams({
@@ -49,22 +51,23 @@ const SearchBar = () => {
     
       
 
-      <ButtonWithHoverLabel label="filters">
-        <button 
-          aria-label="filters" 
-          className={SearchBarStyles.btn}
-          onClick={toggleFilters}
-        >
-          <FontAwesomeIcon icon={faSliders}/>
-        </button>
-        {filters.length > 0
-        && 
-        <div className={SearchBarStyles.filterCount} onClick={toggleFilters}>
-          {filters.length}
-        </div>
-        } 
-        
-      </ButtonWithHoverLabel>
+      {speciesNameParam && (
+        <ButtonWithHoverLabel label="filters">
+          <button 
+            aria-label="filters" 
+            className={SearchBarStyles.btn}
+            onClick={toggleFilters}
+          >
+            <FontAwesomeIcon icon={faSliders}/>
+          </button>
+          {filters.length > 0
+          && 
+          <div className={SearchBarStyles.filterCount} onClick={toggleFilters}>
+            {filters.length}
+          </div>
+          } 
+        </ButtonWithHoverLabel>
+      )}
       
       {filtersVisibility &&
       <SearchFilters/>}

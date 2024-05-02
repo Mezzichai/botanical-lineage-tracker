@@ -2,17 +2,18 @@
   background: #fff;
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  height: 100%;
   width: 100%;
+  height: 21rem;
+  padding-top: .1rem;
 
 }
 .documentUploader {
   height: 100%;
-  width: 100%;
   border: 2px dashed #4282fe;
   background-color: #f4fbff;
   padding: 10px;
   display: flex;
+  gap: 5px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -83,19 +84,13 @@
 
   
 
-  .uploadedPictures {
-    position: absolute;
-    bottom: 0;
+  .uploads {
     display: flex;
-    align-items: baseline;
-    width: 100%;
-    height: 5rem;
-  }
-
-  .uploadedPictures img {
-    object-fit: cover;
-    height: 5rem;
-    width: 5rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+    position: relative;
   }
 
   input[type="file"] {
@@ -126,31 +121,80 @@
 
 
 
-.imageContainer {
-  position: relative;
+.uploadContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap:5px;
+  background-color: #d3eff7;
+  border-radius: 5px;
+  padding:.4rem;
 }
 
-.removeImage {
-  position: absolute;
+.row {
+  display: flex;
+  gap: 3px;
+  justify-content: center;
+  align-items: center;
+}
+
+.imageInfo {
+  display: flex;
+  flex-direction: row;
+  gap:5px;
+  width: 5.5rem;
+}
+
+.imageInfo img {
+  object-fit: cover;
   border-radius: 25px;
-  font-size: .7rem;
-  background-color: #000000;
-  color: #ffffff;
-  width: 1rem;
-  height: 1rem;
+  max-width: 2rem;
+  min-width: 2rem;
+
+  max-height: 2rem;
+  min-height: 2rem;
+}
+
+.imageInfo span {
+  overflow:hidden;
+  text-overflow:ellipsis; 
+  margin:auto 0;
+  height: min-content;
+  white-space:nowrap;
+  font-size: .9rem;
+}
+
+
+
+
+.removeImage {
+  border-radius: 25px;
+  font-size: .6rem;
+  background-color: transparent;
+  color: #2d2d2d;
+  width: .9rem;
+  height: .9rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  top: -.5rem;
-  right: -.5rem;
-  opacity: 0;
   transition: opacity .3s;
+  padding: .7rem;
 }
 
-.visibleRemoveButton {
-  opacity: 1;
-}
 
 #featuredImage {
-  border: 1px solid rgb(57, 105, 239);
+}
+
+.upload {
+
+}
+
+.maxImagesInfo {
+  position: absolute;
+  align-items: center;
+  color: black;
+  display: flex;
+  gap: .3rem;
+  font-size: .85rem;
+  bottom: -1.3rem;
 }

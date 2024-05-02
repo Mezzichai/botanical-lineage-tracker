@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently \"cd .. && cd backend && npm run dev\" \"wait-on -v http://localhost:3000 && vite\"",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -17,10 +17,12 @@
     "@tanstack/react-router": "^1.28.6",
     "@testing-library/jest-dom": "^6.4.2",
     "chart.js": "^4.4.2",
+    "concurrently": "^8.2.2",
     "immer": "^10.0.4",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
+    "react-quill": "^2.0.0",
     "react-redux": "^9.1.0",
     "react-zoom-pan-pinch": "^3.4.4"
   },

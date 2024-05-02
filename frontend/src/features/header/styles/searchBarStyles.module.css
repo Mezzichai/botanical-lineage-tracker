@@ -5,7 +5,7 @@
   width: 23rem;
   min-width: 7rem;
   position: relative;
-
+  
 }
 
 .search {
@@ -35,7 +35,8 @@
   height:40px;
   background-color: inherit;
   transition: width 0.3s ease;
-  width: 100%;
+  width: 80%;
+  color: white
 }
 
 .input::placeholder {

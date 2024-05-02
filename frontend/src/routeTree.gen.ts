@@ -11,15 +11,15 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as SpeciesNameImport } from './routes/$speciesName'
+import { Route as SpeciesIdImport } from './routes/$speciesId'
 import { Route as IndexImport } from './routes/index'
 import { Route as SpeciesNameGroupsImport } from './routes/$speciesName.groups'
 import { Route as SpeciesNameGroupsGroupNameImport } from './routes/$speciesName.groups.$groupName'
 
 // Create/Update Routes
 
-const SpeciesNameRoute = SpeciesNameImport.update({
-  path: '/$speciesName',
+const SpeciesIdRoute = SpeciesIdImport.update({
+  path: '/$speciesId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -29,8 +29,8 @@ const IndexRoute = IndexImport.update({
 } as any)
 
 const SpeciesNameGroupsRoute = SpeciesNameGroupsImport.update({
-  path: '/groups',
-  getParentRoute: () => SpeciesNameRoute,
+  path: '/$speciesName/groups',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const SpeciesNameGroupsGroupNameRoute = SpeciesNameGroupsGroupNameImport.update(
@@ -48,13 +48,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/$speciesName': {
-      preLoaderRoute: typeof SpeciesNameImport
+    '/$speciesId': {
+      preLoaderRoute: typeof SpeciesIdImport
       parentRoute: typeof rootRoute
     }
     '/$speciesName/groups': {
       preLoaderRoute: typeof SpeciesNameGroupsImport
-      parentRoute: typeof SpeciesNameImport
+      parentRoute: typeof rootRoute
     }
     '/$speciesName/groups/$groupName': {
       preLoaderRoute: typeof SpeciesNameGroupsGroupNameImport
@@ -67,9 +67,8 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
-  SpeciesNameRoute.addChildren([
-    SpeciesNameGroupsRoute.addChildren([SpeciesNameGroupsGroupNameRoute]),
-  ]),
+  SpeciesIdRoute,
+  SpeciesNameGroupsRoute.addChildren([SpeciesNameGroupsGroupNameRoute]),
 ])
 
 /* prettier-ignore-end */

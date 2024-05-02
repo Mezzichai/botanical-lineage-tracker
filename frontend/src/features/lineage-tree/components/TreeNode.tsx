@@ -1,22 +1,25 @@
 import React, { useRef, useState } from "react";
 import LineageTreeStyles from '../styles/LineageTreeStyle.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
+import { faInfo } from '@fortawesome/free-solid-svg-icons'
 import optionModalStyles from '../../../styles/optionsModalStyles.module.css'
 
 import image1 from '../../../assets/13947.jpg'
 
 type Props = {
-  title: string;
+  name: string;
   image?: string;
-  _id: string;
-  displayInfoCard?: (cardId: string) => void
+  id: string;
+  displayInfoCard?: (cardId: string) => void;
+  isParentBeingHovered?: boolean;
+   handleHover?: (_id:string) => void;
+   handleUnHover?: () => void
 
 }
 
 
 
-const TreeNode: React.FC<Props> = ({title, _id, image, displayInfoCard}) => {
+const TreeNode: React.FC<Props> = ({name, id, image, displayInfoCard, isParentBeingHovered, handleHover=() => {}, handleUnHover}) => {
 
   const [optionsModalState, setOptionsModal] = useState<boolean>(false);
   const optionsModalRef = useRef<HTMLDivElement>(null)
@@ -32,9 +35,12 @@ const TreeNode: React.FC<Props> = ({title, _id, image, displayInfoCard}) => {
 
   return (
     <span 
-      onClick={displayInfoCard ? () => displayInfoCard(_id) : () => {}}
+      onClick={displayInfoCard ? () => displayInfoCard(id) : () => {}}
+      onMouseEnter={() => handleHover(id)} 
+      onMouseLeave={handleUnHover} 
       className={
-        `${LineageTreeStyles.nodeContent}`
+        `${LineageTreeStyles.nodeContent} 
+        ${isParentBeingHovered ? LineageTreeStyles.parentFocused : ""}`
       }
     >
       {optionsModalState &&
@@ -42,23 +48,23 @@ const TreeNode: React.FC<Props> = ({title, _id, image, displayInfoCard}) => {
           <button aria-label={`more info`} className={optionModalStyles.modalBtn} onClick={handleMoreInfoClick}>More Info</button>
         </div>
       }
-    {!_id ? (
+    {!id ? (
       <>
         <img src={image || image1} className={LineageTreeStyles.nodeImage}/>
         <span className={`${LineageTreeStyles.nodeInfo} `}>
-          <p className={LineageTreeStyles.nodeTitle}>{title}</p>
-          <button>
-            <FontAwesomeIcon icon={faEllipsisVertical} onClick={handleOptionsClick}/>
-          </button>
+          <p className={LineageTreeStyles.nodeTitle}>{name}</p>
+          <button onClick={() => handleOptionsClick()}>
+          <FontAwesomeIcon icon={faInfo} />
+        </button>
         </span>
       </>
     ) : (
       <>
         <img src={image || image1} className={LineageTreeStyles.nodeImage}/>
         <span className={`${LineageTreeStyles.nodeInfo} `}>
-          <p className={LineageTreeStyles.nodeTitle}>{title}</p>
+          <p className={LineageTreeStyles.nodeTitle}>{name}</p>
           <button>
-            <FontAwesomeIcon icon={faEllipsisVertical} onClick={handleOptionsClick}/>
+            <FontAwesomeIcon icon={faInfo} onClick={handleOptionsClick}/>
           </button>
         </span>
       </>

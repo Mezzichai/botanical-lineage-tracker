@@ -1,20 +1,21 @@
-import { faArrowUpFromBracket, faX } from "@fortawesome/free-solid-svg-icons";
+import { faArrowUpFromBracket } from "@fortawesome/free-solid-svg-icons";
+import InfoCardStyles from '../styles/InfoCardStyles.module.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import DragDropStyles from '../styles/DragDropStyles.module.css'
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
+import Upload from "./Upload";
+import InfoBox from "../../../components/InfoBox";
+
 
 type Props = {
-  setImages: (e) => void
-  images: string[]
+  images: string[];
+  setImages: React.Dispatch<React.SetStateAction<string[]>>;
 }
-const DragAndDrop:React.FC<Props> = ({
-  images,
-  setImages
-}) => {
 
-  const [hoveredId, setHoveredId] = useState("")
-
-  const readFile = (file) => {
+const DragAndDrop:React.FC<Props> = ({images, setImages}) => {
+  const [info, setInfo] = useState("")
+  
+  const readFile = (file: File) => {
     const reader = new FileReader()
     return new Promise((resolve, reject) => {
       reader.onload = () => resolve(reader.result);
@@ -23,8 +24,12 @@ const DragAndDrop:React.FC<Props> = ({
     });
   };
 
-  const handleManualUpload = async (e) => {
-    const files = Array.from(e.target.files).slice(0, 5);
+
+  const handleManualUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files.length > 5) {
+      setInfo("Max images reached")
+    }
+    const files = Array.from(event.target.files).slice(0, 5);
     const images = await Promise.all(files.map(async (file) => {
       try {
         const imageDataUrl = await readFile(file);
@@ -36,12 +41,17 @@ const DragAndDrop:React.FC<Props> = ({
     setImages(images)
   };
 
-  const handleDrop = async (event) => {
+  const handleDrop = async (event: React.DragEvent) => {
     event.preventDefault();
-    const droppedFiles = event.dataTransfer.files;
+    let droppedFiles = event.dataTransfer.files;
+    if (droppedFiles.length + images.length > 5) {
+      const remainingSpots = 5 - images.length;
+      droppedFiles = Array.from(droppedFiles).slice(0, remainingSpots)
+      setInfo("Max images reached")
+    }
     if (droppedFiles.length > 0) {
       const newFiles = Array.from(droppedFiles).slice(0, 5);
-      const images = await Promise.all(newFiles.map(async (file) => {
+      const newImages = await Promise.all(newFiles.map(async (file) => {
         try {
           const imageDataUrl = await readFile(file);
           return imageDataUrl
@@ -49,31 +59,24 @@ const DragAndDrop:React.FC<Props> = ({
           console.error("Error reading file:", error);
         }
       }))
-      setImages(prevFiles => [...prevFiles, ...images]);
+      
+      const allImages = images ? [...images, ...newImages] : [...newImages]
+      setImages(allImages);
     }
   };
 
-  const handleHover = (e) => {
-    setHoveredId(e.currentTarget.id)
-  }
-
-  const handleUnhover = () => {
-    setHoveredId("")
-  }
 
   const handleRemoveFile = (index: number) => {
-    setImages(prevFiles => prevFiles.filter((_, i) => i !== index));
+    setImages((images.filter((_, i) => i !== index)));
+    setInfo("")
   };
 
-  // useEffect(() => {
-  //   onFilesSelected(files);
-  // }, [files, onFilesSelected]);
 
   return (
     <div className={DragDropStyles.dragDrop}>
       <div
         className={`${DragDropStyles.documentUploader} ${
-          images.length > 0 ? `${DragDropStyles.uploadBox} active` : `${DragDropStyles.uploadBox}`
+          images?.length > 0 ? `${DragDropStyles.uploadBox} active` : `${DragDropStyles.uploadBox}`
         }`}
         onDrop={handleDrop}
         onDragOver={(event) => event.preventDefault()}
@@ -98,18 +101,21 @@ const DragAndDrop:React.FC<Props> = ({
           </label>
         </>
 
-        {images.length > 0 && (
-
-          //APPLY SAME PATTERN TO AGGREGATE NODE WITH HOVERING
-          <div className={DragDropStyles.uploadedPictures} >
-            {images.map((image, index) => (
-              <div className={DragDropStyles.imageContainer} id={`image ${index}`} onMouseEnter={(e)=>handleHover(e)} onMouseLeave={handleUnhover}>
-                <button onClick={() => handleRemoveFile(index)} className={`${DragDropStyles.removeImage} ${hoveredId === `image ${index}` ? DragDropStyles.visibleRemoveButton : ""}`}>
-                  <FontAwesomeIcon icon={faX}/>
-                </button>
-                <img id={index === 0 ? DragDropStyles.featuredImage : ""} src={image} alt="profile" />
-              </div>
-            ))}
+        {images?.length > 0 && (
+          <div className={DragDropStyles.uploads}>
+            <div className={DragDropStyles.row}>
+              {images.slice(0,3).map((image, index) => (
+              <Upload handleRemoveFile={handleRemoveFile} index={index} image={image}/>
+              ))}
+            </div>
+            <div className={DragDropStyles.row}>
+              {images.slice(3).map((image, index) => (
+              <Upload handleRemoveFile={handleRemoveFile} index={index} image={image} key={index}/>
+              ))}
+            </div>
+            {info && 
+              <InfoBox message={info} styles={DragDropStyles.maxImagesInfo}/>
+            }
           </div>
         )}
       </div>
