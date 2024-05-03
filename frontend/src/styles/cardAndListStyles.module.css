@@ -1,9 +1,9 @@
-.homeContainer {
+.listContainer {
   padding-top: 3.8rem;
   height: 100vh;
 }
 
-.speciesContainer {
+.listSubContainer {
   padding: .7rem;
   display: flex;
   justify-content: center;
@@ -13,7 +13,7 @@
 }
 
 
-.speciesCard {
+.card {
   flex-direction: column;
   width: auto;
   height: min-content;
@@ -22,15 +22,13 @@
   border: 1px solid black;
   overflow: hidden;
   border-radius: 5px;
-  
 }
 
-
-.speciesCard svg {
+.card svg {
   font-size: .7rem;
 }
 
-.speciesCard button {
+.card button {
   border-radius: 25px;
   padding:.5rem;
   width: 1.5rem;
@@ -41,21 +39,49 @@
   justify-content: center;
 }
 
-.speciesCard img {
+.card img {
   width: min-content;
   object-fit: cover;
   width: 300px;
   height: 250px;
 }
 
-.speciesCardInfo {
+.cardInfo {
   display: flex;
   justify-content: space-between;
   background-color: #f0f0f0;
   padding: 1rem 1rem;
 }
 
-.speciesCardInfo p {
+.cardInfo p {
   font-size: 1.1rem;
 }
 
+
+
+.addItemContainer {
+  width: 20rem;
+  height: 20rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #f0f0f0;
+  height: 308px;
+  width: 302px;
+}
+
+.addBtn {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  font-size: 1.5rem;
+  font-weight: 500;
+  background-color: inherit;
+  
+}
+
+.addBtn svg {
+  height: 5rem;
+  width: 5rem;
+}

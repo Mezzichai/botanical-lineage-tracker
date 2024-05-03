@@ -1,30 +1,30 @@
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import LineageTree from '../features/lineage-tree/components/LineageTree'
 import GridView from '../features/grid-view/components/GridView'
-import InfoCard from '../features/InfoCard/components/InfoCard'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTree } from '@fortawesome/free-solid-svg-icons'
 import plantViewStyles from '../styles/plantViewStyles.module.css'
 import image1 from '../assets/13947.jpg'
 import image3 from '../assets/R.jpg'
 import { getNewId } from '../utils/keyGen'
-import NewInfoCard from '../features/InfoCard/components/InfoCard'
-import { LineageNode } from '../types'
+import ListView from '../components/ListView'
+import { useDispatch } from 'react-redux'
+import { toggleInfoCardOn } from '../features/InfoCard/InfoCardSlice'
 
 const root = [
   {
   name: "parent",
-  image: image1,
+  images: [image1],
   id: getNewId(),
   children: [
 
     {
       name: "child 2",
-      image: image3,
+      images: [image3],
       id: getNewId(),
       father: {
         name: "child 2",
-        image: image1,
+        images: [image1],
         id: getNewId(),
         children: [
           
@@ -33,11 +33,11 @@ const root = [
       children: [
         {
           name: "child 3",
-          image: image3,
+          images: [image3],
           id: getNewId(),
           father: {
             name: "child 2",
-            image: image1,
+            images: [image1],
             id: getNewId(),
             children: [
               
@@ -46,11 +46,11 @@ const root = [
           children: [
             {
               name: "child 2",
-              image: image3,
+              images: [image3],
               id: getNewId(),
               father: {
                 name: "child 2",
-                image: image1,
+                images: [image1],
                 id: getNewId(),
                 children: [
                   
@@ -61,11 +61,11 @@ const root = [
               ]
             }, {
               name: "child 2",
-              image: image3,
+              images: [image3],
               id: getNewId(),
               father: {
                 name: "child 2",
-                image: image1,
+                images: [image1],
                 id: getNewId(),
                 children: [
                   
@@ -74,11 +74,11 @@ const root = [
               children: [
                 {
                   name: "child 2",
-                  image: image3,
+                  images: [image3],
                   id: getNewId(),
                   father: {
                     name: "child 2",
-                    image: image1,
+                    images: [image1],
                     id: getNewId(),
                     children: [
                       
@@ -90,11 +90,11 @@ const root = [
                 },
                 {
                   name: "child 2",
-                  image: image3,
+                  images: [image3],
                   id: getNewId(),
                   father: {
                     name: "child 2",
-                    image: image1,
+                    images: [image1],
                     id: getNewId(),
                     children: [
                       
@@ -107,11 +107,11 @@ const root = [
               ]
             }, {
               name: "child 2",
-              image: image3,
+              images: [image3],
               id: getNewId(),
               father: {
                 name: "child 2",
-                image: image1,
+                images: [image1],
                 id: getNewId(),
                 children: [
                   
@@ -120,11 +120,11 @@ const root = [
               children: [
                 {
                   name: "child 2",
-                  image: image3,
+                  images: [image3],
                   id: getNewId(),
                   father: {
                     name: "child 2",
-                    image: image1,
+                    images: [image1],
                     id: getNewId(),
                     children: [
                       
@@ -136,11 +136,11 @@ const root = [
                 },
                 {
                   name: "child 2",
-                  image: image3,
+                  images: [image3],
                   id: getNewId(),
                   father: {
                     name: "child 2",
-                    image: image1,
+                    images: [image1],
                     id: getNewId(),
                     children: [
                       
@@ -151,11 +151,11 @@ const root = [
                   ]
                 }, {
                   name: "child 2",
-                  image: image3,
+                  images: [image3],
                   id: getNewId(),
                   father: {
                     name: "child 2",
-                    image: image1,
+                    images: [image1],
                     id: getNewId(),
                     children: [
                       
@@ -167,11 +167,11 @@ const root = [
                 },
                 {
                   name: "child 2",
-                  image: image3,
+                  images: [image3],
                   id: getNewId(),
                   father: {
                     name: "child 2",
-                    image: image1,
+                    images: [image1],
                     id: getNewId(),
                     children: [
                       
@@ -187,11 +187,11 @@ const root = [
         },
         {
           name: "child 2",
-          image: image3,
+          images: [image3],
           id: getNewId(),
           father: {
             name: "child 2",
-            image: image1,
+            images: [image1],
             id: getNewId(),
             children: [
               
@@ -200,11 +200,11 @@ const root = [
           children: [
             {
               name: "child 2",
-              image: image3,
+              images: [image3],
               id: getNewId(),
               father: {
                 name: "child 2",
-                image: image1,
+                images: [image1],
                 id: getNewId(),
                 children: [
                   
@@ -213,11 +213,11 @@ const root = [
               children: [
                 {
                   name: "child 2",
-                  image: image3,
+                  images: [image3],
                   id: getNewId(),
                   father: {
                     name: "child 2",
-                    image: image1,
+                    images: [image1],
                     id: getNewId(),
                     children: [
                       
@@ -228,11 +228,11 @@ const root = [
                   ]
                 },        {
                   name: "child 2",
-                  image: image3,
+                  images: [image3],
                   id: getNewId(),
                   father: {
                     name: "child 2",
-                    image: image1,
+                    images: [image1],
                     id: getNewId(),
                     children: [
                       
@@ -244,11 +244,11 @@ const root = [
                 },
                 {
                   name: "child 2",
-                  image: image3,
+                  images: [image3],
                   id: getNewId(),
                   father: {
                     name: "child 2",
-                    image: image1,
+                    images: [image1],
                     id: getNewId(),
                     children: [
                       
@@ -263,11 +263,11 @@ const root = [
             
             {
               name: "child 2",
-              image: image3,
+              images: [image3],
               id: getNewId(),
               father: {
                 name: "child 2",
-                image: image1,
+                images: [image1],
                 id: getNewId(),
                 children: [
                   
@@ -276,11 +276,11 @@ const root = [
               children: [
                 {
                   name: "child 2",
-                  image: image3,
+                  images: [image3],
                   id: getNewId(),
                   father: {
                     name: "child 2",
-                    image: image1,
+                    images: [image1],
                     id: getNewId(),
                     children: [
                       
@@ -292,11 +292,11 @@ const root = [
                 },
                 {
                   name: "child 2",
-                  image: image3,
+                  images: [image3],
                   id: getNewId(),
                   father: {
                     name: "child 2",
-                    image: image1,
+                    images: [image1],
                     id: getNewId(),
                     children: [
                       
@@ -308,11 +308,11 @@ const root = [
                 },
                 {
                   name: "child 2",
-                  image: image3,
+                  images: [image3],
                   id: getNewId(),
                   father: {
                     name: "child 2",
-                    image: image1,
+                    images: [image1],
                     id: getNewId(),
                     children: [
                       
@@ -321,11 +321,11 @@ const root = [
                   children: [
                     {
                       name: "child 2",
-                      image: image3,
+                      images: [image3],
                       id: getNewId(),
                       father: {
                         name: "child 2",
-                        image: image1,
+                        images: [image1],
                         id: getNewId(),
                         children: [
                           
@@ -336,11 +336,11 @@ const root = [
                       ]
                     },  {
                       name: "child 2",
-                      image: image3,
+                      images: [image3],
                       id: getNewId(),
                       father: {
                         name: "child 2",
-                        image: image1,
+                        images: [image1],
                         id: getNewId(),
                         children: [
                           
@@ -349,11 +349,11 @@ const root = [
                       children: [
                         {
                           name: "child 2",
-                          image: image3,
+                          images: [image3],
                           id: getNewId(),
                           father: {
                             name: "child 2",
-                            image: image1,
+                            images: [image1],
                             id: getNewId(),
                             children: [
                               
@@ -364,11 +364,11 @@ const root = [
                           ]
                         }, {
                           name: "child 2",
-                          image: image3,
+                          images: [image3],
                           id: getNewId(),
                           father: {
                             name: "child 2",
-                            image: image1,
+                            images: [image1],
                             id: getNewId(),
                             children: [
                               
@@ -379,11 +379,11 @@ const root = [
                           ]
                         }, {
                           name: "child 2",
-                          image: image3,
+                          images: [image3],
                           id: getNewId(),
                           father: {
                             name: "child 2",
-                            image: image1,
+                            images: [image1],
                             id: getNewId(),
                             children: [
                               
@@ -392,11 +392,11 @@ const root = [
                           children: [
                             {
                               name: "child 2",
-                              image: image3,
+                              images: [image3],
                               id: getNewId(),
                               father: {
                                 name: "child 2",
-                                image: image1,
+                                images: [image1],
                                 id: getNewId(),
                                 children: [
                                   
@@ -407,11 +407,11 @@ const root = [
                               ]
                             }, {
                               name: "child 2",
-                              image: image3,
+                              images: [image3],
                               id: getNewId(),
                               father: {
                                 name: "child 2",
-                                image: image1,
+                                images: [image1],
                                 id: getNewId(),
                                 children: [
                                   
@@ -420,11 +420,11 @@ const root = [
                               children: [
                                 {
                                   name: "child 2",
-                                  image: image3,
+                                  images: [image3],
                                   id: getNewId(),
                                   father: {
                                     name: "child 2",
-                                    image: image1,
+                                    images: [image1],
                                     id: getNewId(),
                                     children: [
                                       
@@ -435,11 +435,11 @@ const root = [
                                   ]
                                 }, {
                                   name: "child 2",
-                                  image: image3,
+                                  images: [image3],
                                   id: getNewId(),
                                   father: {
                                     name: "child 2",
-                                    image: image1,
+                                    images: [image1],
                                     id: getNewId(),
                                     children: [
                                       
@@ -450,11 +450,11 @@ const root = [
                                   ]
                                 }, {
                                   name: "child 2",
-                                  image: image3,
+                                  images: [image3],
                                   id: getNewId(),
                                   father: {
                                     name: "child 2",
-                                    image: image1,
+                                    images: [image1],
                                     id: getNewId(),
                                     children: [
                                       
@@ -465,11 +465,11 @@ const root = [
                                   ]
                                 }, {
                                   name: "child 2",
-                                  image: image3,
+                                  images: [image3],
                                   id: getNewId(),
                                   father: {
                                     name: "child 2",
-                                    image: image1,
+                                    images: [image1],
                                     id: getNewId(),
                                     children: [
                                       
@@ -478,11 +478,11 @@ const root = [
                                   children: [
                                     {
                                       name: "child 2",
-                                      image: image3,
+                                      images: [image3],
                                       id: getNewId(),
                                       father: {
                                         name: "child 2",
-                                        image: image1,
+                                        images: [image1],
                                         id: getNewId(),
                                         children: [
                                           
@@ -491,11 +491,11 @@ const root = [
                                       children: [
                                         {
                                           name: "child 2",
-                                          image: image3,
+                                          images: [image3],
                                           id: getNewId(),
                                           father: {
                                             name: "child 2",
-                                            image: image1,
+                                            images: [image1],
                                             id: getNewId(),
                                             children: [
                                               
@@ -506,11 +506,11 @@ const root = [
                                           ]
                                         }, {
                                           name: "child 2",
-                                          image: image3,
+                                          images: [image3],
                                           id: getNewId(),
                                           father: {
                                             name: "child 2",
-                                            image: image1,
+                                            images: [image1],
                                             id: getNewId(),
                                             children: [
                                               
@@ -538,11 +538,11 @@ const root = [
         },
         {
           name: "child 2",
-          image: image3,
+          images: [image3],
           id: getNewId(),
           father: {
             name: "child 2",
-            image: image1,
+            images: [image1],
             id: getNewId(),
             children: [
               
@@ -551,11 +551,11 @@ const root = [
           children: [
             {
               name: "child 2",
-              image: image3,
+              images: [image3],
               id: getNewId(),
               father: {
                 name: "child 2",
-                image: image1,
+                images: [image1],
                 id: getNewId(),
                 children: [
                   
@@ -566,11 +566,11 @@ const root = [
               ]
             }, {
               name: "child 2",
-              image: image3,
+              images: [image3],
               id: getNewId(),
               father: {
                 name: "child 2",
-                image: image1,
+                images: [image1],
                 id: getNewId(),
                 children: [
                   
@@ -579,11 +579,11 @@ const root = [
               children: [
                 {
                   name: "child 2",
-                  image: image3,
+                  images: [image3],
                   id: getNewId(),
                   father: {
                     name: "child 2",
-                    image: image1,
+                    images: [image1],
                     id: getNewId(),
                     children: [
                       
@@ -596,11 +596,11 @@ const root = [
               ]
             }, {
               name: "child 2",
-              image: image3,
+              images: [image3],
               id: getNewId(),
               father: {
                 name: "child 2",
-                image: image1,
+                images: [image1],
                 id: getNewId(),
                 children: [
                   
@@ -609,11 +609,11 @@ const root = [
               children: [
                 {
                   name: "child 2",
-                  image: image3,
+                  images: [image3],
                   id: getNewId(),
                   father: {
                     name: "child 2",
-                    image: image1,
+                    images: [image1],
                     id: getNewId(),
                     children: [
                       
@@ -624,11 +624,11 @@ const root = [
                   ]
                 }, {
                   name: "child 2",
-                  image: image3,
+                  images: [image3],
                   id: getNewId(),
                   father: {
                     name: "child 2",
-                    image: image1,
+                    images: [image1],
                     id: getNewId(),
                     children: [
                       
@@ -646,11 +646,11 @@ const root = [
     },
     {
       name: "child 3",
-      image: image3,
+      images: [image3],
       id: getNewId(),
       father: {
         name: "child 2",
-        image: image1,
+        images: [image1],
         id: getNewId(),
         children: [
           
@@ -659,11 +659,11 @@ const root = [
       children: [
         {
           name: "child 3",
-          image: image3,
+          images: [image3],
           id: getNewId(),
           father: {
             name: "child 2",
-            image: image1,
+            images: [image1],
             id: getNewId(),
             children: [
               
@@ -673,11 +673,11 @@ const root = [
           ]
         },   {
           name: "child 3",
-          image: image3,
+          images: [image3],
           id: getNewId(),
           father: {
             name: "child 2",
-            image: image1,
+            images: [image1],
             id: getNewId(),
             children: []
           },
@@ -691,12 +691,20 @@ const root = [
 
 
 const PlantView = () => {
+  const dispatch = useDispatch()
   const [view, setView] = useState<"tree" | "grid">("tree")
 
   const handleChangeView = (view: "grid" | "tree") => {
     setView(view)
   }
+  
+  const handleNewIndividual = () => {
+    dispatch(toggleInfoCardOn({catagory: "individual"}))
+  }
 
+
+  const handleIndividualClick = () => {
+  }
   return (
     <>
       <div className={plantViewStyles.viewInfo}>
@@ -728,7 +736,7 @@ const PlantView = () => {
       
       {view === "tree" 
       ? <LineageTree root={root}/>
-      : <GridView/>
+      : <ListView catagory='individual' handleNew={handleNewIndividual} handleItemClick={handleIndividualClick}/>
       }
     </>
   )

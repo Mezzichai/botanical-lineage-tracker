@@ -5,22 +5,23 @@ import {useCallback, useState } from 'react'
 import {  produce } from 'immer'
 import {LineageNode} from '../../../types'
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { useDispatch } from 'react-redux'
+import { toggleInfoCardOn } from '../../InfoCard/InfoCardSlice'
 
 
 
 
 type Props = {
-  displayInfoCard: (cardId: string) => void
-  displayNewInfoCard: (motherId?: LineageNode, fatherId?: LineageNode) => void
-
   root: LineageNode[]
-
 }
 
-const LineageTree: React.FC<Props> = ({displayInfoCard, root, displayNewInfoCard}) => {
+const LineageTree: React.FC<Props> = ({root}) => {
   const [widthTree, setWidthTree] = useState<LineageNode[]>(root)
+
+
+  const dispatch = useDispatch()
+
   const handleChangeWidths = useCallback((newWidth: number, ulParentId: string, oldWidth: number) => {
-   
     setWidthTree(
         produce(prevState => {
           let amountToAddToParents: number;
@@ -84,12 +85,20 @@ const LineageTree: React.FC<Props> = ({displayInfoCard, root, displayNewInfoCard
     )
   }, [])
 
+  const displayInfoCard = (id: string) => {
+    dispatch(toggleInfoCardOn({itemId: id, catagory: "individual"}))
+  }
+
+  const displayNewInfoCard = (mother: LineageNode | undefined, father: LineageNode | undefined) => {
+    dispatch(toggleInfoCardOn({mother, father, catagory: "individual", isInfoCardNewOrEditing: true}))
+  }
 
   return (
     <TransformWrapper
       initialScale={1}
       maxScale={2}
       minScale={.7}
+      centerOnInit={true}
       minPositionX={-1000}
       maxPositionX={1000}
     >
