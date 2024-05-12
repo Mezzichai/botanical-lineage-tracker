@@ -25,7 +25,7 @@ const speciesStorage = multerS3({
     cb(null, { fieldName: file.originalname });
   },
   key: async function (req, file, cb) {
-    const speciesId = req.params.speciesId;
+    const speciesId = req.params.speciesId || req.params.nextId;;
     cb(null, `${speciesId}/${Date.now() + Math.floor(Math.random()*10000)}.jpeg`);
   },
 });
@@ -36,11 +36,11 @@ const individualStorage = multerS3({
   metadata: function (req, file, cb) {
     cb(null, { fieldName: file.fieldname });
   },
-  key: function (req, file, cb) {
-    const speciesName = req.body.speciesName;
-    const individualName = req.body.individualName;
-    cb(null, `${speciesName}/${individualName}/${file.fieldname}`);
-  }
+  key: async function (req, file, cb) {
+    const speciesId = req.params.speciesId;
+    const individualId = req.params.individualId || req.params.nextId;
+    cb(null, `${speciesId}/${individualId}${Date.now() + Math.floor(Math.random()*10000)}.jpeg`);
+  },
 });
 
 const groupStorage = multerS3({

@@ -18,12 +18,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 1.2rem;
 }
 
-.microTreeContainer img{
+/* .microTreeContainer img{
   height: 7rem;
   width: 9.6rem;
-}
+} */
 
 .microTreeContainer ul {
   gap: 20px;
@@ -115,7 +116,6 @@
 	border-bottom: 1px solid #ccc;
   width: 1%;
   height: 20px;
-
   border-left: 1px solid #ccc;
   border-bottom-left-radius: 5px;
 }

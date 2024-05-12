@@ -23,9 +23,10 @@ type Props = {
   setGroup: React.Dispatch<React.SetStateAction<Group>>
   setImages: React.Dispatch<React.SetStateAction<string[]>>
   species?: {name: string, id: string}
+  handleGenerateIndividualName: () => void
 }
-const CatagorySpecificInfo:React.FC<Props> = ({name, images, setImages, group, setGroup, handleNameChange, isNameValid, catagory, species}) => {
-  const [nameFocusState, setnameFocus] = useState(true);
+const CatagorySpecificInfo:React.FC<Props> = ({name, images, setImages, group, setGroup, handleNameChange, isNameValid, catagory, species, handleGenerateIndividualName}) => {
+  const [nameFocusState, setnameFocus] = useState(false);
   const isNewOrEditing = useSelector(selectIsInfoNewOrEditing)
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -37,12 +38,6 @@ const CatagorySpecificInfo:React.FC<Props> = ({name, images, setImages, group, s
   }
 
   const nameRef = useRef<HTMLInputElement | null>(null);
-  const focusNameRef = (element: HTMLInputElement | null) => {
-    if (!nameRef.current && element) {
-      element.focus()
-      nameRef.current = element
-    }
-  };
   
   useClickOutside(inputRef, clickOutsideInput)
 
@@ -62,11 +57,6 @@ const CatagorySpecificInfo:React.FC<Props> = ({name, images, setImages, group, s
   } 
 
 
-  const autoGenerateName = () => {
-    // const name = await generateName(species?.id)
-    return "dw"
-  } 
-
   return (
     <>
       {isNewOrEditing ? (
@@ -83,7 +73,7 @@ const CatagorySpecificInfo:React.FC<Props> = ({name, images, setImages, group, s
               </label>
               <input 
                 id="name"
-                ref={focusNameRef}
+                ref={nameRef}
                 type='text'
                 aria-label={`name-input`}
                 value={name} 
@@ -94,22 +84,22 @@ const CatagorySpecificInfo:React.FC<Props> = ({name, images, setImages, group, s
               {(!isNameValid && document.activeElement === nameRef.current) &&
                 <InfoBox message='label title must be 1-50 characters' styles={InfoCardStyles.instructions} />
               }
-              <button className={InfoCardStyles.editNameBtn} onClick={nameFocusState ? handlenameBlur : handlenameFocus}>
-                <FontAwesomeIcon icon={nameFocusState ? faCheck : faPencil}/>
-              </button>
               {catagory === "individual" && (
                 <ButtonWithHoverLabel label='Generate Name'>
-                  <button className={InfoCardStyles.generateNameBtn} onClick={() => handleNameChange(autoGenerateName())}>
+                  <button className={InfoCardStyles.generateNameBtn} onClick={handleGenerateIndividualName}>
                     <FontAwesomeIcon icon={faMagicWandSparkles}/>
                   </button>
                 </ButtonWithHoverLabel>
               )}
+              <button aria-label={"edit name"} className={InfoCardStyles.editNameBtn} onClick={nameFocusState ? handlenameBlur : handlenameFocus}>
+                <FontAwesomeIcon icon={nameFocusState ? faCheck : faPencil}/>
+              </button>
             </div>
             {catagory === "individual" && (
               <SelectedGroup setGroup={setGroup} selectedGroup={group}/>
             )} 
             {(catagory === "individual" || catagory === "group") && (
-              <h2>{name}</h2>
+              <h2>{species?.name}</h2>
             )}
           </div>
         </>
@@ -127,11 +117,14 @@ const CatagorySpecificInfo:React.FC<Props> = ({name, images, setImages, group, s
               <>
                 <h2>{name}</h2>
                 <h3>{species.name}</h3>
-                <span className={InfoCardStyles.group}>
+                {group?.name && (
+                  <span className={InfoCardStyles.group}>
                   (
                     <span>{group.name}</span>
                   )
-                </span>
+                  </span>
+                )}
+               
               </>
             ) : catagory === "group" && species?.name ? (
               <>

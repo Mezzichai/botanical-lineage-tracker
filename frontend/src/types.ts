@@ -12,10 +12,15 @@ export type LineageNode = {
   widthUpdateHistory?: WidthHistoryRecord[]
   descriptionHTML: string
   descriptionDelta: string
-  father?: LineageNode;
-  mother?: LineageNode;
-  water_schedule: number[];
-  substrate: number[]
+  mates: LeanLineageNode[]
+  water_values: number[];
+  substrate_values: number[]
+};
+
+export type LeanLineageNode = {
+  name: string;
+  images: string[];
+  id: string;
 };
 
 export type Species = {

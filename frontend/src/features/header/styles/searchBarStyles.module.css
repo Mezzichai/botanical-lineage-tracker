@@ -11,7 +11,7 @@
 .search {
   display: flex;
   align-items: center;
-  width: 100%;
+  width: 23rem;
   z-index: 999;
   background-color: rgb(20, 22, 23);
   border-radius: 25px;
@@ -19,7 +19,6 @@
 
 .btn {
   border-radius: 25px;
-
   padding: .3rem;
   font-size: 1.2rem;  
   margin: 5px;
@@ -30,12 +29,14 @@
 
 .input {
   border: none;
-  padding: 0 0 0 10px; 
+  padding: 0 0 0 .5rem; 
   font-size: 15px;
   height:40px;
   background-color: inherit;
   transition: width 0.3s ease;
   width: 80%;
+
+  min-width: 10%;
   color: white
 }
 
@@ -153,14 +154,14 @@
 
   .filters {
     width: max-content;
-    position: absolute;
+    position: fixed;
     border: 1px solid rgb(196, 196, 196);
     background-color: rgb(235, 235, 235);
     top: 3.3rem;
     right: 0;
     padding: .4rem;
-
     border-radius: 2px;
+    z-index: 999;
     display: flex;
   }
 

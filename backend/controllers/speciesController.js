@@ -4,7 +4,7 @@ const createDOMPurify = require('dompurify');
 const { JSDOM } = require('jsdom');
 const deleteFolderAndContents = require("../utils/deleteFolderAndContents");
 const isJsonString = require("../utils/isJsonString");
-const deleteAllExcept = require("../utils/deleteAllExcept");
+const generateIndividualName = require("../utils/generateIndividualName");
 const window = new JSDOM('').window;
 const DOMPurify = createDOMPurify(window);
 
@@ -27,39 +27,149 @@ const getSpecificSpeciesInfo = tryCatch(async function(req, res, next) {
   res.send(speciesResult.rows[0]).status(200)
 })
 
+
+
 const getIndividualInfo = tryCatch(async function(req, res, next) {
   const GET_INDIVIDUAL = `SELECT * 
                             FROM individual_plant
                             WHERE id = $1`;  
-                        
-  const individualResult = await makeQuery(GET_INDIVIDUAL, req.params.individualId)
-  res.send(individualResult.rows).status(200)
 
+  const GET_NEW_INDIVIDUAL_DEFAULTS_SPECIES = `SELECT 
+                                                species.name AS species_name, 
+                                                species.id AS species_id, 
+                                                species.substrate_values AS species_substrate_values, 
+                                                species.light_values AS species_light_values, 
+                                                species.water_values AS species_water_values, 
+                                                COUNT(individual_plant.id) AS individuals_count
+                                                FROM species
+                                              LEFT JOIN individual_plant ON individual_plant.species_id = species_id
+                                              WHERE species.id = $1
+                                              GROUP BY
+                                                species.name, 
+                                                species.id, 
+                                                species.substrate_values, 
+                                                species.light_values, 
+                                                species.water_values`;
+
+  const GET_NEW_INDIVIDUAL_DEFAULTS_GROUP_AND_SPECIES = `SELECT 
+                                                          species_group.name AS group_name, 
+                                                          species_group.id AS group_id, 
+                                                          species_group.substrate_values AS group_substrate_values, 
+                                                          species_group.light_values AS group_light_values, 
+                                                          species_group.water_values AS group_water_values,
+                                                          species.name AS species_name, 
+                                                          species.id AS species_id, 
+                                                          species.substrate_values AS species_substrate_values, 
+                                                          species.light_values AS species_light_values, 
+                                                          species.water_values AS species_water_values,
+                                                          COUNT(individual_plant.id) AS individuals_count
+                                                        FROM species_group
+                                                        LEFT JOIN species ON species.id = species_group.species_id
+                                                        LEFT JOIN individual_plant ON individual_plant.species_id = species.id
+                                                        WHERE species_group.id = $1
+                                                        GROUP BY 
+                                                          species_group.name, 
+                                                          species_group.id, 
+                                                          species_group.substrate_values, 
+                                                          species_group.light_values, 
+                                                          species_group.water_values,
+                                                          species.name, 
+                                                          species.id, 
+                                                          species.substrate_values, 
+                                                          species.light_values, 
+                                                          species.water_values`;  
+  
+  if (req.params.individualId === "undefined") {
+    if (req.params.groupId === "undefined") {
+      const speciesDefaultsResult = await makeQuery(GET_NEW_INDIVIDUAL_DEFAULTS_SPECIES, req.params.speciesId)
+      const generatedName = generateIndividualName(speciesDefaultsResult.rows[0].species_name, speciesDefaultsResult.rows[0].species_id, Number(speciesDefaultsResult.rows[0].individuals_count) || 0)
+      speciesDefaultsResult.rows[0].name = generatedName
+      res.send(speciesDefaultsResult.rows[0]).status(200)
+    } else {
+      const groupAndSpeciesDefaultsResult = await makeQuery(GET_NEW_INDIVIDUAL_DEFAULTS_GROUP_AND_SPECIES, req.params.groupId)
+      const generatedName = generateIndividualName(groupAndSpeciesDefaultsResult.rows[0].species_name, Number(groupAndSpeciesDefaultsResult.rows[0].individuals_count) || 0)
+      groupAndSpeciesDefaultsResult.rows[0].name = generatedName
+      res.send(groupAndSpeciesDefaultsResult.rows[0]).status(200)
+    }
+  } else {
+    const individualResult = await makeQuery(GET_INDIVIDUAL, req.params.individualId)
+    res.send(individualResult.rows[0]).status(200)
+  }
 })
+
+
 
 const getGroupInfo = tryCatch(async function(req, res, next) {
   const GET_GROUP = `SELECT * 
                       FROM species_group
                       WHERE id = $1`;
 
-  const groupResult = await makeQuery(GET_GROUP, req.params.groupId)
-  res.send(groupResult.rows).status(200)
+  const GET_NEW_GROUP_DEFAULTS_SPECIES = `SELECT name AS species_name, id AS species_id, substrate_values AS species_substrate_values, light_values AS light_values_values, water_values AS water_values_values 
+                                                FROM species
+                                                WHERE id = $1`;
 
+  if (req.params.groupId === "undefined") {
+    const speciesDefaultsResult = await makeQuery(GET_NEW_GROUP_DEFAULTS_SPECIES, req.params.speciesId)
+    res.send(speciesDefaultsResult.rows[0]).status(200)
+  } else {
+    const groupResult = await makeQuery(GET_GROUP, req.params.groupId)
+    res.send(groupResult.rows).status(200)
+  }
 })
 
-const getSpeciesMembers = tryCatch(async function(req, res, next) {
-  const GET_SPECIES = `SELECT * 
-  FROM species
-  WHERE name = $1`;
+
+const getSpeciesMembersNested = tryCatch(async function(req, res, next) {
+  const GET_PARENT_LESS_INDIVIDUALS = `SELECT individual_plant.id AS id, individual_plant.name AS name, individual_plant.images AS images
+                                        FROM individual_plant
+                                        JOIN child_parent_pair ON child_parent_pair.individual_plant_id = individual_plant.id
+                                        WHERE species_id = $1 AND child_parent_pair.parent_pair_id IS NULL`;
+
+  const parentlessIndividualsResult = await makeQuery(GET_PARENT_LESS_INDIVIDUALS, req.params.speciesId)
+
 
   const GET_SPECIES_INDIVIDUALS = `SELECT * 
-                FROM individualPlant
-                WHERE species_id = $1`;
+                                    FROM individual_plant
+                                    WHERE species_id = $1`;
 
-  const speciesResult = await makeQuery(GET_SPECIES, )
-  const individualsResult = await makeQuery(GET_SPECIES_INDIVIDUALS, speciesResult.rows[0].id)
-  res.send({species: speciesResult.rows, individuals: individualsResult.rows}).status(200)
+  const individualsResult = await makeQuery(GET_SPECIES_INDIVIDUALS, req.params.speciesId)
+
+  
+  const GET_CHILDREN_OF = `SELECT individual_plant.id AS id, individual_plant.name AS name, individual_plant.images AS images
+                            FROM individual_plant
+                            LEFT JOIN child_parent_pair ON child_parent_pair.individual_plant_id = individual_plant.id
+                            LEFT JOIN parent_pair ON child_parent_pair.parent_pair_id = parent_pair.id
+                            WHERE individual_plant.species_id = $1 AND parent_pair.mother_id = $2`;
+
+  const GET_MATES_OF = `SELECT father.id AS id, father.images AS images, father.name AS name
+                          FROM parent_pair
+                          JOIN individual_plant AS mother ON parent_pair.mother_id = mother.id
+                          JOIN individual_plant AS father ON parent_pair.father_id = father.id
+                          WHERE mother.species_id = $1 
+                          AND mother.id = $2`
+  
+  let nestedNodes = parentlessIndividualsResult.rows;
+  const speciesId = Number(req.params.speciesId);
+  async function recursivelyNormalize(node) {
+    const mates = await makeQuery(GET_MATES_OF, speciesId, node.id);
+    node.mates = mates.rows;
+    const children = await makeQuery(GET_CHILDREN_OF, speciesId, node.id);
+    node.children = await Promise.all(children.rows.map(recursivelyNormalize));
+    return node
+  }
+  nestedNodes = await Promise.all(nestedNodes.map(recursivelyNormalize));
+
+  res.send(nestedNodes).status(200);
 })
+
+
+
+const getSpeciesMembersFlat = tryCatch(async function(req, res, next) {
+  const GET_INDIVIDUALS = `SELECT * FROM individual_plant WHERE species_id = $1 LIMIT 100`
+  const speciesId = Number(req.params.speciesId);
+  const plants = await makeQuery(GET_INDIVIDUALS, speciesId);
+  res.send(plants.rows).status(200);
+})
+
 
 const getSpecificSpeciesGroups = tryCatch(async function(req, res, next) {
   const GET_SPECIES = `SELECT * 
@@ -72,8 +182,9 @@ const getSpecificSpeciesGroups = tryCatch(async function(req, res, next) {
 
   const speciesResult = await makeQuery(GET_SPECIES, )
   const groupsResult = await makeQuery(GET_SPECIES_GROUPS, speciesResult.rows[0].id)
-  res.send({groups: groupsResult.rows}).status(200)
+  res.send(groupsResult.rows).status(200)
 })
+
 
 const getSpecificSpeciesSpecificGroup = tryCatch(async function(req, res, next) {
   const GET_SPECIES = `SELECT * 
@@ -97,40 +208,6 @@ const getSpecificSpeciesSpecificGroup = tryCatch(async function(req, res, next) 
 
 
 
-const getNewIndividualName = tryCatch(async function(req, res, next) {
-  const GET_HIGHEST_ID = `SELECT id 
-                            FROM individuals
-                            WHERE species_id = $1
-                            ORDER BY id DESC
-                            LIMIT 1`;
-
-  const GET_SPECIES_NAME = `SELECT name 
-                            FROM species
-                            WHERE id = $1`;
-
-
-  const nameResult = await makeQuery(GET_SPECIES_NAME, req.params.speciesId)
-  const highestIdResult = await makeQuery(GET_HIGHEST_ID, req.params.speciesId)
-  const highestId = highestIdResult.rows[0]
-  let name = ""
-  let letterPositionToUse = 0
-  while (!isNameUnique("individual_plant", name)) {
-    name = nameResult
-    .split(" ")
-    .map(word => word[letterPositionToUse])
-    .join("")
-    .toUpperCase()
-    +
-    String(highestId + 1);
-
-    letterPositionToUse++
-  };
-
-  res.send({name}).status(200)
-})
-
-
-
 //create
 const createSpecies = tryCatch(async function(req, res, next) {
   if (
@@ -139,34 +216,73 @@ const createSpecies = tryCatch(async function(req, res, next) {
     res.status(400).send({ error: "Please complete all required fields" });
     return;
   }
-  console.log("files", req.files)
   const clean = DOMPurify.sanitize(req.body.descriptionHTML);
-  const ADD_SPECIES = `INSERT INTO species (id, name, images, description_delta, description_html, light_schedule, substrate_values, water_schedule)
+  const ADD_SPECIES = `INSERT INTO species (id, name, images, description_delta, description_html, light_values, substrate_values, water_values)
                           VALUES ($1, $2, $3, $4, $5, COALESCE($6::jsonb, '[{"hours": 1, "month": "January"}, {"hours": 1, "hours": "February"}, {"hours": 1, "month": "March"}, {"hours": 1, "month": "April"}, {"hours": 1, "month": "May"}, {"hours": 1, "month": "June"}, {"hours": 1, "month": "July"}, {"hours": 1, "month": "August"}, {"hours": 1, "month": "September"}, {"hours": 1, "month": "October"}, {"hours": 1, "month": "November"}, {"hours": 1, "month": "December"}]'::jsonb), COALESCE($7::jsonb, '[{"percent": "50", "substrate": "pumice"}, {"percent": "50", "substrate": "soil"}]'::jsonb), COALESCE($8::jsonb, '[{"water_count": 1, "month": "January"}, {"water_count": 1, "month": "February"}, {"water_count": 1, "month": "March"}, {"water_count": 1, "month": "April"}, {"water_count": 1, "month": "May"}, {"water_count": 1, "month": "June"}, {"water_count": 1, "month": "July"}, {"water_count": 1, "month": "August"}, {"water_count": 1, "month": "September"}, {"water_count": 1, "month": "October"}, {"water_count": 1, "month": "November"}, {"water_count": 1, "month": "December"}]'::jsonb))`
-
                           
   const addSpeciesResult = await makeQuery(ADD_SPECIES, 
-    req.params.speciesId,
+    req.params.nextId,
     req.body.name,
     JSON.stringify(req.files),
-    req.body.descriptionDelta,
+    isJsonString(req.body.descriptionDelta) ? req.body.descriptionDelta : JSON.stringify(req.body.descriptionDelta),
     clean,
-    req.body?.light_schedule,
+    req.body.light_values.length ? JSON.stringify(req.body.light_values) : null,
     req.body.substrate_values.length ? JSON.stringify(req.body.substrate_values) : null,
-    req.body.water_schedule.length ? JSON.stringify(req.body.water_schedule) : null,
+    req.body.water_values.length ? JSON.stringify(req.body.water_values) : null,
   )
   res.send(addSpeciesResult.rowCount > 0).status(200)
 })
 
 
 const createSpeciesIndividual = tryCatch(async function(req, res, next) {
-  const ADD_PARENTS = `INSERT INTO parentPairs (mother_id, father_id) 
+  const GET_PARENTS = `SELECT * FROM parent_pair WHERE mother_id = $1 AND father_id = $2`
+
+  const parents = await JSON.parse(req.body.parents)
+  const getExistingParentsResult = await makeQuery(GET_PARENTS,
+    parents.mother?.id || null,
+    parents.father?.id || null
+  )
+  
+  const ADD_PARENTS = `INSERT INTO parent_pair (mother_id, father_id)
                          VALUES ($1, $2)`
 
-  const ADD_INDIVIDUAL = `INSERT INTO individualPlant (name, images, description, substrate_values, light_schedule, water_schedule, is_clone, parents_id, group_id, species_id)
+  let addParentsResult;
+  if (parents.mother?.id && getExistingParentsResult.rowCount === 0) {
+    addParentsResult = await makeQuery(ADD_PARENTS,
+      parents.mother.id,
+      parents.father?.id || null
+    )
+  }
+ 
+  const clean = DOMPurify.sanitize(req.body.descriptionHTML);
+  const ADD_INDIVIDUAL = `INSERT INTO individual_plant (id, name, images, description_delta, description_html, light_values, substrate_values, water_values, group_id, species_id)
                            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`;
+                           
+  const addIndividualResult = await makeQuery(ADD_INDIVIDUAL, 
+    req.params.nextId,
+    req.body.name,
+    JSON.stringify(req.files),
+    isJsonString(req.body.descriptionDelta) ? req.body.descriptionDelta : JSON.stringify(req.body.descriptionDelta),
+    clean,
+    req.body.light_values.length ? JSON.stringify(req.body.substrate_values) : null,
+    req.body.substrate_values.length ? JSON.stringify(req.body.substrate_values) : null,
+    req.body.water_values.length ? JSON.stringify(req.body.water_values) : null,
+    req.params.groupId !== "undefined" ? req.params.groupId : null,
+    req.params.speciesId
+  )
 
-  const addIndividualResult = await makeQuery(ADD_INDIVIDUAL, )
+
+  const ADD_PARENT_CHILD_PAIR = `INSERT INTO child_parent_pair (individual_plant_id, parent_pair_id) 
+                                  VALUES ($1, $2)`
+
+  const GET_PARENT_PAIR_ID = `SELECT id FROM parent_pair WHERE mother_id = $1  AND (father_id = $2 OR $2 IS NULL)`;
+  let getParentPairIdResult;
+
+  if (parents.mother?.id) {
+    getParentPairIdResult = await makeQuery(GET_PARENT_PAIR_ID, parents.mother.id, parents.father?.id || null)
+  } 
+  await makeQuery(ADD_PARENT_CHILD_PAIR, req.params.nextId, getParentPairIdResult?.rows[0]?.id || null) 
+
   res.send(addIndividualResult.rowCount > 0).status(200)
 })
 
@@ -190,10 +306,10 @@ const editSpecies = tryCatch(async function(req, res, next) {
                           description_delta = COALESCE($3, description_delta),
                           description_html = COALESCE($4, description_html),
                           substrate_values = COALESCE($5, substrate_values),
-                          water_schedule = COALESCE($6, water_schedule)
+                          water_values = COALESCE($6, water_values)
                         WHERE id = $7`;
 
-  let {name, descriptionDelta, descriptionHTML, substrate_values, water_schedule, parents, groupId, existing_images} = req.body;
+  let {name, descriptionDelta, descriptionHTML, substrate_values, water_values, parents, groupId, existing_images} = req.body;
   const speciesId = req.params.speciesId;
   existing_images = JSON.parse(existing_images)
   const imageNameRegex = /image(\d+)\.jpeg/;
@@ -215,7 +331,7 @@ const editSpecies = tryCatch(async function(req, res, next) {
     descriptionDelta,
     clean, 
     isJsonString(substrate_values) ? substrate_values : null,
-    isJsonString(water_schedule) ? water_schedule : null,
+    isJsonString(water_values) ? water_values : null,
     speciesId
   )
   res.send(editGroupResult.rowCount > 0).status(200)
@@ -229,8 +345,8 @@ const editSpeciesIndividual = tryCatch(async function(req, res, next) {
                              images = COALESCE($2, images),
                              description = COALESCE($3, description),
                              substrate_values = COALESCE($4, substrate),
-                             light_schedule = COALESCE($5, light_schedule),
-                             water_schedule = COALESCE($6, water_schedule),
+                             light_values = COALESCE($5, light_values),
+                             water_values = COALESCE($6, water_values),
                              is_clone = COALESCE($7, is_clone),
                              parents_id = COALESCE($8, parents_id),
                              group_id = COALESCE($9, group_id)
@@ -299,9 +415,10 @@ module.exports = {
   createSpeciesIndividual,
   getSpecies,
   getSpecificSpeciesInfo,
-  getSpeciesMembers,
+  getSpeciesMembersFlat,
+  getSpeciesMembersNested,
   getSpecificSpeciesGroups,
   getIndividualInfo,
   getGroupInfo,
-  getSpecificSpeciesSpecificGroup
+  getSpecificSpeciesSpecificGroup,
 }

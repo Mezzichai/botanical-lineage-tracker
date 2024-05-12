@@ -63,7 +63,12 @@ const SelectedGroup: React.FC<Props> = ({selectedGroup, setGroup}) => {
   return (
     <span className={SelectedGroupStyles.group}>
       {!isGroupBeingChanged ? (
-        <span>({selectedGroup.name})</span>
+        <>
+          <span>({selectedGroup.name || "??? group"})</span>
+          <button aria-label={`change-groups`} className={`${SelectedGroupStyles.changeGroupsBtn} ${isGroupBeingChanged ? SelectedGroupStyles.check : ""}`} onClick={() => setIsGroupBeingChanged(prevState => !prevState)}>
+            <FontAwesomeIcon icon={isGroupBeingChanged ? faCheck : faGear} />
+          </button>
+        </>
       ) : (
         <div className={SelectedGroupStyles.selectionContainer} tabIndex={0} onKeyDown={(e) => handleKeyDown(e)}>
           <div className={SelectedGroupStyles.groupSelectionControls}>
@@ -87,9 +92,7 @@ const SelectedGroup: React.FC<Props> = ({selectedGroup, setGroup}) => {
         </div>
       )}
       
-      <button aria-label={`change-groups`} className={`${SelectedGroupStyles.changeGroupsBtn} ${isGroupBeingChanged ? SelectedGroupStyles.check : ""}`} onClick={() => setIsGroupBeingChanged(prevState => !prevState)}>
-        <FontAwesomeIcon icon={isGroupBeingChanged ? faCheck : faGear} />
-      </button>
+     
     </span>
   )
 }

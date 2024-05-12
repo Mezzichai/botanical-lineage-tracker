@@ -1,23 +1,23 @@
 
 import '../App.css'
-import { useGetSpeciesQuery } from '../api/apiSlice'
+import { useGetSpecificGroupIndividualsQuery } from '../api/apiSlice'
 import ListView from '../components/ListView'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import ItemCard from '../components/ItemCard'
 import CardStyles from '../styles/cardAndListStyles.module.css'
 
-const Species = () => {
+
+const SpecificGroupView = () => {
   const { speciesIdParam, groupIdParam } = useParams({ strict: false})
 
-  const navigate = useNavigate({ from: '/' })
-  const handleSpeciesClick = (id: string) => {
-    navigate({ to: `/$speciesId`, params: {speciesId: id}})
+
+  const handleGroupClick = (id: string) => {
   }
 
   const {
     data,
     isLoading,
-  } = useGetSpeciesQuery({speciesId: speciesIdParam})
+  } = useGetSpecificGroupIndividualsQuery({speciesId: speciesIdParam, groupId: groupIdParam})
   
   
   return (
@@ -27,14 +27,14 @@ const Species = () => {
         loading...
       </div>
     ) : (
-      <ListView catagory={'species'} styles={CardStyles.speciesListContainer}>
+      <ListView catagory={'group'}>
         {data.map((item, index: number) => (
-          <ItemCard key={index + String(item.id)} handleClick={() => handleSpeciesClick(item.id)} info={item} catagory={'species'} imageDimensions={{width: 300, height: 200}}/>
+          <ItemCard key={index + String(item.id)} handleClick={() => handleGroupClick(item.id)} info={item} catagory={'group'}/>
         ))}
       </ListView>
-  )}
+    )}
   </>
   )
 }
 
-export default Species
+export default SpecificGroupView

@@ -1,74 +1,95 @@
 .listContainer {
-  padding-top: 3.8rem;
-  height: 100vh;
-}
-
-.listSubContainer {
-  padding: .7rem;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+  padding: 0 .7rem .7rem .7rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(176px, 176px));
+  /* justify-content: center; */
   width: 100%;
-  gap: 1rem;
+  gap: .837rem;
+
 }
 
+.smallCardSize { 
+  min-width: 11rem;
+  max-width: 11rem;
+  height: 10rem;
+	font-size: 11px;
+}
 
-.card {
+.cardContent {
+  display: flex;
   flex-direction: column;
-  width: auto;
-  height: min-content;
-  background-color: rgb(170, 224, 224);
-  display: flex;
-  border: 1px solid black;
-  overflow: hidden;
-  border-radius: 5px;
-}
-
-.card svg {
-  font-size: .7rem;
-}
-
-.card button {
-  border-radius: 25px;
-  padding:.5rem;
-  width: 1.5rem;
-  height: 1.5rem;
-  background-color: rgb(227, 227, 227);
-  display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  border: 1px solid #000000;
+  border-radius: 6px;
+	text-decoration: none;
+	color: #000000;
+	font-family: arial, verdana, tahoma;
+	transition: all 0.3s;
+  position: relative;
+  z-index: 1;
 }
 
-.card img {
-  width: min-content;
+.cardContent img {
+  height: 78.5%;
+  width: 100%;
   object-fit: cover;
-  width: 300px;
-  height: 250px;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
 }
+
 
 .cardInfo {
+  background-color: #ffffff; 
+  font-size: 1rem;
+  padding: 5px .2rem;
   display: flex;
-  justify-content: space-between;
-  background-color: #f0f0f0;
-  padding: 1rem 1rem;
+  align-items: center;
+  justify-content:space-between;
+  width: 100%;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+	transition: all 0.3s;
 }
 
 .cardInfo p {
-  font-size: 1.1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis
 }
+
+/* .cardInfo svg {
+  font-size: .7rem;
+} */
+
+.cardInfo button {
+  padding: .7rem;
+  border-radius: 50%;
+  height: 1.4rem;
+  width: 1.4rem;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .9rem;
+  color: #000000;
+}
+
+.cardInfo button:hover {
+  background-color: rgb(221, 221, 221);
+}
+
+
+
 
 
 
 .addItemContainer {
-  width: 20rem;
-  height: 20rem;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   background-color: #f0f0f0;
-  height: 308px;
-  width: 302px;
 }
 
 .addBtn {
@@ -85,3 +106,10 @@
   height: 5rem;
   width: 5rem;
 }
+
+
+
+.speciesListContainer {
+  padding-top: 3.8rem;
+}
+

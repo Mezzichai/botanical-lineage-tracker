@@ -1,5 +1,4 @@
 import { faArrowUpFromBracket } from "@fortawesome/free-solid-svg-icons";
-import InfoCardStyles from '../styles/InfoCardStyles.module.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import DragDropStyles from '../styles/DragDropStyles.module.css'
 import { ChangeEvent, useState } from "react";

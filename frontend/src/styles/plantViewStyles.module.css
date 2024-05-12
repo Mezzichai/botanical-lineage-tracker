@@ -3,7 +3,7 @@
   width: 100%;
   padding: 0 1rem 0 1rem;
   position: fixed;
-  z-index: 999;
+  z-index: 998;
 
 }
 
@@ -11,8 +11,6 @@
 
 
 .viewSettings {
-  z-index: 999;
-  width: auto;
   display: flex;
   position: fixed;
   top: 5rem;
@@ -87,9 +85,9 @@
 
 
 
-
-
-
+#individualsListContainer {
+  padding-top: 9.5rem;
+}
 
 
 @media (max-width: 700px) { 
@@ -113,3 +111,7 @@
 
   }
 }
+
+
+
+

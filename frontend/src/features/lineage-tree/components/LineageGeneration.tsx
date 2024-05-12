@@ -3,7 +3,7 @@ import LineageTreeStyles from '../styles/LineageTreeStyle.module.css'
 import TreeNode from "./TreeNode";
 import LineageAggregateNode from "./LineageAggregateNode";
 import useInvalidateParentWidthRefCallback from "../hooks/useInvalidateParentWidthCallback";
-import { LineageNode } from "../../../types";
+import { LeanLineageNode, LineageNode } from "../../../types";
 import ButtonWithHoverLabel from "../../../components/ButtonWithHoverLabel";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -19,7 +19,7 @@ type Props = {
   refCallbackFromAggregateNodes?: (node: HTMLUListElement) => void;
   isParentBeingHovered?: boolean;
   displayInfoCard: (id: string) => void
-  displayNewInfoCard: (mother: LineageNode | undefined, father: LineageNode | undefined) => void
+  displayNewInfoCard: (mother: LeanLineageNode, father: LeanLineageNode) => void
 }
 
 //todo: 
@@ -30,9 +30,19 @@ type Props = {
 
 const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCard, displayNewInfoCard, handleChangeWidths, widthTree, shouldUnmount, refCallbackFromAggregateNodes, isParentBeingHovered=false}) => {
   const [shouldActiveNodeChildrenUnmount, setShouldActiveNodeChildrenUnmount] = useState(false);
-  const [activeNodeOfAggregates, setActiveNodeOfAggregates] = useState<LineageNode>();
-  const [hoveredNode, setHoveredNode] = useState<LineageNode>();
-  
+  const [activeMateIndexes, setActiveIndexes] = useState<number>(0);
+  const [activeIdOfAggregates, setActiveIdOfAggregates] = useState<string>();
+  const [hoveredNodeId, setHoveredNodeId] = useState<string>();
+  console.log(children)
+  function getActiveNode() {
+    return children.find(child => child.id === activeIdOfAggregates);
+  }
+
+  function getHoveredNode() {
+    return children.find(child => child.id === hoveredNodeId);
+  }
+
+
   let width: number | undefined;
 
   function searchWidths(nodes: LineageNode[]): number | undefined{
@@ -52,19 +62,19 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
   if (children.length > 2) {
     width = searchWidths(widthTree)
   }
-  if (!width && activeNodeOfAggregates?.id) {
+  if (!width && activeIdOfAggregates) {
     width = 176
   }
 
   const aggregateChildrenRef = useRef<HTMLLIElement | null>(null)
 
   const childrenWithChildrenIds = children
-    .filter(child => child.children.length !== 0)
+    .filter(child => child?.children?.length !== 0)
     .map(child => child.id)
 
   const doesHoveredOrActiveNodeHaveChildren = 
-  (activeNodeOfAggregates?.id && childrenWithChildrenIds.includes(activeNodeOfAggregates.id)) ||
-  (childrenWithChildrenIds.includes(hoveredNode?.id || ""))
+  (activeIdOfAggregates && childrenWithChildrenIds.includes(activeIdOfAggregates)) ||
+  (childrenWithChildrenIds.includes(hoveredNodeId || ""))
 
 
   const findWidthOfAggregateContainer = useCallback((newULwidth: number) => {
@@ -82,34 +92,34 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
 
   const aggregateNodesId = children[0].id
   const changeWidth = useCallback((newULwidth: number) => {
-    const newWidth = findWidthOfAggregateContainer(newULwidth)
-      handleChangeWidths(newWidth, aggregateNodesId, aggregateChildrenRef.current?.offsetWidth || 0)
-  }, [findWidthOfAggregateContainer, handleChangeWidths, aggregateNodesId])
+    const newWidth = findWidthOfAggregateContainer(newULwidth);
+      handleChangeWidths(newWidth, aggregateNodesId, aggregateChildrenRef.current?.offsetWidth || 0);
+  }, [findWidthOfAggregateContainer, handleChangeWidths, aggregateNodesId]);
 
-  const [ulRefCB] = useInvalidateParentWidthRefCallback(changeWidth)
+  const [ulRefCB] = useInvalidateParentWidthRefCallback(changeWidth);
 
   const computeXPositioningInOrder = (childrenCount: number, offset: number) => {
-    let positions: number[] = []
-    const center = Math.floor(childrenCount / 2)
+    let positions: number[] = [];
+    const center = Math.floor(childrenCount / 2);
     let minOffset = 0;
     if (childrenCount % 2 === 0) {
-      minOffset = Math.floor(offset/2)
+      minOffset = Math.floor(offset/2);
     }
-    let currentOffset = (center * offset) - minOffset
+    let currentOffset = (center * offset) - minOffset;
 
     while (currentOffset >= -(center * offset) + minOffset) {
       if (childrenCount % 2 === 0 && (currentOffset <= 0 && currentOffset > -minOffset)) {
-        currentOffset -= offset
+        currentOffset -= offset;
         continue
       }
-      positions.push(currentOffset)
-      currentOffset -= offset
+      positions.push(currentOffset);
+      currentOffset -= offset;
     }
 
-    if (activeNodeOfAggregates) {
+    if (activeIdOfAggregates) {
       positions = positions.map(() => {
         return 0
-      })
+      });
     }
     return positions
   }
@@ -124,10 +134,14 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
 
 
   const handleAggregateNodeClick = (id: string) => {
-    if (!activeNodeOfAggregates) {
-      setActiveNodeOfAggregates(children.find(child => child.id === id))
-    }
+    setActiveIdOfAggregates(state => {
+      if (!activeIdOfAggregates) {
+        return id
+      }
+      return state
+    })
   };
+
 
   const handleUnfocusAggregateNode = () => {
     setShouldActiveNodeChildrenUnmount(true);
@@ -137,7 +151,7 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
         changeWidth(0)
       }
       setShouldActiveNodeChildrenUnmount(false);
-      setActiveNodeOfAggregates(() => undefined);
+      setActiveIdOfAggregates(undefined);
     }, 300);  
   };
 
@@ -148,17 +162,17 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
       clearTimeout(hoverTimeout)
     }
     hoverTimeout = setTimeout(() => {
-      setHoveredNode(children.find(child => child.id === id))
+      setHoveredNodeId(id)
     }, 0);
   };
 
   const handleUnHover = () => {
-    if (!activeNodeOfAggregates) {
+    if (!activeIdOfAggregates) {
       if (doesHoveredOrActiveNodeHaveChildren) {
         changeWidth(0)
       }
     }
-    setHoveredNode(undefined)
+    setHoveredNodeId(undefined)
   };
 
 
@@ -189,88 +203,80 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
             `}
             style={{width: `${width || 133 + (children.length * 44)}px`}} 
           >
-            {/* needed to maintain the aggregate nodes height in document */}
-            <div style={{position: "relative", height: "165.71px"}}></div>
+            <div className={`${activeIdOfAggregates && !getActiveNode()?.children.length ? LineageTreeStyles.hasNoChildren : LineageTreeStyles.parentsContainer}`}>
+              {/* needed to maintain the aggregate nodes height and width in document */}
+              <span className={`${LineageTreeStyles.pseudoContainer}`}>
+              </span>          
             
-            {children.map((node, index) => {
-              return (
-                <>
-                  {(node?.children[0]?.father) &&
-                    <div className={`${LineageTreeStyles.fatherContainer} ${LineageTreeStyles.fatherContainerOfActive} ${activeNodeOfAggregates?.id === node.id ? `fadeInElement` : "fadeOutElement"}`}>
-                      <TreeNode 
-                        displayInfoCard={displayInfoCard}
-                        image={node.children[0]?.father.images[0]} 
-                        id={node.children[0].father.id || ""} 
-                        name ={node.children[0].father.name || ""} 
+              {children.map((node, index) => {
+                return (
+                  <>
+                    {(node.mates.length > 0) &&
+                      <div className={`${LineageTreeStyles.fatherContainer} ${LineageTreeStyles.fatherContainerOfActive} ${activeIdOfAggregates === node.id ? `fadeInElement` : "fadeOutElement"}`}>
+                        <TreeNode 
+                          displayInfoCard={displayInfoCard}
+                          image={node.mates[activeMateIndexes]?.images[0]} 
+                          id={node.mates[0]?.id || ""} 
+                          name ={node.mates[0]?.name || "???"} 
+                        />
+                      </div>
+                    }
+                    <div 
+                      style={{
+                        transform: "translateX(" + computedXPositionsForAggregateNodes[index] + "px)"
+                      }}
+                      className={`${LineageTreeStyles.nodeContainer}
+                        ${(activeIdOfAggregates && activeIdOfAggregates !== node.id) ? LineageTreeStyles.shaded: ""}
+                        ${isParentBeingHovered || hoveredNodeId === node.id ? LineageTreeStyles.parentFocused: ""}
+                      `}
+                    >
+                      <LineageAggregateNode
+                        key={index+node.id}
+                        image={node.images[0]} 
+                        id={node.id} 
+                        name={node.name} 
+                        handleNodeClick={activeIdOfAggregates ? displayInfoCard : handleAggregateNodeClick}
+                        handleHover={handleHover} 
+                        handleUnHover={handleUnHover} 
+                        activeOfAggregatesId={activeIdOfAggregates}
+                        siblingCount={children.length-1}
+                        father={node?.mates[activeMateIndexes]}
+                        handleShowSiblings={handleUnfocusAggregateNode}
                       />
                     </div>
-                  }
-                  <div 
-                    style={{
-                      transform: "translateX(" + computedXPositionsForAggregateNodes[index] + "px)",
-                    }}
-                    className={`${LineageTreeStyles.nodeContainer}
-                      ${(activeNodeOfAggregates?.id && activeNodeOfAggregates.id !== node.id) ? LineageTreeStyles.shaded: ""}
-                      ${isParentBeingHovered || hoveredNode?.id === node.id ? LineageTreeStyles.parentFocused: ""}
-                      `}
-                  >
-                    <LineageAggregateNode
-                      key={index+node.id}
-                      image={node.images[0]} 
-                      id={node.id} 
-                      name={node.name} 
-                      handleNodeClick={activeNodeOfAggregates?.id ? displayInfoCard : handleAggregateNodeClick}
-                      handleHover={handleHover} 
-                      handleUnHover={handleUnHover} 
-                      activeOfAggregatesId={activeNodeOfAggregates?.id}
-                      siblingCount={children.length-1}
-                      father={node?.children[0]?.father}
-                      handleShowSiblings={handleUnfocusAggregateNode}
-                      
-                    />
-                  </div>
-                  {activeNodeOfAggregates?.id && (
-                    <ButtonWithHoverLabel
-                      positioningStyles={LineageTreeStyles.addChildPosition}
-                      label="Add child"
-                    >
-                      <button 
-                        className={LineageTreeStyles.addChild}
-                        onClick={() => displayNewInfoCard({...node, children: []}, node?.children[0]?.father)}
+                    {(activeIdOfAggregates === node.id) && (
+                      <ButtonWithHoverLabel
+                        positioningStyles={getActiveNode()?.children?.length || 0 > 0 ? LineageTreeStyles.addChildPosition : LineageTreeStyles.addFirstChildPosition}
+                        label="Add child"
+                      >
+                        <button 
+                          className={LineageTreeStyles.addChild}
+                          onClick={
+                            () => displayNewInfoCard(
+                              {name: node.name, images: node.images[0], id: node.id},
+                              {name: node.mates[activeMateIndexes]?.name, images: node.mates[activeMateIndexes]?.images[0], id: node.mates[activeMateIndexes]?.id}
+                            )}
                         >
-                        <FontAwesomeIcon icon={faPlus} />
-                      </button>
-                    </ButtonWithHoverLabel>
-                  )}
-
-                </>
-              )}
-            )}    
-
-            {hoveredNode?.children.length ? (
+                          <FontAwesomeIcon icon={faPlus} />
+                        </button>
+                      </ButtonWithHoverLabel>
+                    )}
+                  </>
+                )}
+              )}    
+            </div>
+            {(getHoveredNode()?.children.length || (getActiveNode()?.children.length || 0) > 0) && (
               <LineageGeneration 
                 refCallbackFromAggregateNodes={aggregateNodesChildUlRefCallback}
                 shouldUnmount={shouldActiveNodeChildrenUnmount}
                 handleChangeWidths={handleChangeWidths}
                 widthTree={widthTree}
-                children={hoveredNode.children}
-                isParentBeingHovered={isParentBeingHovered || Boolean(hoveredNode?.id)}
-                displayInfoCard={displayInfoCard}
-                displayNewInfoCard={displayNewInfoCard}
-              /> 
-            ) : (
-            activeNodeOfAggregates?.children.length ? (
-              <LineageGeneration 
-                refCallbackFromAggregateNodes={aggregateNodesChildUlRefCallback}
-                shouldUnmount={shouldActiveNodeChildrenUnmount}
-                handleChangeWidths={handleChangeWidths}
-                widthTree={widthTree}
-                children={activeNodeOfAggregates.children}
-                isParentBeingHovered={isParentBeingHovered || Boolean(hoveredNode?.id)}
+                children={getHoveredNode()?.children.length ? getHoveredNode()?.children : getActiveNode()?.children}
+                isParentBeingHovered={isParentBeingHovered || Boolean(hoveredNodeId)}
                 displayInfoCard={displayInfoCard}
                 displayNewInfoCard={displayNewInfoCard}
               />
-            ) : null)}
+            )}
           </li>
 
         : children.map((node, index) => (
@@ -279,13 +285,12 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
             key={node.id + index} 
           >
             <div className={`
-              ${LineageTreeStyles.parentsContainer} 
-              ${!node.children.length ? LineageTreeStyles.paddingForAddingChildren : ""}
-              ${isParentBeingHovered || hoveredNode?.id === node.id ? LineageTreeStyles.parentFocused : ""}
+              ${!node.children.length ? LineageTreeStyles.hasNoChildren : LineageTreeStyles.parentsContainer}
+              ${isParentBeingHovered || hoveredNodeId === node.id ? LineageTreeStyles.parentFocused : ""}
 
               `}>
               {/* need to maintain width */}
-              {(node?.children[0]?.father) &&
+              {node.children.length > 0 &&
                 <span className={`${LineageTreeStyles.pseudoContainer}`}>
                 </span>
               }
@@ -304,19 +309,21 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
               >
                 <button 
                   className={LineageTreeStyles.addChild}
-                  onClick={() => displayNewInfoCard({...node, children: []}, node?.children[0]?.father)}
+                  onClick={() => displayNewInfoCard(
+                    {name: node.name, images: node.images[0], id: node.id},
+                    {name: node.mates[activeMateIndexes]?.name, image: node.mates[activeMateIndexes]?.images[0], id: node.mates[activeMateIndexes]?.id}
+                  )}
                   >
                   <FontAwesomeIcon icon={faPlus} />
                 </button>
               </ButtonWithHoverLabel>
-              {(node?.children[0]?.father) &&
+              {node.children.length > 0 &&
                 <span className={`${LineageTreeStyles.fatherContainer} ${`fadeInElement`}`}>
                   <TreeNode 
-                    image={node.children[0]?.father.images[0]} 
-                    id={node.children[0].father.id || ""} 
-                    name ={node.children[0].father.name || ""} 
+                    image={node?.mates[activeMateIndexes]?.images[0]} 
+                    id={node?.mates[0]?.id || ""} 
+                    name ={node?.mates[0]?.name || "???"} 
                     displayInfoCard={displayInfoCard}
-
                   />
                 </span>
               }
@@ -328,7 +335,7 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
                 handleChangeWidths={handleChangeWidths}
                 widthTree={widthTree}
                 children={node.children} 
-                isParentBeingHovered={isParentBeingHovered || hoveredNode?.id === node.id}
+                isParentBeingHovered={isParentBeingHovered || hoveredNodeId === node.id}
                 displayInfoCard={displayInfoCard}
                 displayNewInfoCard={displayNewInfoCard}
               /> 

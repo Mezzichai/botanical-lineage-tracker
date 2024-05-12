@@ -5,15 +5,21 @@ import { faMagnifyingGlass, faSliders } from '@fortawesome/free-solid-svg-icons'
 import ButtonWithHoverLabel from '../../../components/ButtonWithHoverLabel'
 import SearchFilters from './SearchFilters'
 import { useParams } from '@tanstack/react-router'
+import { useDispatch, useSelector } from 'react-redux'
+import { changeQuery, selectQuery } from '../HeaderSlice'
 
 
 const SearchBar = () => {
-  const inputRef = useRef(null)
-  const searchRef = useRef(null)
+  const inputRef = useRef(null);
+  const searchRef = useRef(null);
+  const dispatch = useDispatch();
+  const query = useSelector(selectQuery);
+
+  const { speciesId } = useParams({ strict: false});
+
   const [searchInput, setSearchInput] = useState('');
   const [filters, setFilters] = useState([]);
-  const [filtersVisibility, setFilterVisibility] = useState<boolean>(false)
-  const { speciesNameParam } = useParams({ strict: false})
+  const [filtersVisibility, setFilterVisibility] = useState<boolean>(false);
 
   //  const handleConfirmSearch = () => {
   //   if (searchInput !== "") {
@@ -33,25 +39,20 @@ const SearchBar = () => {
 
   return (
   <div 
-    className={`${SearchBarStyles.searchContainer}`} 
+    className={`${SearchBarStyles.search}`} 
     ref={searchRef}>
-    <div 
-      className={`${SearchBarStyles.search}`}>
         <button className={SearchBarStyles.btn}>
           <FontAwesomeIcon icon={faMagnifyingGlass} className={SearchBarStyles.searchIcon} />
         </button>
       <input
         ref={inputRef}
-        value={searchInput}
-        onChange={e => setSearchInput(e.target.value)}
+        value={query}
+        onChange={e => dispatch(changeQuery({query: e.target.value}))}
         type="text"
         className={SearchBarStyles.input}
         placeholder='search...'
       />
-    
-      
-
-      {speciesNameParam && (
+      {speciesId ? (
         <ButtonWithHoverLabel label="filters">
           <button 
             aria-label="filters" 
@@ -67,10 +68,12 @@ const SearchBar = () => {
           </div>
           } 
         </ButtonWithHoverLabel>
+      ) : (
+        <div className={SearchBarStyles.btn}>
+        </div>
       )}
-      
-      {filtersVisibility &&
-      <SearchFilters/>}
+    
+      {filtersVisibility && <SearchFilters/>}
       
       {/* {searchInput !== "" && isActive ? (
       <>
@@ -164,7 +167,6 @@ const SearchBar = () => {
         )}
       </>
      ) : null} */}
-    </div>
   </div>
   )
 }

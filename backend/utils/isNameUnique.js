@@ -12,15 +12,25 @@ const isNameUnique = async (table, name, speciesId) => {
       FROM species
       WHERE name = $1
     `;
-  } else {
+  } else if (table === "individual_plant") {
     GET_BY_NAME = `
       SELECT name 
-      FROM $1
-      WHERE species_id = $2 AND name = $3
+      FROM individual_plant
+      WHERE species_id = $1 AND name = $2
+    `;
+  } else if (table === "species_group") {
+    GET_BY_NAME = `
+      SELECT name 
+      FROM species_group
+      WHERE species_id = $1 AND name = $2
     `;
   }
   
-  const result = await makeQuery(GET_BY_NAME, table === 'species' ? [name] : [speciesId, name]);
+  const result = await makeQuery(GET_BY_NAME, table === 'species' ? name : speciesId, name);
   
   return !result.rowCount > 0
 }
+
+
+
+module.exports=isNameUnique

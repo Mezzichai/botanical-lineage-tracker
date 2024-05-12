@@ -10,7 +10,7 @@ import MiniLineageTree from './MiniLineageTree'
 import SubstrateChart from './SubstrateChart'
 import { useParams } from '@tanstack/react-router'
 import { useDispatch, useSelector } from 'react-redux'
-import {  selectCatagory,  selectId,  selectIsInfoCardOpen, selectIsInfoNewOrEditing, toggleInfoCardEditModeOn, toggleInfoCardOff, toggleInfoCardOn } from '../InfoCardSlice'
+import {  selectCatagory,  selectId,  selectIsInfoCardOpen, selectIsInfoNewOrEditing, selectParents, toggleInfoCardEditModeOn, toggleInfoCardOff, toggleInfoCardOn } from '../InfoCardSlice'
 import { useCreateSpeciesGroupMutation, useCreateSpeciesIndividualMutation, useCreateSpeciesMutation, useDeleteSpeciesGroupMutation, useDeleteSpeciesIndividualMutation, useDeleteSpeciesMutation, useEditSpeciesGroupMutation, useEditSpeciesIndividualMutation, useEditSpeciesMutation, useGetSpecficIndividualInfoQuery, useGetSpecificGroupInfoQuery, useGetSpecificSpeciesInfoQuery } from '../../../api/apiSlice'
 import WaterChart from './WaterChart'
 import ReactQuill from 'react-quill'
@@ -19,7 +19,7 @@ import { DeltaStatic } from 'quill'
 import dataURLtoFile from '../../../utils/dataURLtoFile'
 import useIsValidInput from '../../../hooks/useIsValidInput'
 import CatagorySpecificInfo from './CatagorySpecificInfo'
-import { Group, Parent, SubstrateEntry, WaterEntry } from '../../../types'
+import { Group, LeanLineageNode, SubstrateEntry, WaterEntry } from '../../../types'
 
 
 
@@ -50,44 +50,53 @@ const InfoCard:React.FC = () => {
   const isNewOrEditing = useSelector(selectIsInfoNewOrEditing)
   const catagory = useSelector(selectCatagory)
   const cardId = useSelector(selectId)
-  const prevCardId = useRef<string>("")
-  const autoGenerateName = () => {
-    return "ST112"
-  }
+  const newNodeParents = useSelector(selectParents)
 
-  const {data: specificSpeciesInfo} = useGetSpecificSpeciesInfoQuery({speciesId: cardId}, {skip: !(Boolean(cardId) && catagory === "species")});
-  const {data: specificGroupInfo} = useGetSpecificGroupInfoQuery({groupId: cardId}, {skip: !(Boolean(cardId) && catagory === "group")});
-  const {data: specificIndividualInfo} = useGetSpecficIndividualInfoQuery({individualId: cardId}, {skip: !(Boolean(cardId) && catagory === "individual")});
-  
-  
+  const prevCardId = useRef<string | undefined>()
+  const generatedIndividualNameRef = useRef<string>("")
+ 
+  const { speciesId, groupId } = useParams({ strict: false})
+
+  const {data: specificSpeciesInfo} = useGetSpecificSpeciesInfoQuery({speciesId: cardId}, {skip: !(Boolean(cardId) && catagory === "species" && isOpen)});
+  const {data: specificGroupInfo} = useGetSpecificGroupInfoQuery({speciesId: speciesId, groupId: cardId || ""}, {skip: !(catagory === "group" && isOpen)});
+  const {data: specificIndividualInfo} = useGetSpecficIndividualInfoQuery({speciesId: speciesId, groupId: groupId || "", individualId: cardId || ""}, {skip: !(catagory === "individual" && isOpen)});
   const [descriptionDelta, setDescriptionDelta] = useState<DeltaStatic | undefined>();
   const [descriptionHTML, setDescriptionHTML] = useState("");
   const [substrateValues, setSubstrateValues] = useState<SubstrateEntry[]>([]);
-  const [waterPoints, setWaterPoints] = useState<WaterEntry[]>([]);
-  const [parents, setParents] = useState<{mother: Parent, father: Parent}>();
+  const [waterValues, setWaterValues] = useState<WaterEntry[]>([]);
+  const [lightValues, setLightValues] = useState<SubstrateEntry[]>([]);
+
+  const [parents, setParents] = useState<{mother: LeanLineageNode, father: LeanLineageNode}>({mother: newNodeParents.mother, father: newNodeParents.father});
   const [group, setGroup] = useState<Group>({id: "", name: ""})
   const [images, setImages] = useState<string[]>([])
   const speciesInfo = useRef<{ name: string; id: string}>({name: "", id: ""})
-  const initialName = ((catagory === "individual") && !cardId) ? autoGenerateName() : "";
-  const [isNameValid, name, handleNameChange] = useIsValidInput(1, 50, initialName);
+
+  const [isNameValid, name, handleNameChange] = useIsValidInput(1, 50, "");
   const [activeTab, setActiveTab] = useState("Info")
-  const { speciesNameParam, groupNameParam } = useParams({ strict: false})
+
 
   useEffect(() => {
-    if ((specificSpeciesInfo || specificGroupInfo || specificIndividualInfo) && prevCardId.current !== cardId) {
+    if (((specificSpeciesInfo || specificGroupInfo || specificIndividualInfo) && isOpen)) {
       const fetchedInfo = specificSpeciesInfo || specificGroupInfo || specificIndividualInfo;
-      setDescriptionDelta(fetchedInfo?.description_delta ? JSON.parse(fetchedInfo?.description_delta) : "")
-      setDescriptionHTML(fetchedInfo.description_html)
-      setSubstrateValues(fetchedInfo.substrate_values)
-      setWaterPoints(fetchedInfo.water_points)
-      setParents({mother: fetchedInfo.mother, father: fetchedInfo.father})
-      setGroup({name: fetchedInfo.groupName, id: fetchedInfo.groupId})
-      setImages(fetchedInfo.images)
-      handleNameChange(fetchedInfo.name || "")
-      speciesInfo.current = {name: fetchedInfo?.speciesName, id: fetchedInfo?.speciesId}
+      setDescriptionDelta(fetchedInfo.description_delta || "")
+      setDescriptionHTML(fetchedInfo.description_html || "")
+      setSubstrateValues(fetchedInfo.substrate_values || fetchedInfo.group_substrate_values || fetchedInfo.species_substrate_values)
+      setWaterValues(fetchedInfo.water_values || fetchedInfo.group_water_values || fetchedInfo.species_water_values)
+      setParents(prevParents => {
+        return fetchedInfo?.mother 
+        ? {mother: fetchedInfo.mother, father: fetchedInfo.father} 
+        : newNodeParents 
+        ? newNodeParents 
+        : prevParents
+      })
+      setGroup({name: fetchedInfo.group_name, id: fetchedInfo.group_id})
+      setImages(fetchedInfo.images || [])
+      handleNameChange(fetchedInfo.name || '')
+      speciesInfo.current = {name: fetchedInfo?.species_name, id: fetchedInfo?.species_id}
       prevCardId.current = cardId
+      generatedIndividualNameRef.current = fetchedInfo?.name
     }
-  }, [specificGroupInfo, specificIndividualInfo, specificSpeciesInfo, handleNameChange, cardId])
+  }, [specificGroupInfo, specificIndividualInfo, specificSpeciesInfo, cardId, isOpen, newNodeParents])
 
   const isCreatingOrEditingLoading = useCallback(() => {
     if (isCreateSpeciesLoading 
@@ -114,27 +123,40 @@ const InfoCard:React.FC = () => {
 
   }, [])
 
+  
+
+  const handleGenerateIndividualName = useCallback(() => {
+    handleNameChange(generatedIndividualNameRef.current)
+  }, [handleNameChange])
+
+
   const handleTabClick = (e: React.MouseEvent<HTMLSpanElement>) => {
     setActiveTab(e.currentTarget.id);
   }
 
   const handleToggleInfoCard = () => {
     if (isOpen) {
-      dispatch(toggleInfoCardOff())
+      dispatch(toggleInfoCardOff());
     } else {
       let catagory = ""
-      if (groupNameParam) {
+      if (groupId) {
         catagory = "group"
       } else {
         catagory = "species"
       }
-      dispatch(toggleInfoCardOn({infoCardCatagory: catagory}))
+      let id = ""
+      if (groupId) {
+        id = groupId
+      } else {
+        id = speciesId
+      }
+      dispatch(toggleInfoCardOn({catagory: catagory, itemId: id}))
     }
   } 
 
   const handleConfirm = async () => {
     try {
-      const descriptionString = JSON.stringify(descriptionDelta);
+      const descriptionString = JSON.stringify(descriptionDelta || {});
       const dataForm = new FormData();
       dataForm.set("name", name);
       dataForm.set("existing_images", JSON.stringify(images.filter(image => image.match(/https:\/\/.+?\.jpeg/))));
@@ -144,17 +166,18 @@ const InfoCard:React.FC = () => {
           const file = dataURLtoFile(image, `image${index + 1}.jpeg`)
           dataForm.append(`images`, file);
         })
+        console.log(parents)
 
-      dataForm.set("descriptionDelta", JSON.stringify(descriptionString));
+      dataForm.set("descriptionDelta", descriptionString);
       dataForm.set("descriptionHTML", descriptionHTML);
       dataForm.set("substrate_values", substrateValues?.length ? JSON.stringify(substrateValues) : "");
-      dataForm.set("water_schedule", waterPoints?.length ? JSON.stringify(waterPoints) : "");
+      dataForm.set("light_values", lightValues?.length ? JSON.stringify(lightValues) : "");
+      dataForm.set("water_values", waterValues?.length ? JSON.stringify(waterValues) : "");
       dataForm.set("parents", JSON.stringify(parents));
-      dataForm.set("groupId", group.id);
 
       if (catagory === "individual") {
         if (!cardId) {
-          await createIndividual({form: dataForm, params: {speciesId: speciesInfo.current.id}})
+          await createIndividual({form: dataForm, params: {speciesId: speciesInfo.current.id, groupId: group.id}})
         } else {
           await editIndividual({form: dataForm, params: {speciesId: speciesInfo.current.id, individualId: cardId}})
         }
@@ -200,13 +223,13 @@ const InfoCard:React.FC = () => {
   }
   
   let tabs = ["Info", "Substrate", "Water", "Relatives"]
-  if (!speciesNameParam) {
+  if (typeof Number(speciesId) !== "number") {
     tabs = ["Info", "Substrate", "Water"]
   }
 
   return (
     <div className={`${InfoCardStyles.cardContainer} ${isOpen ? InfoCardStyles.showNewCard : InfoCardStyles.hideCard}`}>
-      {((!speciesNameParam && isOpen) || speciesNameParam) &&
+      {((!speciesId && isOpen) || speciesId) &&
         <ButtonWithHoverLabel label={isOpen ? "close" : "open"} positioningStyles={InfoCardStyles.toggleInfoCardPosition}>
           <button className={InfoCardStyles.toggleInfoCard} onClick={handleToggleInfoCard} >
             <FontAwesomeIcon icon={isOpen ? faChevronRight : faChevronLeft}/>
@@ -228,11 +251,10 @@ const InfoCard:React.FC = () => {
                 onClick={handleDisgard}>
                 <FontAwesomeIcon icon={faXmark} />
               </button>
-              {cardId &&
                <button id={InfoCardStyles.delete}
                 onClick={handleDelete}>
                 <FontAwesomeIcon icon={faTrash}/>
-              </button>}
+              </button>
             </div>
           </>
         ) : (
@@ -241,7 +263,7 @@ const InfoCard:React.FC = () => {
           </button>
         )}
 
-        <CatagorySpecificInfo name={name} images={images} setImages={setImages} group={group} setGroup={setGroup} handleNameChange={handleNameChange} isNameValid={isNameValid} catagory={catagory} species={speciesInfo.current}/>
+        <CatagorySpecificInfo handleGenerateIndividualName={handleGenerateIndividualName} name={name} images={images} setImages={setImages} group={group} setGroup={setGroup} handleNameChange={handleNameChange} isNameValid={isNameValid} catagory={catagory} species={speciesInfo.current}/>
         <div className={TabStyles.tabContainer}>
           {tabs.map(tab => 
             <Tab handleTabClick={handleTabClick} tabName={tab} activeTab={activeTab} key={tab}/> 
@@ -275,12 +297,12 @@ const InfoCard:React.FC = () => {
         }
         {activeTab === "Water" &&
           <div className={InfoCardStyles.activeTabContents}>
-            <WaterChart waterPoints={waterPoints} handleChangeWater={handleChangeWater}/>
+            <WaterChart waterPoints={waterValues} handleChangeWater={handleChangeWater}/>
           </div>
         }
         {activeTab === "Relatives" &&
           <div className={InfoCardStyles.activeTabContents}>
-            <MiniLineageTree mother={parents?.mother} father={parents?.father} child={{name, image: images[0]}} handleChangeParents={handleChangeParents} />
+            <MiniLineageTree mother={parents?.mother} father={parents?.father} child={{name, image: images.length ? images[0] : "", id: ""}} handleChangeParents={handleChangeParents} />
           </div>
         }
       </div>

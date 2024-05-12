@@ -3,13 +3,13 @@ import LineageTreeStyles from '../../lineage-tree/styles/LineageTreeStyle.module
 import TreeNode from '../../lineage-tree/components/TreeNode'
 import MiniLineageTreeStyles from '../styles/MiniLineageTreeStyles.module.css'
 import placeholder from '../../../assets/placeholder.jpeg'
-import { Parent } from '../../../types'
+import { LeanLineageNode } from '../../../types'
 import { useDispatch } from 'react-redux'
 import { toggleInfoCardOn } from '../InfoCardSlice'
 
 type Props = {
-  mother?: Parent
-  father?: Parent
+  mother?: LeanLineageNode
+  father?: LeanLineageNode
   child: {
     id: string,
     image: string,
@@ -39,6 +39,7 @@ const MiniLineageTree:React.FC<Props> = ({mother, father, child, handleChangePar
                 image={mother?.image || placeholder} 
                 id={mother?.id || ""} 
                 name={mother?.name || "???"} 
+                styles={MiniLineageTreeStyles.smallContainer}
               />
             </div>
             <div className={`${LineageTreeStyles.fatherContainer} fadeInElement`}>
@@ -49,7 +50,7 @@ const MiniLineageTree:React.FC<Props> = ({mother, father, child, handleChangePar
               </span> */}
               <TreeNode 
                 displayInfoCard={father?.id ? () => displayInfoCard(father.id) : () => {}} 
-                image={father?.image || placeholder} 
+                image={father?.image} 
                 id={father?.id || ""} 
                 name ={father?.name || "???"} 
               />
@@ -65,7 +66,7 @@ const MiniLineageTree:React.FC<Props> = ({mother, father, child, handleChangePar
                 </span> */}
                 <TreeNode 
                   displayInfoCard={child?.id ? () => displayInfoCard(child.id) : () => {}} 
-                  image={child?.image || placeholder} 
+                  image={child.image} 
                   id={child?.id || ""} 
                   name ={child?.name || "???"} 
                 />

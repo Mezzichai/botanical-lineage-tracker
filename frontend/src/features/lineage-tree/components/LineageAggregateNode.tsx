@@ -3,9 +3,9 @@ import LineageTreeStyles from '../styles/LineageTreeStyle.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faEllipsisVertical, faPlus} from '@fortawesome/free-solid-svg-icons'
 import optionModalStyles from '../../../styles/optionsModalStyles.module.css'
-
-import image1 from '../../../assets/13947.jpg'
+import placeholder from '../../../assets/placeholder.jpeg'
 import ButtonWithHoverLabel from "../../../components/ButtonWithHoverLabel";
+import { LeanLineageNode } from "../../../types";
 type Child = {
   name: string;
   image?: string;
@@ -24,7 +24,7 @@ type Props = {
   handleShowSiblings: () => void
   activeOfAggregatesId?: string;
   siblingCount?: number;
-  father?: Child
+  father?: LeanLineageNode
 
 }
 
@@ -93,7 +93,7 @@ const LineageAggregateNode: React.FC<Props> = ({name, id, image, handleNodeClick
           <button aria-label={`more info`} className={optionModalStyles.modalBtn} onClick={handleMoreInfoClick}>More Info</button>
         </div>
       }
-      <img src={image || image1} className={LineageTreeStyles.nodeImage}/>
+      <img src={image || placeholder} className={LineageTreeStyles.nodeImage}/>
       <span className={`${LineageTreeStyles.nodeInfo}`}>
         <p className={LineageTreeStyles.nodeTitle}>{name}</p>
         <button>

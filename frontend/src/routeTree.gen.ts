@@ -13,8 +13,8 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as SpeciesIdImport } from './routes/$speciesId'
 import { Route as IndexImport } from './routes/index'
-import { Route as SpeciesNameGroupsImport } from './routes/$speciesName.groups'
-import { Route as SpeciesNameGroupsGroupNameImport } from './routes/$speciesName.groups.$groupName'
+import { Route as SpeciesIdGroupsImport } from './routes/$speciesId.groups'
+import { Route as SpeciesIdGroupsGroupIdImport } from './routes/$speciesId.groups.$groupId'
 
 // Create/Update Routes
 
@@ -28,17 +28,15 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const SpeciesNameGroupsRoute = SpeciesNameGroupsImport.update({
-  path: '/$speciesName/groups',
-  getParentRoute: () => rootRoute,
+const SpeciesIdGroupsRoute = SpeciesIdGroupsImport.update({
+  path: '/groups',
+  getParentRoute: () => SpeciesIdRoute,
 } as any)
 
-const SpeciesNameGroupsGroupNameRoute = SpeciesNameGroupsGroupNameImport.update(
-  {
-    path: '/$groupName',
-    getParentRoute: () => SpeciesNameGroupsRoute,
-  } as any,
-)
+const SpeciesIdGroupsGroupIdRoute = SpeciesIdGroupsGroupIdImport.update({
+  path: '/$groupId',
+  getParentRoute: () => SpeciesIdGroupsRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -52,13 +50,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SpeciesIdImport
       parentRoute: typeof rootRoute
     }
-    '/$speciesName/groups': {
-      preLoaderRoute: typeof SpeciesNameGroupsImport
-      parentRoute: typeof rootRoute
+    '/$speciesId/groups': {
+      preLoaderRoute: typeof SpeciesIdGroupsImport
+      parentRoute: typeof SpeciesIdImport
     }
-    '/$speciesName/groups/$groupName': {
-      preLoaderRoute: typeof SpeciesNameGroupsGroupNameImport
-      parentRoute: typeof SpeciesNameGroupsImport
+    '/$speciesId/groups/$groupId': {
+      preLoaderRoute: typeof SpeciesIdGroupsGroupIdImport
+      parentRoute: typeof SpeciesIdGroupsImport
     }
   }
 }
@@ -67,8 +65,9 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
-  SpeciesIdRoute,
-  SpeciesNameGroupsRoute.addChildren([SpeciesNameGroupsGroupNameRoute]),
+  SpeciesIdRoute.addChildren([
+    SpeciesIdGroupsRoute.addChildren([SpeciesIdGroupsGroupIdRoute]),
+  ]),
 ])
 
 /* prettier-ignore-end */

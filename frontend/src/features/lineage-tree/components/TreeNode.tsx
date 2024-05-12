@@ -2,8 +2,7 @@ import React from "react";
 import LineageTreeStyles from '../styles/LineageTreeStyle.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faInfo } from '@fortawesome/free-solid-svg-icons'
-
-import image1 from '../../../assets/13947.jpg'
+import placeholder from '../../../assets/placeholder.jpeg'
 
 type Props = {
   name: string;
@@ -19,7 +18,7 @@ type Props = {
 
 const TreeNode: React.FC<Props> = ({name, id, image, displayInfoCard, isParentBeingHovered, handleHover=() => {}, handleUnHover}) => {
   return (
-    <span 
+    <div
       onClick={displayInfoCard ? () => displayInfoCard(id) : () => {}}
       onMouseEnter={() => handleHover(id)} 
       onMouseLeave={handleUnHover} 
@@ -30,8 +29,11 @@ const TreeNode: React.FC<Props> = ({name, id, image, displayInfoCard, isParentBe
     >
     {!id ? (
       <>
-        <img src={image || image1} className={LineageTreeStyles.nodeImage}/>
-        <span className={`${LineageTreeStyles.nodeInfo} `}>
+        <img 
+          srcSet={`${image ? `${image}?w=176&fit=crop&auto=format&dpr=3` : placeholder}`}
+          src={image} className={LineageTreeStyles.nodeImage}
+        />
+        <span className={`${LineageTreeStyles.nodeInfo}`}>
           <p className={LineageTreeStyles.nodeTitle}>{name}</p>
           <button onClick={() => displayInfoCard(id)}>
           <FontAwesomeIcon icon={faInfo} />
@@ -40,8 +42,11 @@ const TreeNode: React.FC<Props> = ({name, id, image, displayInfoCard, isParentBe
       </>
     ) : (
       <>
-        <img src={image || image1} className={LineageTreeStyles.nodeImage}/>
-        <span className={`${LineageTreeStyles.nodeInfo} `}>
+        <img 
+          srcSet={`${image ? `${image}?w=176&fit=crop&auto=format&dpr=3` : placeholder}`}
+          src={image} className={LineageTreeStyles.nodeImage}
+        />        
+          <span className={`${LineageTreeStyles.nodeInfo} `}>
           <p className={LineageTreeStyles.nodeTitle}>{name}</p>
           <button onClick={() => displayInfoCard(id)}>
             <FontAwesomeIcon icon={faInfo}/>
@@ -49,7 +54,7 @@ const TreeNode: React.FC<Props> = ({name, id, image, displayInfoCard, isParentBe
         </span>
       </>
     )}
-    </span>
+    </div>
   )
 }
 

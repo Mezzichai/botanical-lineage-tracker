@@ -1,17 +1,23 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import placeholder from '../../../assets/placeholder.jpeg'
+import placeholder from '../assets/placeholder.jpeg'
 import { faInfo } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { toggleInfoCardOn } from '../features/InfoCard/InfoCardSlice'
 import { Species } from '../types'
-import CardStyles from '../styles/cardStyles.module.css'
+import CardStyles from '../styles/cardAndListStyles.module.css'
 type Props = {
-  info: Species,
-  handleClick: () => void
-  catagory: "group" | "species" | "individual"
+  info: Species;
+  handleClick: () => void;
+  catagory: "group" | "species" | "individual";
+  sizeStyles: string;
+  hovered?: boolean;
+  handleHover?: (id:string) => void;
+  handleUnHover?: () => void;
+  imageDimensions: {width: number, height?: number};
+
 }
-const ItemCard: React.FC<Props> = ({info, catagory, handleClick}) => {
+const ItemCard: React.FC<Props> = ({info, catagory, handleClick, sizeStyles, imageDimensions, handleHover = ()=>{}, handleUnHover = ()=>{}}) => {
 
   const dispatch = useDispatch();
   
@@ -21,11 +27,15 @@ const ItemCard: React.FC<Props> = ({info, catagory, handleClick}) => {
   }
 
   return (
-    <div className={CardStyles.card} onClick={handleClick}>
+    <div 
+      className={`${CardStyles.cardContent} ${sizeStyles}`}
+      onClick={handleClick}
+      onMouseEnter={() => handleHover(info.id)} 
+      onMouseLeave={handleUnHover} 
+    >
       <img 
-        srcSet={`${info?.images?.length ? `${info.images[0]}?w=${300}&h=${200}&fit=crop&auto=format&dpr=2` : placeholder}`}
+        srcSet={`${info?.images?.length ? `${info.images[0]}?w=${imageDimensions.width}&h=${imageDimensions.height || "auto"}&fit=crop&auto=format&dpr=2` : placeholder}`}
         src={info.images[0] || placeholder}
-        style={{ width: '300px', height: '200px' }}
       />
       <span className={CardStyles.cardInfo}>
         <p>{info.name}</p>

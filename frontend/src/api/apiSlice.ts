@@ -11,15 +11,19 @@ export const apiSlice = createApi({
       providesTags: ['Species']
     }),
     getSpecificSpeciesInfo: builder.query({
-      query: params => `/info/species/${params.speciesId}`,
+      query: params => `/info/${params.speciesId}`,
       providesTags: ["cardInfo"]
     }),
-    getSpecificSpeciesIndividuals: builder.query({
-      query: params => `/${params.speciesId}`,
+    getNestedIndividuals: builder.query({
+      query: params => `/${params.speciesId}/nested`,
+      providesTags: ['Individuals']
+    }),
+    getFlatIndividuals: builder.query({
+      query: params => `/${params.speciesId}/flat`,
       providesTags: ['Individuals']
     }),
     getSpecificGroupInfo: builder.query({
-      query: params => `/info/group/${params.groupId}`,
+      query: params => `/info/${params.speciesId}/${params.groupId || "undefined"}`,
       providesTags: ["cardInfo"]
     }),
     getSpecificSpeciesGroups: builder.query({
@@ -31,7 +35,7 @@ export const apiSlice = createApi({
       providesTags: ['Individuals']
     }),
     getSpecficIndividualInfo: builder.query({
-      query: params => `/info/individual/${params.individualId}`,
+      query: params => `/info/${params.speciesId}/${params.groupId || "undefined"}/${params.individualId || "undefined"}`,
       providesTags: ["cardInfo"]
     }),
 
@@ -46,11 +50,11 @@ export const apiSlice = createApi({
     }),
     createSpeciesIndividual: builder.mutation({
       query: individualInfo => ({
-        url: `/${individualInfo.params.speciesId}/individual`,
+        url: `/${individualInfo.params.speciesId}/${individualInfo.params.groupId || "undefined"}`,
         method: 'POST',
         body: individualInfo.form
       }),
-      invalidatesTags: ["Individuals"]
+      invalidatesTags: ["Individuals", "cardInfo"]
     }),
     createSpeciesGroup: builder.mutation({
       query: groupInfo => ({
@@ -58,7 +62,7 @@ export const apiSlice = createApi({
         method: 'POST',
         body: groupInfo.form
       }),
-      invalidatesTags: ["Groups"]
+      invalidatesTags: ["Groups", "cardInfo"]
     }),
 
 
@@ -115,8 +119,10 @@ export const apiSlice = createApi({
 export const {
   useGetSpeciesQuery,
   useGetSpecificSpeciesInfoQuery,
-  useGetSpecificSpeciesIndividualsQuery,
+  useGetNestedIndividualsQuery,
+  useGetFlatIndividualsQuery,
   useGetSpecificSpeciesGroupsQuery,
+  useGetSpecificGroupIndividualsQuery,
   useGetSpecificGroupInfoQuery,
   useGetSpecficIndividualInfoQuery,
   useCreateSpeciesGroupMutation,
