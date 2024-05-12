@@ -34,7 +34,7 @@ const TreeView: React.FC = () => {
   const dispatch = useDispatch()
 
   const handleChangeWidths = useCallback((newWidth: number, ulParentId: string, oldWidth: number) => {
-    
+    console.log(widthTree)
     setWidthTree(
       produce(prevState => {
 
@@ -52,9 +52,11 @@ const TreeView: React.FC = () => {
             removeChildrenWidthHistory(node.children)
           }) 
         }
+        
         function cascadeWidthUpdates(nodes:LineageNode[]) {
           if (nodes.length > 2 && nodes[0].id === ulParentId) {
-            amountToAddToParents = newWidth - Math.max(nodes[0].width || oldWidth, 580)
+            amountToAddToParents = newWidth - Math.max(nodes[0].width || oldWidth, 568)
+            console.log(amountToAddToParents)
             removeChildrenWidthHistory(nodes)
             nodes[0].width = newWidth
             return true
@@ -81,7 +83,7 @@ const TreeView: React.FC = () => {
                     }
                   }
                 }
-                if (doubleNodesExistBetweenGenerations && nodes[0].width && nodes[0].widthUpdateHistory) {
+                if (nodes[0].width && nodes[0].widthUpdateHistory) {
                   nodes[0].width+=amountToAddToParents
 
                   if (amountToAddToParents > 0) {

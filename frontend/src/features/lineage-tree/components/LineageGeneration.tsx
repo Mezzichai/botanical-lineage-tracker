@@ -33,7 +33,7 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
   const [activeMateIndexes, setActiveIndexes] = useState<number>(0);
   const [activeIdOfAggregates, setActiveIdOfAggregates] = useState<string>();
   const [hoveredNodeId, setHoveredNodeId] = useState<string>();
-  console.log(children)
+
   function getActiveNode() {
     return children.find(child => child.id === activeIdOfAggregates);
   }
@@ -66,6 +66,8 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
     width = 176
   }
 
+
+
   const aggregateChildrenRef = useRef<HTMLLIElement | null>(null)
 
   const childrenWithChildrenIds = children
@@ -92,8 +94,10 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
 
   const aggregateNodesId = children[0].id
   const changeWidth = useCallback((newULwidth: number) => {
+   
     const newWidth = findWidthOfAggregateContainer(newULwidth);
-      handleChangeWidths(newWidth, aggregateNodesId, aggregateChildrenRef.current?.offsetWidth || 0);
+    console.log(newWidth)
+    handleChangeWidths(newWidth, aggregateNodesId, aggregateChildrenRef.current?.offsetWidth || 0);
   }, [findWidthOfAggregateContainer, handleChangeWidths, aggregateNodesId]);
 
   const [ulRefCB] = useInvalidateParentWidthRefCallback(changeWidth);
