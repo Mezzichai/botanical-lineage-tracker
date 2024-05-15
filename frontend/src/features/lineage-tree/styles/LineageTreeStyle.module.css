@@ -358,6 +358,7 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
 .parentsContainer {
   width: 35.5rem;
   gap: 1.2rem;
+  height: 10rem;
   position: relative;
   display: flex;
   align-items: center;

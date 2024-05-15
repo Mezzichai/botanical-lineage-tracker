@@ -6,13 +6,7 @@ import optionModalStyles from '../../../styles/optionsModalStyles.module.css'
 import placeholder from '../../../assets/placeholder.jpeg'
 import ButtonWithHoverLabel from "../../../components/ButtonWithHoverLabel";
 import { LeanLineageNode } from "../../../types";
-type Child = {
-  name: string;
-  image?: string;
-  children: Child[];
-  father?: Child
-  id: string
-}
+
 
 type Props = {
   name: string;
@@ -20,7 +14,6 @@ type Props = {
   id: string;
   handleNodeClick: (id: string, e?: React.MouseEvent) => void;
   handleHover: (id: string) => void;
-  handleUnHover: () => void;
   handleShowSiblings: () => void
   activeOfAggregatesId?: string;
   siblingCount?: number;
@@ -30,7 +23,7 @@ type Props = {
 
 
 
-const LineageAggregateNode: React.FC<Props> = ({name, id, image, handleNodeClick, handleHover, handleUnHover, handleShowSiblings, activeOfAggregatesId, siblingCount}) => {
+const LineageAggregateNode: React.FC<Props> = ({name, id, image, handleNodeClick, handleHover, handleShowSiblings, activeOfAggregatesId, siblingCount}) => {
   const [optionsModalState, setOptionsModal] = useState<boolean>(false);
   const optionsModalRef = useRef<HTMLDivElement>(null)
 
@@ -62,7 +55,6 @@ const LineageAggregateNode: React.FC<Props> = ({name, id, image, handleNodeClick
   return (
     <div 
       onMouseEnter={() => handleHover(id)} 
-      onMouseLeave={handleUnHover} 
       onClick={(e) => handleNodeClick(id, e)}
       className={
         `${LineageTreeStyles.nodeContent} 

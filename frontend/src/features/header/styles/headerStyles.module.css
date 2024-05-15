@@ -4,7 +4,7 @@
   justify-content: space-between;
   display: flex;
   align-items: center;
-  position: absolute;
+  position: fixed;
   padding: .4em;
 
   width: 100%;

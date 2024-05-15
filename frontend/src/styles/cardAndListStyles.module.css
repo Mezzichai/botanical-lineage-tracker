@@ -1,17 +1,28 @@
 .listContainer {
   padding: 0 .7rem .7rem .7rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(176px, 176px));
-  /* justify-content: center; */
+  justify-content: center;
   width: 100%;
-  gap: .837rem;
+  display: grid;
+  gap: 1.2rem;
 
+}
+
+#individualsListContainer {
+  padding-top: 9.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(176px, 176px));
 }
 
 .smallCardSize { 
   min-width: 11rem;
   max-width: 11rem;
   height: 10rem;
+	font-size: 11px;
+}
+
+.largeCardSize { 
+  min-width: 20rem;
+  max-width: 20rem;
+  height: 18rem;
 	font-size: 11px;
 }
 
@@ -43,6 +54,7 @@
   background-color: #ffffff; 
   font-size: 1rem;
   padding: 5px .2rem;
+  height: 21.5%;
   display: flex;
   align-items: center;
   justify-content:space-between;
@@ -109,7 +121,14 @@
 
 
 
-.speciesListContainer {
-  padding-top: 3.8rem;
+#speciesListContainer {
+  padding-top: 4.8rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 320px));
+}
+
+#speciesListContainer .cardInfo button {
+  height: 1.7rem;
+  width: 1.7rem;
+  margin-right: .5rem;
 }
 
