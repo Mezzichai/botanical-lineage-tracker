@@ -17,10 +17,17 @@ Features include but are not limited to:
 low level control over each individual- water schedules, substrate compostitions, etc will default to the users species-specific
 defaults, but can manually set as having its own individual-specific parameters
 
-Built using:
-TypeScript,
-React,
-Redux (including RTK query),
-Express,
+Frontend built with:
+
+React
+Redux (including RTK query)
+Tanstack-Router
+TypeScript
+
+Backend built with:
+
 Postgres
+Express
+NodeJS
+
 
