@@ -13,6 +13,8 @@ characteristics.
 Features include but are not limited to:
 
  - "tree view", which is a visualization tool for viewing the children of a given individual in a family tree like structure
+ ![bfca04400c867d29a7f1b91fc002e419](https://github.com/Mezzichai/botanical-lineage-tracker/assets/76605204/679d9a2a-841f-4efe-a50e-03a9b8f390ef)
+
 
  - "grid view", a simplified view of individuals of a particular species that can be filtered and sorted at a fine granularity
 
