@@ -93,24 +93,3 @@ CREATE TABLE child_parent_pair (
   parent_pair_id integer REFERENCES parent_pair(id) ON DELETE CASCADE,
   id serial PRIMARY KEY
 );
-
-
-SELECT individualPlant.* AS plant 
-  FROM individualPlant
-  WHERE plant.parents_id IS NULL
-
-SELECT individualPlant.* AS father
-  FROM individualPlant
-    JOIN parentPairs
-      ON individualPlant.id === parentPairs.father_id
-    WHERE parentPairs.mother_id === ${motherId}
-
-SELECT id FROM parentPairs
-WHERE ${mother_id} === parentPairs.mother_id
-OFFSET ${offset}
-
-SELECT individualPlant.*
-  FROM individualPlant
-  WHERE individualPlant.parents_id === ${parentsId}
-
-

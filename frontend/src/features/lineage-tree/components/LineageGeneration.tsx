@@ -5,7 +5,7 @@ import LineageAggregateNode from "./LineageAggregateNode";
 import { LeanLineageNode, LineageNode } from "../../../types";
 import ButtonWithHoverLabel from "../../../components/ButtonWithHoverLabel";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faChevronUp, faPlus } from "@fortawesome/free-solid-svg-icons";
 import useChangeContentWidth from "../hooks/useChangeContentWidth";
 
 
@@ -99,12 +99,12 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
 
   let hoverTimeout:NodeJS.Timeout;
   const handleHover = (id: string) => {
-      if (hoverTimeout) {
-        clearTimeout(hoverTimeout)
-      }
-    // if (!isExpandAnimating && !isContractAnimating) {
-      preHoverOrActiveLiWidth.current = aggregateChildrenRef.current?.offsetWidth || 0
-      setHoveredNodeId(id)
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout)
+    }
+ // if (!isExpandAnimating && !isContractAnimating) {
+    preHoverOrActiveLiWidth.current = aggregateChildrenRef.current?.offsetWidth || 0
+    setHoveredNodeId(id)
   };
 
   const handleUnHover = () => {
@@ -130,22 +130,30 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
           >
             <div 
               className={`${activeIdOfAggregates && !getActiveNode()?.children.length ? LineageTreeStyles.hasNoChildren : LineageTreeStyles.parentsContainer}`}
-              style={{width: `${176 + ((children.length-1) * 44)}px`}}
+              style={{width: `${activeIdOfAggregates ? 568 : 176 + ((children.length-1) * 44)}px`}}
               onMouseLeave={handleUnHover}
             >
               {children.map((node, index) => {
                 return (
                   <>
-                    {(node.mates.length > 0) &&
-                      <div className={`${LineageTreeStyles.fatherContainer} ${LineageTreeStyles.fatherContainerOfActive} ${activeIdOfAggregates === node.id ? `fadeInElement` : "fadeOutElement"}`}>
-                        <TreeNode 
-                          displayInfoCard={displayInfoCard}
-                          image={node.mates[activeMateIndexes]?.images[0]} 
-                          id={node.mates[0]?.id || ""} 
-                          name ={node.mates[0]?.name || "???"} 
-                        />
+                    
+                    <div className={`${LineageTreeStyles.fatherContainer} ${LineageTreeStyles.fatherContainerOfActive} ${activeIdOfAggregates === node.id ? `fadeInElement` : "fadeOutElement"}`}>
+                      <div className={LineageTreeStyles.paginateMatesContainer}>
+                        <ButtonWithHoverLabel label="Next Mate">
+                          <button><FontAwesomeIcon icon={faChevronUp} /></button>
+                        </ButtonWithHoverLabel>
+                        <ButtonWithHoverLabel label="Previous Mate">
+                          <button><FontAwesomeIcon icon={faChevronDown} /></button>
+                        </ButtonWithHoverLabel>
                       </div>
-                    }
+                      <TreeNode 
+                        displayInfoCard={displayInfoCard}
+                        image={node.mates[activeMateIndexes]?.images[0]} 
+                        id={node.mates[0]?.id || ""} 
+                        name ={node.mates[0]?.name || "???"} 
+                      />
+                    </div>
+                  
                     <div 
                       style={{
                         transform: "translateX(" + computedXPositionsForAggregateNodes[index] + "px)"
@@ -177,8 +185,8 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
                           className={LineageTreeStyles.addChild}
                           onClick={
                             () => displayNewInfoCard(
-                              {name: node.name, images: node.images[0], id: node.id},
-                              {name: node.mates[activeMateIndexes]?.name, images: node.mates[activeMateIndexes]?.images[0], id: node.mates[activeMateIndexes]?.id}
+                              {name: node.name, image: node.images[0], id: node.id},
+                              {name: node.mates[activeMateIndexes]?.name, image: node.mates[activeMateIndexes]?.images[0], id: node.mates[activeMateIndexes]?.id}
                             )}
                         >
                           <FontAwesomeIcon icon={faPlus} />
@@ -240,6 +248,14 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
               </ButtonWithHoverLabel>
               {node.children.length > 0 &&
                 <span className={`${LineageTreeStyles.fatherContainer} ${`fadeInElement`}`}>
+                  <div className={LineageTreeStyles.paginateMatesContainer}>
+                    <ButtonWithHoverLabel label="Next Mate">
+                      <button><FontAwesomeIcon icon={faChevronUp} /></button>
+                    </ButtonWithHoverLabel>
+                    <ButtonWithHoverLabel label="Previous Mate">
+                      <button><FontAwesomeIcon icon={faChevronDown} /></button>
+                    </ButtonWithHoverLabel>
+                  </div>
                   <TreeNode 
                     image={node?.mates[activeMateIndexes]?.images[0]} 
                     id={node?.mates[0]?.id || ""} 
