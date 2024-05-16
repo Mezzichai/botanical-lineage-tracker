@@ -3,7 +3,7 @@ Botanical Lineage Tracker is a wep app that allows users to keep track of, and v
 An example of the problem domain would suffice in understanding the utility of this application:
 
 Imagine you are interested in selecting for specific morphological or chemical characteristics within a plant species.
-Assumming you are working with hundreds or even thousands of individuals, it will prove a difficult task to keep track 
+Assuming you are working with hundreds or even thousands of individuals, it will prove a difficult task to keep track 
 of their specific familial lineages without a GUI, which is very important if we are selecting for specific inherited 
 characteristics.
 
