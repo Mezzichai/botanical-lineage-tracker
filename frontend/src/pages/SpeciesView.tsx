@@ -29,7 +29,7 @@ const Species = () => {
     ) : (
       <ListView catagory={'species'} styles={CardStyles.speciesListContainer}>
         {data.map((item, index: number) => (
-          <ItemCard key={index + String(item.id)} handleClick={() => handleSpeciesClick(item.id)} info={item} catagory={'species'} imageDimensions={{width: 300, height: 200}}/>
+          <ItemCard key={index + String(item.id)} sizeStyles={CardStyles.largeCardSize} handleClick={() => handleSpeciesClick(item.id)} info={item} catagory={'species'} imageDimensions={{width: 320}}/>
         ))}
       </ListView>
   )}

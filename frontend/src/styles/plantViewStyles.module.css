@@ -84,12 +84,6 @@
 }
 
 
-
-#individualsListContainer {
-  padding-top: 9.5rem;
-}
-
-
 @media (max-width: 700px) { 
   .search {
     width: auto;
