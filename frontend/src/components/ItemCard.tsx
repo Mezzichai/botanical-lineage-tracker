@@ -15,8 +15,8 @@ type Props = {
   handleHover?: (id:string) => void;
   handleUnHover?: () => void;
   imageDimensions: {width: number, height?: number};
-
 }
+
 const ItemCard: React.FC<Props> = ({info, catagory, handleClick, sizeStyles, imageDimensions, handleHover = ()=>{}, handleUnHover = ()=>{}}) => {
 
   const dispatch = useDispatch();
