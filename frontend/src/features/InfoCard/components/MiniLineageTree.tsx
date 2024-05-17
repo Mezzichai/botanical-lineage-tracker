@@ -6,6 +6,7 @@ import placeholder from '../../../assets/placeholder.jpeg'
 import { LeanLineageNode } from '../../../types'
 import { useDispatch } from 'react-redux'
 import { toggleInfoCardOn } from '../InfoCardSlice'
+import EditableTreeNode from './EditableTreeNodeInfo'
 
 type Props = {
   mother?: LeanLineageNode
@@ -18,7 +19,7 @@ type Props = {
   handleChangeParents: () => void
 }
 
-const MiniLineageTree:React.FC<Props> = ({mother, father, child, handleChangeParents}) => {
+const MiniLineageTree:React.FC<Props> = ({mother, father, child}) => {
   const dispatch = useDispatch()
   const displayInfoCard = (id?: string) => {
     dispatch(toggleInfoCardOn({itemId: id}))
@@ -38,9 +39,11 @@ const MiniLineageTree:React.FC<Props> = ({mother, father, child, handleChangePar
                 displayInfoCard={mother?.id ? () => displayInfoCard(mother.id) : () => {}} 
                 image={mother?.image || placeholder} 
                 id={mother?.id || ""} 
-                name={mother?.name || "???"} 
                 styles={MiniLineageTreeStyles.smallContainer}
-              />
+              >
+                <EditableTreeNode name={mother?.name || "???"}/>
+              </TreeNode>
+
             </div>
             <div className={`${LineageTreeStyles.fatherContainer} fadeInElement`}>
               {/* <span className={InfoCardStyles.group}>
@@ -52,8 +55,9 @@ const MiniLineageTree:React.FC<Props> = ({mother, father, child, handleChangePar
                 displayInfoCard={father?.id ? () => displayInfoCard(father.id) : () => {}} 
                 image={father?.image} 
                 id={father?.id || ""} 
-                name ={father?.name || "???"} 
-              />
+              >
+                <EditableTreeNode name={father?.name || "???"}/>
+              </TreeNode>
             </div>
           </div>
           <ul>

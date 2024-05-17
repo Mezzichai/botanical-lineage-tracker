@@ -4,7 +4,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_URL }),
-  tagTypes: ['Species', 'Individuals', "Groups", "cardInfo"],
+  tagTypes: ['Species', 'Individuals', "Groups", "cardInfo", "individualsQuery"],
   endpoints: builder => ({
     getSpecies: builder.query({
       query: () => '/',
@@ -17,6 +17,14 @@ export const apiSlice = createApi({
     getNestedIndividuals: builder.query({
       query: params => `/${params.speciesId}/nested`,
       providesTags: ['Individuals']
+    }),
+    getQueriedIndividuals: builder.query({
+      query: params => `/${params.speciesId}?search=${params.query}`,
+      providesTags: ['individualsQuery']
+    }),
+    getNestedChildrenOfPair: builder.query({
+      query: params => `/${params.speciesId}/nested?mother=${params.motherId}&father=${params.fatherId}`,
+      providesTags: result => [{ type: 'Individuals', id: result.motherId + result.fatherId }]
     }),
     getFlatIndividuals: builder.query({
       query: params => `/${params.speciesId}/flat`,
@@ -118,8 +126,10 @@ export const apiSlice = createApi({
 
 export const {
   useGetSpeciesQuery,
+  useGetQueriedIndividualsQuery,
   useGetSpecificSpeciesInfoQuery,
   useGetNestedIndividualsQuery,
+  useGetNestedChildrenOfPairQuery,
   useGetFlatIndividualsQuery,
   useGetSpecificSpeciesGroupsQuery,
   useGetSpecificGroupIndividualsQuery,

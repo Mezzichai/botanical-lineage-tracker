@@ -119,26 +119,25 @@ const getGroupInfo = tryCatch(async function(req, res, next) {
 
 
 const getSpeciesMembersNested = tryCatch(async function(req, res, next) {
+  const mother = req.query?.mother;
+  const father = req.query?.father;
+  const page = req.query?.page;
+
   const GET_PARENT_LESS_INDIVIDUALS = `SELECT individual_plant.id AS id, individual_plant.name AS name, individual_plant.images AS images
                                         FROM individual_plant
                                         JOIN child_parent_pair ON child_parent_pair.individual_plant_id = individual_plant.id
                                         WHERE species_id = $1 AND child_parent_pair.parent_pair_id IS NULL`;
 
-  const parentlessIndividualsResult = await makeQuery(GET_PARENT_LESS_INDIVIDUALS, req.params.speciesId)
-
-
-  const GET_SPECIES_INDIVIDUALS = `SELECT * 
-                                    FROM individual_plant
-                                    WHERE species_id = $1`;
-
-  const individualsResult = await makeQuery(GET_SPECIES_INDIVIDUALS, req.params.speciesId)
-
+  let parentlessIndividualsResult;
+  if (!mother && !father) {
+    parentlessIndividualsResult = await makeQuery(GET_PARENT_LESS_INDIVIDUALS, req.params.speciesId)
+  }
   
   const GET_CHILDREN_OF = `SELECT individual_plant.id AS id, individual_plant.name AS name, individual_plant.images AS images
                             FROM individual_plant
                             LEFT JOIN child_parent_pair ON child_parent_pair.individual_plant_id = individual_plant.id
                             LEFT JOIN parent_pair ON child_parent_pair.parent_pair_id = parent_pair.id
-                            WHERE individual_plant.species_id = $1 AND parent_pair.mother_id = $2`;
+                            WHERE individual_plant.species_id = $1 AND parent_pair.mother_id = $2 AND (parent_pair.father_id = $3 OR $3 IS NULL)`;
 
   const GET_MATES_OF = `SELECT father.id AS id, father.images AS images, father.name AS name
                           FROM parent_pair
@@ -147,17 +146,26 @@ const getSpeciesMembersNested = tryCatch(async function(req, res, next) {
                           WHERE mother.species_id = $1 
                           AND mother.id = $2`
   
-  let nestedNodes = parentlessIndividualsResult.rows;
+  let nestedNodes = parentlessIndividualsResult.rows || [{id: mother, mates: [{id: father}]}];
   const speciesId = Number(req.params.speciesId);
-  async function recursivelyNormalize(node) {
+  async function recursivelyRetrieveNodes(node) {
     const mates = await makeQuery(GET_MATES_OF, speciesId, node.id);
     node.mates = mates.rows;
-    const children = await makeQuery(GET_CHILDREN_OF, speciesId, node.id);
-    node.children = await Promise.all(children.rows.map(recursivelyNormalize));
+    const children = await makeQuery(GET_CHILDREN_OF, speciesId, node.id, node.mates[0]?.id || null);
+    node.children = await Promise.all(children.rows.map(recursivelyRetrieveNodes));
     return node
   }
-  nestedNodes = await Promise.all(nestedNodes.map(recursivelyNormalize));
+  async function childrenOfPair(node) {
+    const children = await makeQuery(GET_CHILDREN_OF, speciesId, node.id, node.mates[0].id);
+    node.children = await Promise.all(children.rows.map(recursivelyRetrieveNodes));
+    return node
+  }
 
+  if (mother && father) {
+    nestedNodes = await childrenOfPair(nestedNodes);
+  } else {
+    nestedNodes = await Promise.all(nestedNodes.map(recursivelyRetrieveNodes));
+  }
   res.send(nestedNodes).status(200);
 })
 
