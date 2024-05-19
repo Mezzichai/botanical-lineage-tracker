@@ -5,6 +5,7 @@ import ListView from '../components/ListView'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import ItemCard from '../components/ItemCard'
 import CardStyles from '../styles/cardAndListStyles.module.css'
+import ItemCardInfo from '../components/ItemCardInfo'
 
 const Species = () => {
   const { speciesIdParam, groupIdParam } = useParams({ strict: false})
@@ -29,7 +30,9 @@ const Species = () => {
     ) : (
       <ListView catagory={'species'} styles={CardStyles.speciesListContainer}>
         {data.map((item, index: number) => (
-          <ItemCard key={index + String(item.id)} sizeStyles={CardStyles.largeCardSize} handleClick={() => handleSpeciesClick(item.id)} info={item} catagory={'species'} imageDimensions={{width: 320}}/>
+          <ItemCard key={index + String(item.id)} sizeStyles={CardStyles.largeCardSize} handleClick={() => handleSpeciesClick(item.id)} id={item.id} image={item.images[0]} imageDimensions={{width: 320}}>
+            <ItemCardInfo name={item.name}/>
+          </ItemCard>
         ))}
       </ListView>
   )}

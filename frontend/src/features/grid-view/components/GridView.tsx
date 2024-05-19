@@ -1,9 +1,9 @@
 import { useNavigate } from '@tanstack/react-router'
 import React from 'react'
-import { useGetSpecificSpeciesIndividualsQuery } from '../../../api/apiSlice'
 import ItemCard from '../../../components/ItemCard'
 import ListView from '../../../components/ListView'
 import CardStyles from '../../../styles/cardAndListStyles.module.css'
+import ItemCardInfo from '../../../components/ItemCardInfo'
 
 const GridView = () => {
   const navigate = useNavigate({ from: '/' })
@@ -27,7 +27,9 @@ const GridView = () => {
       <div className={CardStyles.listContainer}>
         <ListView catagory={'individual'}>
           {data.map((item, index: number) => (
-            <ItemCard key={index + String(item.id)} handleClick={() => handleSpeciesClick(item.id)} info={item} catagory={'individual'}/>
+            <ItemCard key={index + String(item.id)} handleClick={() => handleSpeciesClick(item.id)} info={item} catagory={'individual'}>
+              <ItemCardInfo name={item.name}/>
+            </ItemCard>
           ))}
         </ListView>
       </div>

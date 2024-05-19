@@ -19,11 +19,11 @@ export const apiSlice = createApi({
       providesTags: ['Individuals']
     }),
     getQueriedIndividuals: builder.query({
-      query: params => `/${params.speciesId}?search=${params.query}`,
+      query: params => encodeURI(`/${params.speciesId}?search=${params.query}`),
       providesTags: ['individualsQuery']
     }),
     getNestedChildrenOfPair: builder.query({
-      query: params => `/${params.speciesId}/nested?mother=${params.motherId}&father=${params.fatherId}`,
+      query: params => encodeURI(`/${params.speciesId}/nested?mother=${params.motherId}&father=${params.fatherId}`),
       providesTags: result => [{ type: 'Individuals', id: result.motherId + result.fatherId }]
     }),
     getFlatIndividuals: builder.query({

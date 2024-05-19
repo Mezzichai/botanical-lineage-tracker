@@ -1,48 +1,32 @@
-import React from 'react'
-import { useDispatch } from 'react-redux'
 import placeholder from '../assets/placeholder.jpeg'
-import { faInfo } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { toggleInfoCardOn } from '../features/InfoCard/InfoCardSlice'
-import { Species } from '../types'
 import CardStyles from '../styles/cardAndListStyles.module.css'
+import { ReactNode } from '@tanstack/react-router'
 type Props = {
-  info: Species;
-  handleClick: () => void;
-  catagory: "group" | "species" | "individual";
+  image?: string,
+  name?: string,
+  id?: string,
+  handleClick?: () => void;
   sizeStyles: string;
   hovered?: boolean;
-  handleHover?: (id:string) => void;
+  handleHover?: (id?:string) => void;
   handleUnHover?: () => void;
   imageDimensions: {width: number, height?: number};
-
+  children: ReactNode
 }
-const ItemCard: React.FC<Props> = ({info, catagory, handleClick, sizeStyles, imageDimensions, handleHover = ()=>{}, handleUnHover = ()=>{}}) => {
-
-  const dispatch = useDispatch();
-  
-  const toggleInfoCard = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    dispatch(toggleInfoCardOn({itemId: info.id, catagory}))
-  }
+const ItemCard: React.FC<Props> = ({image, id, handleClick, sizeStyles, imageDimensions, handleHover = ()=>{}, handleUnHover = ()=>{}, children}) => {
 
   return (
     <div 
       className={`${CardStyles.cardContent} ${sizeStyles}`}
       onClick={handleClick}
-      onMouseEnter={() => handleHover(info.id)} 
+      onMouseEnter={() => handleHover(id)} 
       onMouseLeave={handleUnHover} 
     >
       <img 
-        srcSet={`${info?.images?.length ? `${info.images[0]}?w=${imageDimensions.width}&h=${imageDimensions.height || "auto"}&fit=crop&auto=format&dpr=2` : placeholder}`}
-        src={info.images[0] || placeholder}
+        srcSet={`${image ? `${image}?w=${imageDimensions.width}&h=${imageDimensions.height || "auto"}&fit=crop&auto=format&dpr=2` : placeholder}`}
+        src={image || placeholder}
       />
-      <span className={CardStyles.cardInfo}>
-        <p>{info.name}</p>
-        <button onClick={(e) => toggleInfoCard(e)}>
-          <FontAwesomeIcon icon={faInfo} />
-        </button>
-      </span> 
+      {children}
     </div>
   )
 }

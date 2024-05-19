@@ -1,17 +1,17 @@
 import React from "react";
-import LineageTreeStyles from '../styles/LineageTreeStyle.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faInfo } from '@fortawesome/free-solid-svg-icons'
+import CardStyles from '../styles/cardAndListStyles.module.css'
 
 type Props = {
  name: string;
  onClick?: () => void
 }
 
-const TreeNodeInfo:React.FC<Props> = ({name, onClick}) => {
+const ItemCardInfo:React.FC<Props> = ({name, onClick}) => {
   return (
-    <span className={`${LineageTreeStyles.nodeInfo}`}>
-      <p className={LineageTreeStyles.nodeTitle}>{name}</p>
+    <span className={CardStyles.cardInfo}>
+      <p>{name}</p>
       <button onClick={onClick}>
         <FontAwesomeIcon icon={faInfo}/>
       </button>
@@ -19,4 +19,4 @@ const TreeNodeInfo:React.FC<Props> = ({name, onClick}) => {
   )
 }
 
-export default TreeNodeInfo
+export default ItemCardInfo

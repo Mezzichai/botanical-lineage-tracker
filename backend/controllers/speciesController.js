@@ -169,7 +169,13 @@ const getSpeciesMembersNested = tryCatch(async function(req, res, next) {
   res.send(nestedNodes).status(200);
 })
 
-
+const getSpeciesMembers = tryCatch(async function(req, res, next) {
+  const query = decodeURI(req.query.search);
+  const GET_INDIVIDUALS = `SELECT name, id, images FROM individual_plant WHERE species_id = $1 AND LOWER(name) LIKE LOWER($2) LIMIT 100`;
+  const speciesId = Number(req.params.speciesId);
+  const plants = await makeQuery(GET_INDIVIDUALS, speciesId, `%${query}%`);
+  res.send(plants.rows).status(200);
+})
 
 const getSpeciesMembersFlat = tryCatch(async function(req, res, next) {
   const GET_INDIVIDUALS = `SELECT * FROM individual_plant WHERE species_id = $1 LIMIT 100`
@@ -423,6 +429,7 @@ module.exports = {
   createSpeciesIndividual,
   getSpecies,
   getSpecificSpeciesInfo,
+  getSpeciesMembers,
   getSpeciesMembersFlat,
   getSpeciesMembersNested,
   getSpecificSpeciesGroups,

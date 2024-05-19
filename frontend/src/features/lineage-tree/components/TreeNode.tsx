@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import LineageTreeStyles from '../styles/LineageTreeStyle.module.css'
 import placeholder from '../../../assets/placeholder.jpeg'
 
@@ -9,7 +9,7 @@ type Props = {
   isParentBeingHovered?: boolean;
   handleHover?: (_id:string) => void;
   handleUnHover?: () => void;
-  
+  children: ReactNode
 }
 
 

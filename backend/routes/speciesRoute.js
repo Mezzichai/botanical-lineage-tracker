@@ -12,6 +12,8 @@ router.get("/info/:speciesId/:groupId/:individualId", controllers.getIndividualI
 
 router.get("/", controllers.getSpecies) //get species
 
+router.get("/:speciesId", controllers.getSpeciesMembers) //get a species' members nested
+
 router.get("/:speciesId/nested", controllers.getSpeciesMembersNested) //get a species' members nested
 
 router.get("/:speciesId/flat", controllers.getSpeciesMembersFlat) //get a species' members flat

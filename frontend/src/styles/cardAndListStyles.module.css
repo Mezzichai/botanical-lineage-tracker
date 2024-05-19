@@ -70,11 +70,20 @@
   text-overflow: ellipsis
 }
 
-/* .cardInfo svg {
+/*.cardInfo svg {
   font-size: .7rem;
-} */
+}*/
 
-.cardInfo button {
+.editButton {
+  font-size: 1rem;
+  padding-left: .2rem;
+}
+
+.editButton svg {
+  
+}
+
+/* .cardInfo button {
   padding: .7rem;
   border-radius: 50%;
   height: 1.4rem;
@@ -83,13 +92,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: .9rem;
   color: #000000;
-}
+} */
 
-.cardInfo button:hover {
+/* .cardInfo button:hover {
   background-color: rgb(221, 221, 221);
-}
+} */
 
 
 

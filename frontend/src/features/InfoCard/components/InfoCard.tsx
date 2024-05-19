@@ -119,8 +119,8 @@ const InfoCard:React.FC = () => {
 
   }, [])
   
-  const handleChangeParents  = useCallback(() => {
-
+  const handleChangeParents = useCallback((mother: LeanLineageNode, father: LeanLineageNode) => {
+    setParents({mother, father})
   }, [])
 
   
