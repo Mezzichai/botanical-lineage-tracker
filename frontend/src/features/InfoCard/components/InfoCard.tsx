@@ -231,7 +231,7 @@ const InfoCard:React.FC = () => {
     <div className={`${InfoCardStyles.cardContainer} ${isOpen ? InfoCardStyles.showNewCard : InfoCardStyles.hideCard}`}>
       {((!speciesId && isOpen) || speciesId) &&
         <ButtonWithHoverLabel label={isOpen ? "close" : "open"} positioningStyles={InfoCardStyles.toggleInfoCardPosition}>
-          <button className={InfoCardStyles.toggleInfoCard} onClick={handleToggleInfoCard} >
+          <button aria-label='toggle-info-card' className={InfoCardStyles.toggleInfoCard} onClick={handleToggleInfoCard} >
             <FontAwesomeIcon icon={isOpen ? faChevronRight : faChevronLeft}/>
           </button>
         </ButtonWithHoverLabel>
@@ -242,24 +242,32 @@ const InfoCard:React.FC = () => {
           <>
             <div className={InfoCardStyles.confirmationButtons}>
               <button 
+                aria-label='confirm-changes'
                 id={InfoCardStyles.confirm} 
                 onClick={handleConfirm} 
-                disabled={!isNameValid || isCreatingOrEditingLoading()}>
+                disabled={!isNameValid || isCreatingOrEditingLoading()}
+              >
                 <FontAwesomeIcon icon={faCheck} />
               </button>
-              <button id={InfoCardStyles.disgard}
-                onClick={handleDisgard}>
+              <button 
+                aria-label='disgard-changes'
+                id={InfoCardStyles.disgard}
+                onClick={handleDisgard}
+              >
                 <FontAwesomeIcon icon={faXmark} />
               </button>
-               <button id={InfoCardStyles.delete}
-                onClick={handleDelete}>
+               <button 
+                aria-label='delete-item'
+                id={InfoCardStyles.delete}
+                onClick={handleDelete}
+              >
                 <FontAwesomeIcon icon={faTrash}/>
               </button>
             </div>
           </>
         ) : (
-          <button className={InfoCardStyles.edit}>
-            <FontAwesomeIcon icon={faGear} onClick={handleToggleEditView}/>
+          <button aria-label="edit-item" className={InfoCardStyles.edit} onClick={handleToggleEditView}>
+            <FontAwesomeIcon icon={faGear}/>
           </button>
         )}
 

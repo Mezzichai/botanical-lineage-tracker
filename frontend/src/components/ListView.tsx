@@ -21,7 +21,7 @@ const ListView:React.FC<Props> = ({catagory, children, styles}) => {
     <div className={`${CardStyles.listContainer}`} id={styles}>
       {children}
       <div className={CardStyles.addItemContainer}>
-        <button className={CardStyles.addBtn} onClick={handleNewItem}>
+        <button aria-label={"add-new-item"} className={CardStyles.addBtn} onClick={handleNewItem}>
           <FontAwesomeIcon icon={faPlus} /> 
           Add {catagory}
         </button>

@@ -17,6 +17,7 @@ const ItemCard: React.FC<Props> = ({image, id, handleClick, sizeStyles, imageDim
 
   return (
     <div 
+      aria-label={`item-${id}`}
       className={`${CardStyles.cardContent} ${sizeStyles}`}
       onClick={handleClick}
       onMouseEnter={() => handleHover(id)} 

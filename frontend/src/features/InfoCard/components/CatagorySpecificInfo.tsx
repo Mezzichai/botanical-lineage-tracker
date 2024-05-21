@@ -91,7 +91,7 @@ const CatagorySpecificInfo:React.FC<Props> = ({name, images, setImages, group, s
                   </button>
                 </ButtonWithHoverLabel>
               )}
-              <button aria-label={"edit name"} className={InfoCardStyles.editNameBtn} onClick={nameFocusState ? handlenameBlur : handlenameFocus}>
+              <button aria-label={"edit-name"} className={InfoCardStyles.editNameBtn} onClick={nameFocusState ? handlenameBlur : handlenameFocus}>
                 <FontAwesomeIcon icon={nameFocusState ? faCheck : faPencil}/>
               </button>
             </div>

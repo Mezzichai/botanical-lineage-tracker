@@ -5,14 +5,15 @@ import CardStyles from '../styles/cardAndListStyles.module.css'
 
 type Props = {
  name: string;
- onClick?: () => void
+ onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => void
+ id: string
 }
 
-const ItemCardInfo:React.FC<Props> = ({name, onClick}) => {
+const ItemCardInfo:React.FC<Props> = ({name, onClick, id}) => {
   return (
     <span className={CardStyles.cardInfo}>
       <p>{name}</p>
-      <button onClick={onClick}>
+      <button onClick={(e) => onClick(e, id)} aria-label={`item-${id}-info`}>
         <FontAwesomeIcon icon={faInfo}/>
       </button>
   </span>
