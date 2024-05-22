@@ -5,7 +5,6 @@ import {faEllipsisVertical, faPlus} from '@fortawesome/free-solid-svg-icons'
 import optionModalStyles from '../../../styles/optionsModalStyles.module.css'
 import placeholder from '../../../assets/placeholder.jpeg'
 import ButtonWithHoverLabel from "../../../components/ButtonWithHoverLabel";
-import { LeanLineageNode } from "../../../types";
 
 
 type Props = {
@@ -17,8 +16,6 @@ type Props = {
   handleShowSiblings: () => void
   activeOfAggregatesId?: string;
   siblingCount?: number;
-  father?: LeanLineageNode
-
 }
 
 

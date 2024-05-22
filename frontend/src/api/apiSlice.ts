@@ -24,7 +24,7 @@ export const apiSlice = createApi({
     }),
     getNestedChildrenOfPair: builder.query({
       query: params => encodeURI(`/${params.speciesId}/nested?mother=${params.motherId}&father=${params.fatherId}`),
-      providesTags: result => [{ type: 'Individuals', id: result.motherId + result.fatherId }]
+      providesTags: ['Individuals']
     }),
     getFlatIndividuals: builder.query({
       query: params => `/${params.speciesId}/flat`,

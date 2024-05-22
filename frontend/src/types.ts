@@ -7,19 +7,23 @@ export type LineageNode = {
   name: string;
   images: string[];
   id: string;
-  children: LineageNode[];
-  width?: number;
-  widthUpdateHistory?: WidthHistoryRecord[]
   descriptionHTML: string
   descriptionDelta: string
-  mates: LeanLineageNode[]
+  mates: Mate[]
   water_values: number[];
   substrate_values: number[]
 };
 
-export type LeanLineageNode = {
+export type Mate = {
   name: string;
   images: string[];
+  id: string;
+  children: LineageNode[]
+}
+
+export type LeanLineageNode = {
+  name: string;
+  image: string;
   id: string;
 };
 

@@ -18,9 +18,9 @@ router.get("/:speciesId/nested", controllers.getSpeciesMembersNested) //get a sp
 
 router.get("/:speciesId/flat", controllers.getSpeciesMembersFlat) //get a species' members flat
 
-router.get("/:speciesName/groups", controllers.getSpecificSpeciesGroups)  //get groups of a species
+router.get("/:speciesId/groups", controllers.getSpecificSpeciesGroups)  //get groups of a species
 
-router.get("/:speciesName/groups/:groupName", controllers.getSpecificSpeciesSpecificGroup)  //get individuals of species and group
+router.get("/:speciesId/:groupId", controllers.getSpecificSpeciesSpecificGroup)  //get individuals of species and group
 
 
 router.post("/", getNextId.bind(this, "species"), speciesUpload.array("images", 5), deleteFolderImages, controllers.createSpecies) // create a new species
@@ -33,7 +33,7 @@ router.post("/:speciesId/group", getNextId.bind(this, "species_group"), groupUpl
 
 router.patch("/:speciesId", speciesUpload.array("images", 5), deleteFolderImages, controllers.editSpecies) // edit a species
 
-router.patch("/:speciesId/:IndividualId", individualUpload.array("images", 5), deleteFolderImages, controllers.editSpeciesIndividual) // edit a individual
+router.patch("/:speciesId/:individualId", individualUpload.array("images", 5), deleteFolderImages, controllers.editSpeciesIndividual) // edit a individual
 
 router.patch("/:speciesId/groups/:groupId", groupUpload.array("images", 5), deleteFolderImages, controllers.editSpeciesGroup) // create a new group in ${speciesId}
 

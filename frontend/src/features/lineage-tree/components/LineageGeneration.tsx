@@ -7,8 +7,6 @@ import ButtonWithHoverLabel from "../../../components/ButtonWithHoverLabel";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp, faPlus } from "@fortawesome/free-solid-svg-icons";
 import useChangeContentWidth from "../hooks/useChangeContentWidth";
-import { useGetNestedChildrenOfPairQuery } from "../../../api/apiSlice";
-import { useParams } from "@tanstack/react-router";
 import TreeNodeInfo from "./TreeNodeInfo";
 
 
@@ -24,23 +22,23 @@ type Props = {
 
 
 const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCard, displayNewInfoCard, shouldUnmount, isParentBeingHovered=false}) => {
-  const { speciesId } = useParams({ strict: false})
+  // const { speciesId } = useParams({ strict: false})
 
   const [shouldActiveNodeChildrenUnmount, setShouldActiveNodeChildrenUnmount] = useState(false);
   const [activeMateIndex, setActiveMateIndex] = useState<number[]>(children.length > 2 ? [0, 0] : [0]);
   const [activeIdOfAggregates, setActiveIdOfAggregates] = useState<string>("");
   const [hoveredNodeId, setHoveredNodeId] = useState<string>("");
-  const {trigger: getChildrenOfFirstPairTrigger, data: childrenOfFirstPairData} = useGetNestedChildrenOfPairQuery({
-    speciesId: speciesId, 
-    motherId: activeIdOfAggregates ? getActiveNode() : children[0]?.id, 
-    fatherId: activeIdOfAggregates ? getActiveNode()?.mates[activeMateIndex[0]] : children[0]?.mates[activeMateIndex[0]]
-  }, { skip: Boolean(!activeMateIndex[0]) });
+  // const { data: childrenOfFirstPairData} = useGetNestedChildrenOfPairQuery({
+  //   speciesId: speciesId, 
+  //   motherId: activeIdOfAggregates || children[0]?.id, 
+  //   fatherId: activeIdOfAggregates ? getActiveNode()?.mates[activeMateIndex[0]]?.id : children[0]?.mates[activeMateIndex[0]]?.id
+  // }, { skip: Boolean(!activeMateIndex[0]) });
   
-  const {trigger: getChildrenOfSecondPairTrigger, data: childrenOfSecondPairData} = useGetNestedChildrenOfPairQuery({
-    speciesId: speciesId, 
-    motherId: children[1]?.id, 
-    fatherId: children[1]?.mates[activeMateIndex[1]]
-  }, { skip: Boolean(!activeMateIndex[1]) });
+  // const {data: childrenOfSecondPairData} = useGetNestedChildrenOfPairQuery({
+  //   speciesId: speciesId, 
+  //   motherId: children[1]?.id, 
+  //   fatherId: children[1]?.mates[activeMateIndex[1]]?.id
+  // }, { skip: Boolean(!activeMateIndex[1]) });
 
   function getActiveNode() {
     return children.find(child => child.id === activeIdOfAggregates);
@@ -134,7 +132,8 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
   const getNextParent = (nodePosition: number = 0) => {
     setActiveMateIndex(prevState => {
       const state = [...prevState];
-      state[nodePosition] = (prevState[nodePosition] || 0) + 1;
+      const numberOfMates = children[nodePosition].mates.length
+      state[nodePosition] = ((prevState[nodePosition]) + 1) % numberOfMates;
       return state;
     });
   }
@@ -142,7 +141,8 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
   const getPrevParent = (nodePosition: number = 0) => {
     setActiveMateIndex(prevState => {
       const state = [...prevState];
-      state[nodePosition] = (prevState[nodePosition] || 0) - 1;
+      const numberOfMates = children[nodePosition].mates.length
+      state[nodePosition] = Math.abs(prevState[nodePosition] - 1) % numberOfMates;
       return state;
     });
   }
@@ -161,16 +161,15 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
             `}
           >
             <div 
-              className={`${activeIdOfAggregates && !getActiveNode()?.children.length ? LineageTreeStyles.hasNoChildren : LineageTreeStyles.parentsContainer}`}
+              className={`${activeIdOfAggregates && !getActiveNode()?.mates?.[activeMateIndex[0]]?.children.length ? LineageTreeStyles.hasNoChildren : LineageTreeStyles.parentsContainer}`}
               style={{width: `${activeIdOfAggregates ? 568 : 176 + ((children.length-1) * 44)}px`}}
               onMouseLeave={handleUnHover}
             >
               {children.map((node, index) => {
                 return (
                   <>
-                    
                     <div className={`${LineageTreeStyles.fatherContainer} ${LineageTreeStyles.fatherContainerOfActive} ${activeIdOfAggregates === node.id ? `fadeInElement` : "fadeOutElement"}`}>
-                      {node.mates.length > 1 && (
+                      {node.mates.length > 0 && (
                         <div className={LineageTreeStyles.paginateMatesContainer}>
                           <ButtonWithHoverLabel label="Next Mate">
                             <button onClick={() => getNextParent()}><FontAwesomeIcon icon={faChevronUp} /></button>
@@ -182,12 +181,12 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
                       )}
                       <TreeNode
                         key={index+node.mates[0]?.id}
-                        image={node.mates[activeMateIndex[0]]?.images[0]} 
-                        id={node.mates[0]?.id || ""} 
+                        image={node.mates[activeMateIndex[0]]?.images?.[0]} 
+                        id={node.mates[activeMateIndex[0]]?.id || ""} 
                         displayInfoCard={displayInfoCard}
                         handleHover={handleHover}
                       >
-                        <TreeNodeInfo onClick={() => displayInfoCard(node.mates[0]?.id)} name={node.mates[0]?.name || "???"}/>
+                        <TreeNodeInfo onClick={() => displayInfoCard(node.mates[activeMateIndex[0]]?.id)} name={node.mates[activeMateIndex[0]]?.name || "???"}/>
                       </TreeNode>
                     </div>
                   
@@ -209,13 +208,12 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
                         handleHover={handleHover} 
                         activeOfAggregatesId={activeIdOfAggregates}
                         siblingCount={children.length-1}
-                        father={node?.mates[activeMateIndex[0]]}
                         handleShowSiblings={handleUnfocusAggregateNode}
                       />
                     </div>
                     {(activeIdOfAggregates === node.id) && (
                       <ButtonWithHoverLabel
-                        positioningStyles={getActiveNode()?.children?.length || 0 > 0 ? LineageTreeStyles.addChildPosition : LineageTreeStyles.addFirstChildPosition}
+                        positioningStyles={getActiveNode()?.mates?.[activeMateIndex[0]]?.children.length || 0 > 0 ? LineageTreeStyles.addChildPosition : LineageTreeStyles.addFirstChildPosition}
                         label="Add child"
                       >
                         <button 
@@ -234,10 +232,14 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
                 )}
               )}    
             </div>
-            {(getHoveredNode()?.children.length || (getActiveNode()?.children.length || 0) > 0) && (
+            {(getHoveredNode()?.mates[activeMateIndex[0]]?.children.length || (getActiveNode()?.mates[activeMateIndex[0]]?.children.length || 0) > 0) && (
               <LineageGeneration 
                 shouldUnmount={shouldActiveNodeChildrenUnmount}
-                children={getHoveredNode()?.children.length ? getHoveredNode()?.children : getActiveNode()?.children}
+                children={
+                  getHoveredNode()?.mates[activeMateIndex[0]].children.length ? 
+                  getHoveredNode()?.mates[activeMateIndex[0]].children : 
+                  getActiveNode()?.mates[activeMateIndex[0]].children 
+                }
                 isParentBeingHovered={isParentBeingHovered || Boolean(hoveredNodeId)}
                 displayInfoCard={displayInfoCard}
                 displayNewInfoCard={displayNewInfoCard}
@@ -251,11 +253,11 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
             key={node.id + index} 
           >
             <div className={`
-              ${!node.children.length ? LineageTreeStyles.hasNoChildren : LineageTreeStyles.parentsContainer}
+              ${!node.mates[activeMateIndex[index]]?.children.length ? LineageTreeStyles.hasNoChildren : LineageTreeStyles.parentsContainer}
               ${isParentBeingHovered || hoveredNodeId === node.id ? LineageTreeStyles.parentFocused : ""}
               `}>
               {/* need to maintain width */}
-              {node.children.length > 0 &&
+              {node.mates[activeMateIndex[index]]?.children.length > 0 &&
                 <span className={`${LineageTreeStyles.pseudoContainer}`}>
                 </span>
               }
@@ -263,7 +265,6 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
                 key={index+node.id}
                 image={node.images[0]} 
                 id={node.id} 
-                name ={node.name} 
                 displayInfoCard={displayInfoCard}
                 handleHover={handleHover}
                 handleUnHover={handleUnHover}
@@ -271,22 +272,22 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
                 <TreeNodeInfo onClick={() => displayInfoCard(node.id)} name={node.name}/>
               </TreeNode>
               <ButtonWithHoverLabel
-                positioningStyles={node.children.length ? LineageTreeStyles.addChildPosition : LineageTreeStyles.addFirstChildPosition}
+                positioningStyles={node.mates[activeMateIndex[index]]?.children.length ? LineageTreeStyles.addChildPosition : LineageTreeStyles.addFirstChildPosition}
                 label="Add child"
               >
                 <button 
                   className={LineageTreeStyles.addChild}
                   onClick={() => displayNewInfoCard(
-                    {name: node.name, images: node.images[0], id: node.id},
+                    {name: node.name, image: node.images[0], id: node.id},
                     {name: node.mates[activeMateIndex[index]]?.name, image: node.mates[activeMateIndex[index]]?.images[0], id: node.mates[activeMateIndex[index]]?.id}
                   )}
                   >
                   <FontAwesomeIcon icon={faPlus} />
                 </button>
               </ButtonWithHoverLabel>
-              {node.children.length > 0 &&
+              {node.mates[activeMateIndex[index]]?.children.length > 0 &&
                 <span className={`${LineageTreeStyles.fatherContainer} ${`fadeInElement`}`}>
-                  {node.mates.length > 1 && (
+                  {node.mates.length > 0 && (
                     <div className={LineageTreeStyles.paginateMatesContainer}>
                       <ButtonWithHoverLabel label="Next Mate">
                         <button onClick={() => getNextParent(index)}><FontAwesomeIcon icon={faChevronUp} /></button>
@@ -297,19 +298,20 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
                     </div>
                   )}
                   <TreeNode 
-                    image={node?.mates[activeMateIndex[0]]?.images[0]} 
+                    image={node?.mates[activeMateIndex[0]]?.images?.[0]} 
                     id={node?.mates[0]?.id || ""} 
-                    name ={node?.mates[0]?.name || "???"} 
                     displayInfoCard={displayInfoCard}
-                  />
+                  >
+                    <TreeNodeInfo onClick={() => displayInfoCard(node.mates[activeMateIndex[0]]?.id)} name={node.mates[activeMateIndex[0]]?.name || "???"}/>
+                  </TreeNode>
                 </span>
               }
             </div>
         
-            {node.children.length 
+            {node.mates[activeMateIndex[index]]?.children.length 
             ? <LineageGeneration 
                 shouldUnmount={shouldActiveNodeChildrenUnmount}
-                children={node.children} 
+                children={node.mates[activeMateIndex[index]]?.children} 
                 isParentBeingHovered={isParentBeingHovered || hoveredNodeId === node.id}
                 displayInfoCard={displayInfoCard}
                 displayNewInfoCard={displayNewInfoCard}
