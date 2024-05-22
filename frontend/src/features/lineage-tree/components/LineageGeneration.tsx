@@ -25,7 +25,7 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
   // const { speciesId } = useParams({ strict: false})
 
   const [shouldActiveNodeChildrenUnmount, setShouldActiveNodeChildrenUnmount] = useState(false);
-  const [activeMateIndex, setActiveMateIndex] = useState<number[]>(children.length > 2 ? [0, 0] : [0]);
+  const [activeMateIndex, setActiveMateIndex] = useState<number[]>(children.length > 2 ? [0] : [0, 0]);
   const [activeIdOfAggregates, setActiveIdOfAggregates] = useState<string>("");
   const [hoveredNodeId, setHoveredNodeId] = useState<string>("");
   // const { data: childrenOfFirstPairData} = useGetNestedChildrenOfPairQuery({
@@ -147,7 +147,6 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
     });
   }
 
-
   return (
     <ul 
       className={`${LineageTreeStyles.childrenContainer} ${shouldUnmount ? 'fadeOutElement' : 'fadeInElement'}`}
@@ -169,7 +168,7 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
                 return (
                   <>
                     <div className={`${LineageTreeStyles.fatherContainer} ${LineageTreeStyles.fatherContainerOfActive} ${activeIdOfAggregates === node.id ? `fadeInElement` : "fadeOutElement"}`}>
-                      {node.mates.length > 0 && (
+                      {node.mates.length > 1 && (
                         <div className={LineageTreeStyles.paginateMatesContainer}>
                           <ButtonWithHoverLabel label="Next Mate">
                             <button onClick={() => getNextParent()}><FontAwesomeIcon icon={faChevronUp} /></button>
@@ -236,7 +235,7 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
               <LineageGeneration 
                 shouldUnmount={shouldActiveNodeChildrenUnmount}
                 children={
-                  getHoveredNode()?.mates[activeMateIndex[0]].children.length ? 
+                  getHoveredNode()?.mates[activeMateIndex[0]]?.children.length ? 
                   getHoveredNode()?.mates[activeMateIndex[0]].children : 
                   getActiveNode()?.mates[activeMateIndex[0]].children 
                 }
@@ -287,7 +286,7 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
               </ButtonWithHoverLabel>
               {node.mates[activeMateIndex[index]]?.children.length > 0 &&
                 <span className={`${LineageTreeStyles.fatherContainer} ${`fadeInElement`}`}>
-                  {node.mates.length > 0 && (
+                  {node.mates.length > 1 && (
                     <div className={LineageTreeStyles.paginateMatesContainer}>
                       <ButtonWithHoverLabel label="Next Mate">
                         <button onClick={() => getNextParent(index)}><FontAwesomeIcon icon={faChevronUp} /></button>

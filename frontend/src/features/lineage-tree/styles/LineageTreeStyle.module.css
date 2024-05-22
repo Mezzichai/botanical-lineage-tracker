@@ -356,7 +356,7 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
   display: flex;
   flex-direction: column;
   gap: .5rem;
-
+  z-index: 1000;
 }
 
 .paginateMatesContainer button {
