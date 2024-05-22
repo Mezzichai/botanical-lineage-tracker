@@ -11,9 +11,22 @@ type Props = {
   handleHover?: (id?:string) => void;
   handleUnHover?: () => void;
   imageDimensions: {width: number, height?: number};
+<<<<<<< HEAD
   children: ReactNode
 }
 const ItemCard: React.FC<Props> = ({image, id, handleClick, sizeStyles, imageDimensions, handleHover = ()=>{}, handleUnHover = ()=>{}, children}) => {
+=======
+}
+
+const ItemCard: React.FC<Props> = ({info, catagory, handleClick, sizeStyles, imageDimensions, handleHover = ()=>{}, handleUnHover = ()=>{}}) => {
+
+  const dispatch = useDispatch();
+  
+  const toggleInfoCard = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    dispatch(toggleInfoCardOn({itemId: info.id, catagory}))
+  }
+>>>>>>> 9017a2ae720062651e827409b6ad9b0268f6e5e4
 
   return (
     <div 
