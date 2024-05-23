@@ -8,6 +8,7 @@ import EditableTreeNode from '../../../components/EditableItemCardInfo'
 import TreeNodeInfo from '../../lineage-tree/components/TreeNodeInfo'
 import ItemCard from '../../../components/ItemCard'
 import CardStyles from '../../../styles/cardAndListStyles.module.css'
+import ItemCardInfo from '../../../components/ItemCardInfo'
 type Props = {
   mother: LeanLineageNode
   father: LeanLineageNode
@@ -86,7 +87,7 @@ const MiniLineageTree:React.FC<Props> = ({mother, father, child, handleChangePar
                   imageDimensions={{width: 176}}
                   sizeStyles={CardStyles.smallCardSize}
                 >
-                  <TreeNodeInfo name={child?.name || "???"}/>
+                  <ItemCardInfo name={child?.name || "???"}/>
                 </ItemCard>
               </div>
             </li>

@@ -23,6 +23,7 @@ const TreeView: React.FC = () => {
   const dispatch = useDispatch()
 
   const displayInfoCard = (id: string) => {
+    console.log("id", id)
     dispatch(toggleInfoCardOn({itemId: id, catagory: "individual"}))
   }
 
