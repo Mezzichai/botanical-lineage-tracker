@@ -1,34 +1,35 @@
-import {  useLayoutEffect, useRef } from 'react'
+import { useLayoutEffect } from 'react'
 
-const useChangeContentWidth = (container: HTMLLIElement | null, widthToTransitionFrom: number, conditionToRun: boolean, dependencies: Array<string>) => {
-  const isAnimating = useRef<boolean>(false)
+const useChangeContentWidth = (container: React.RefObject<HTMLLIElement>, widthToTransitionFrom: number, conditionToRun: boolean, dependencies: Array<string>, isAnimating) => {
   useLayoutEffect(() => {
-    if (conditionToRun && container) {
+    if (conditionToRun && container.current) {
       isAnimating.current = true;
-      const liWidth = container?.offsetWidth;
+      const liWidth = container?.current?.offsetWidth;
       const newContentWidth = liWidth - widthToTransitionFrom;
-      const elementTransition = container?.style.transition;
-      container.style.transition = "";
-      container.style.width = widthToTransitionFrom + "px"
+      const elementTransition = container?.current?.style.transition;
+      container.current.style.transition = "";
+      container.current.style.width = widthToTransitionFrom + "px"
 
       requestAnimationFrame(() => {
-        if (container) {
-          container.style.width = widthToTransitionFrom + "px"
-          container.style.transition = elementTransition;
+        if (container.current) {
+          container.current.style.width = widthToTransitionFrom + "px"
+          container.current.style.transition = elementTransition;
         }
       
          // On the next frame, transition the height to include the new content
         requestAnimationFrame(function() {
-          if (container) {
-            container.style.width = (widthToTransitionFrom+ newContentWidth) + 'px';
+          if (container.current) {
+            container.current.style.width = (widthToTransitionFrom+ newContentWidth) + 'px';
           }
         });
       })
 
-      container.addEventListener('transitionend', function transitionEndHandler(e) {   
-        container.removeEventListener('transitionend', transitionEndHandler);   
-        isAnimating.current = false;
-        container.style.width = "";
+      container.current.addEventListener('transitionend', function transitionEndHandler(e) { 
+        if (container.current) {
+          container.current.removeEventListener('transitionend', transitionEndHandler);   
+          isAnimating.current = false;
+          container.current.style.width = "";
+        }  
       });
 
     }
