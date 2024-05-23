@@ -30,9 +30,12 @@ const getSpecificSpeciesInfo = tryCatch(async function(req, res, next) {
 
 
 const getIndividualInfo = tryCatch(async function(req, res, next) {
-  const GET_INDIVIDUAL = `SELECT * 
+  const GET_INDIVIDUAL = `SELECT 
+                            individual_plant.*,
+                            species.name AS species_name
                             FROM individual_plant
-                            WHERE id = $1`;  
+                            JOIN species ON individual_plant.species_id = species.id
+                            WHERE individual_plant.id = $1`;  
 
   const GET_NEW_INDIVIDUAL_DEFAULTS_SPECIES = `SELECT 
                                                 species.name AS species_name, 
@@ -93,6 +96,7 @@ const getIndividualInfo = tryCatch(async function(req, res, next) {
     }
   } else {
     const individualResult = await makeQuery(GET_INDIVIDUAL, req.params.individualId)
+    console.log(individualResult.rows[0])
     res.send(individualResult.rows[0]).status(200)
   }
 })
