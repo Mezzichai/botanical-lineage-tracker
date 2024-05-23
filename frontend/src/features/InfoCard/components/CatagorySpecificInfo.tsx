@@ -55,7 +55,7 @@ const CatagorySpecificInfo:React.FC<Props> = ({name, images, setImages, group, s
       nameRef.current.blur()
     }
   } 
-
+console.log(catagory)
 
   return (
     <>

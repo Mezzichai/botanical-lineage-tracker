@@ -16,14 +16,14 @@
   min-width: 11rem;
   max-width: 11rem;
   height: 10rem;
-	font-size: 11px;
+	font-size: .8em;
 }
 
 .largeCardSize { 
   min-width: 20rem;
   max-width: 20rem;
   height: 18rem;
-	font-size: 11px;
+	font-size: .8em;
 }
 
 .cardContent {
@@ -52,8 +52,8 @@
 
 .cardInfo {
   background-color: #ffffff; 
-  font-size: 1rem;
-  padding: 5px .2rem;
+  font-size: .9rem;
+  padding: 5px .2em;
   height: 21.5%;
   display: flex;
   align-items: center;
@@ -87,7 +87,7 @@
   
 }
 
-/* .cardInfo button {
+.cardInfo button {
   padding: .7rem;
   border-radius: 50%;
   height: 1.4rem;
@@ -97,7 +97,7 @@
   align-items: center;
   justify-content: center;
   color: #000000;
-} */
+}
 
 /* .cardInfo button:hover {
   background-color: rgb(221, 221, 221);

@@ -5,21 +5,22 @@ type Props = {
   image?: string,
   name?: string,
   id?: string,
-  handleClick?: () => void;
+  handleClick?: (id: string) => void;
   sizeStyles: string;
   hovered?: boolean;
   handleHover?: (id?:string) => void;
   handleUnHover?: () => void;
   imageDimensions: {width: number, height?: number};
-  children: ReactNode
+  children: ReactNode,
+  styles?: string
 }
-const ItemCard: React.FC<Props> = ({image, id, handleClick, sizeStyles, imageDimensions, handleHover = ()=>{}, handleUnHover = ()=>{}, children}) => {
+const ItemCard: React.FC<Props> = ({image, id, handleClick = ()=>{}, sizeStyles, styles, imageDimensions, handleHover = ()=>{}, handleUnHover = ()=>{}, children}) => {
 
   return (
     <div 
       aria-label={`item-${id}`}
-      className={`${CardStyles.cardContent} ${sizeStyles}`}
-      onClick={handleClick}
+      className={`${CardStyles.cardContent} ${sizeStyles} ${styles}`}
+      onClick={()=> handleClick(id || "")}
       onMouseEnter={() => handleHover(id)} 
       onMouseLeave={handleUnHover} 
     >

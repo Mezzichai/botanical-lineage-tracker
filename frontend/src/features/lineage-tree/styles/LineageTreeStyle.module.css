@@ -187,7 +187,7 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
 
 
 .nodeContent { 
-  min-width: 11rem;
+  /* min-width: 11rem;
   max-width: 11rem;
   height: 10rem;
   display: flex;
@@ -202,11 +202,11 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
 	font-size: 11px;
 	transition: all 0.3s;
   position: relative;
-  z-index: 1;
+  z-index: 1; */
 }
 
-.parentFocused > .nodeContent .nodeInfo, 
-.parentFocused .nodeContainer .nodeInfo {
+.parentFocused > div span, 
+.parentFocused .nodeContainer span {
 	background-color: #c8e4f8; 
 }
 
@@ -214,56 +214,7 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
 	background-color: #ffffff; 
 }
 
-.nodeContent img {
-  height: 78%;
-  width: 100%;
-  object-fit: cover;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
-}
 
-.nodeInfo {
-  background-color: #ffffff; 
-  font-size: 1rem;
-  padding: 5px .2rem;
-  display: flex;
-  align-items: center;
-  justify-content:space-between;
-  width: 100%;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-	transition: all 0.3s;
-}
-
-
-.nodeInfo button {
-  padding: .7rem;
-  border-radius: 50%;
-  height: 1.4rem;
-  width: 1.4rem;
-  background-color: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: .9rem;
-  color: #000000;
-}
-
-.nodeInfo button:hover {
-  background-color: rgb(221, 221, 221);
-}
-
-
-.nodeInfo button svg {
-  
-}
-
-
-.nodeInfo p {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis
-}
 
 
 
