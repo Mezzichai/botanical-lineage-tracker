@@ -236,7 +236,7 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
 }
 
 .child:hover {
-  z-index: 999;
+  z-index: 998;
 }
 
 .nodeContainer {
