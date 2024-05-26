@@ -285,6 +285,8 @@
 
 .instructions {
   z-index: 999;
+  align-items: center;
+  width: auto;
   font-size: 0.75rem;
   border-radius: 0.5rem;
   color: #fff;
@@ -292,9 +294,8 @@
   padding: 0.25rem;
   position: absolute;
   display: flex;
-  inline-size: 300px;
   overflow-wrap: break-word;
-  top: 2.5rem;
+  top: 2rem;
   gap: .3rem
 }
 

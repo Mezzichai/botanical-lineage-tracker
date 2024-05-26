@@ -1,0 +1,57 @@
+.pieChart {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0 .5rem;
+  font-size: .8rem;
+}
+
+.chart {
+  padding: 0 1rem
+}
+
+.substrateLegendGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.substrateLegend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.addLabelButton {
+  margin:0 auto;
+}
+
+.addLabelButton svg{
+  margin-left: .3rem;
+}
+
+.label {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.colorBox {
+  height: 1.2rem;
+  width: 1.2rem;
+  margin-right: .3rem;
+}
+
+.labelInput {
+  width: 6.5rem;
+  padding: 0 .1rem;
+}
+
+.percentInput {
+  width: 2.3rem;
+  
+}
