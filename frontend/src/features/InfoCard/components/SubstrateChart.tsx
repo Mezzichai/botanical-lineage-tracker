@@ -1,18 +1,17 @@
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
-import React, { useState } from 'react';
 import { SubstrateEntry } from '../../../types';
 import LegendLabel from './LegendLabel';
 import PieLegendStyles from "../styles/PieLegendStyles.module.css"
 import { useSelector } from 'react-redux';
 import { selectIsInfoNewOrEditing } from '../InfoCardSlice';
-import { produce } from 'immer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { useState } from 'react';
 
 type Props = {
   substrateValues: SubstrateEntry[], 
-  handleChangeSubstrate: () => void
+  handleChangeSubstrate: (substrate_values: SubstrateEntry[]) => void
 }
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -29,68 +28,69 @@ const pieOptions = {
   }
 };
 
-const data = {
-  labels: ['worm casting'],
-  datasets: [
-    {
-      label: '% of substrate',
-      data: [1],
-      backgroundColor: [
-        'rgba(255, 99, 132, 0.2)',
-      ],
-      borderColor: [
-        'rgba(255, 99, 132, 1)',
-      ],
-      borderWidth: 1,
-    },
-  ],
-};
+function constructChartData(substrateValues: SubstrateEntry[]) {
+  const structure: {
+    labels: string[];
+    datasets: {
+        label: string;
+        data: number[];
+        backgroundColor: string[];
+        borderColor: string[];
+        borderWidth: number;
+    }[];
+  } = {
+    labels: [],
+    datasets: [
+      {
+        label: '% of substrate',
+        data: [],
+        backgroundColor: [],
+        borderColor: [],
+        borderWidth: 1,
+      },
+    ],
+  }
+
+  structure.labels = substrateValues.map(value => value.substrate)
+  structure.datasets[0].data = substrateValues.map(value => Number(value.percent))
+  structure.datasets[0].backgroundColor = substrateValues.map(value => value.color + "33")
+  structure.datasets[0].borderColor = substrateValues.map(value => value.color)
+
+  return structure
+}
 
 const SubstrateChart:React.FC<Props> = ({substrateValues, handleChangeSubstrate}) => {
-  const [chartData, setChartData] = useState<typeof data>(data);
   const isNewOrEditing = useSelector(selectIsInfoNewOrEditing)
-  const remainingPercent = 100 - chartData?.datasets[0].data.reduce((acc, item) => acc + item, 0)
+  const [removeSubstrateMode, setRemoveSubstrateMode] = useState<boolean>(false)
+  const chartData = constructChartData(substrateValues)
+  const remainingPercent = 100 - substrateValues.map(value=>value.percent).reduce((acc, item) => acc + item, 0)
 
   const handleLabelChange = (dataIndex: number, newLabel: string) => {
-    setChartData(
-      produce(prevState => {
-        prevState.labels[dataIndex] = newLabel
-      })
-    );
+    const substrateValuesCopy = [...substrateValues]
+    substrateValuesCopy[dataIndex] = {...substrateValuesCopy[dataIndex], substrate: newLabel}
+    handleChangeSubstrate(substrateValuesCopy)
   }
 
   const handleLabelValueChange = (dataIndex: number, newValue: number) => {
-    setChartData(
-      produce(prevState => {
-        prevState.datasets[0].data[dataIndex] = Number(newValue)
-      })
-    );
+    const substrateValuesCopy = [...substrateValues]
+    substrateValuesCopy[dataIndex] = {...substrateValuesCopy[dataIndex], percent: Number(newValue)}
+    handleChangeSubstrate(substrateValuesCopy)
   }
 
   const handleAddLabel = () => {
-    setChartData(prevState => {
-        const newLabels = [...prevState.labels, "new label"]
-        const dataSet = [...prevState.datasets]
-        const dataSetObject = {...dataSet[0]}
-        const newData = [...dataSetObject.data, 1]
-        const newBackgroundColor = [...dataSetObject.backgroundColor, 'rgba(153, 102, 255, 0.2)']
-        const newBorderColor = [...dataSetObject.borderColor, 'rgba(153, 102, 255, 1)']
-        dataSetObject.backgroundColor = newBackgroundColor
-        dataSetObject.borderColor = newBorderColor
-        dataSetObject.data = newData
-        const newState = {datasets: [dataSetObject], labels: newLabels}
-        return newState
-      }
-    );
+    const substrateValuesCopy = [...substrateValues, {substrate: "new substrate", percent: 0, color: '#9966FF'}]
+    handleChangeSubstrate(substrateValuesCopy)
   }
 
-  const handleRemoveLabel = (dataIndex: number, labelName: string) => {
-    setChartData(
-      produce(prevState => {
-        prevState.labels.filter(label => label !== labelName)
-        prevState.datasets[0].data.filter((_, index) => index !== dataIndex)
-      })
-    );
+  const handleRemoveLabel = (dataIndex: number) => {
+    const substrateValuesCopy = substrateValues.filter((_, index) => index !== dataIndex)
+    handleChangeSubstrate(substrateValuesCopy)
+  }
+
+  const handleColorChange = (dataIndex: number, color: string) => {
+    const substrateValuesCopy = [...substrateValues]
+    substrateValuesCopy[dataIndex] = {...substrateValuesCopy[dataIndex], color}
+    handleChangeSubstrate(substrateValuesCopy)
   }
 
   return (
@@ -98,7 +98,9 @@ const SubstrateChart:React.FC<Props> = ({substrateValues, handleChangeSubstrate}
       <ul className={`${isNewOrEditing ? PieLegendStyles.substrateLegendGrid : PieLegendStyles.substrateLegend}`}>
         {chartData.labels.length > 0 && chartData.labels.map((label, index) => (
           <LegendLabel 
-            combinedPercent={chartData?.datasets[0].data.reduce((acc, item) => acc + item, 0)}
+            removeSubstrateMode={removeSubstrateMode}
+            handleColorChange={handleColorChange}
+            combinedPercent={substrateValues.map(value=>value.percent).reduce((acc, item) => acc + item, 0)}
             dataIndex={index}
             handleLabelValueChange={handleLabelValueChange}
             handleLabelChange={handleLabelChange}
@@ -111,10 +113,30 @@ const SubstrateChart:React.FC<Props> = ({substrateValues, handleChangeSubstrate}
         ))}
       </ul>
       {isNewOrEditing && (
-        <button className={PieLegendStyles.addLabelButton} onClick={handleAddLabel}>
-          Add a new substrate
-          <FontAwesomeIcon icon={faPlus} />
-        </button>
+        <>
+          <div className={PieLegendStyles.btnsContainer}>
+            {!removeSubstrateMode && (
+              <button className={PieLegendStyles.addLabelButton} onClick={handleAddLabel}>
+                Add a new substrate
+                <FontAwesomeIcon icon={faPlus} />
+              </button>
+            )}
+          
+            <button className={PieLegendStyles.addLabelButton} onClick={() => setRemoveSubstrateMode(prev => !prev)}>
+              {removeSubstrateMode ? (
+                <>
+                  <FontAwesomeIcon icon={faChevronLeft}/>
+                  Back to edit mode
+                </>
+              ) : (
+                <>
+                  Remove a substrate
+                  <FontAwesomeIcon icon={faMinus} />
+                </>
+              )}
+            </button>
+          </div>
+        </>
       )}
       {isNewOrEditing && <div>Remaining space: {remainingPercent}%</div>}
       <div className={PieLegendStyles.chart}>

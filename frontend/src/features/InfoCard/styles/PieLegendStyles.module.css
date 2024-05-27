@@ -25,12 +25,20 @@
   gap: 1rem;
 }
 
+
+.btnsContainer {
+  display: flex;
+  
+}
+
 .addLabelButton {
   margin:0 auto;
 }
 
+
+
 .addLabelButton svg{
-  margin-left: .3rem;
+  margin: 0 .3rem;
 }
 
 .label {
@@ -44,6 +52,30 @@
   height: 1.2rem;
   width: 1.2rem;
   margin-right: .3rem;
+  position: relative;
+}
+
+.deleteLabelIcon {
+  background-color: rgba(229, 5, 5, 0.553);
+  padding: .3rem;
+  border-radius: 50px;
+  height: 1.3rem;
+  width: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: .3rem;
+}
+
+.colorPicker{
+  z-index: 999;
+  position: absolute;
+  top: 1.2rem;
+}
+
+.colorPicker > div {
+  width: 180px;
+  height: 180px;
 }
 
 .labelInput {

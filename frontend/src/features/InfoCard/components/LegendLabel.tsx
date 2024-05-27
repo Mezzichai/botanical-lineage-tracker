@@ -4,6 +4,9 @@ import { selectIsInfoNewOrEditing } from "../InfoCardSlice"
 import InfoBox from "../../../components/InfoBox"
 import InfoCardStyles from '../styles/InfoCardStyles.module.css'
 import {useRef, useState } from "react"
+import { HexColorPicker } from "react-colorful";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faX, faXmark } from "@fortawesome/free-solid-svg-icons"
 
 type Props = {
   label: string,
@@ -11,22 +14,26 @@ type Props = {
   dataIndex: number,
   backgroundColor: string, 
   borderColor:string,
-  handleRemoveLabel: (dataIndex:number, labelName: string) => void
+  handleRemoveLabel: (dataIndex:number) => void
   handleLabelValueChange: (index: number, newValue: number) => void,
   handleLabelChange: (index: number, newLabel: string) => void,
   combinedPercent: number
+  handleColorChange: (dataIndex: number, color: string) => void
+  removeSubstrateMode: boolean
 }
 
-const LegendLabel:React.FC<Props> = ({handleLabelValueChange, handleLabelChange, label, value, backgroundColor, borderColor, dataIndex, combinedPercent}) => {
+const LegendLabel:React.FC<Props> = ({handleLabelValueChange, handleLabelChange, handleRemoveLabel, handleColorChange, label, value, backgroundColor, borderColor, dataIndex, combinedPercent, removeSubstrateMode}) => {
   const isNewOrEditing = useSelector(selectIsInfoNewOrEditing)
   const [isInValidAmount, setIsInvalidAmount] = useState<boolean>(false)
+  const [isHoveringColorBox, setIsHoveringColorBox] = useState<boolean>(false)
 
   const fieldRef = useRef<HTMLInputElement>(null)
 
 
+
+
   const handleValueChange = (eventValue: string) => {
     const newValue = Number(eventValue)
-    console.log(((combinedPercent - value) + newValue) <= 100)
     if (((combinedPercent - value) + newValue) <= 100) {
       setIsInvalidAmount(false)
       handleLabelValueChange(dataIndex, newValue)
@@ -40,7 +47,24 @@ const LegendLabel:React.FC<Props> = ({handleLabelValueChange, handleLabelChange,
 
   return (
     <li className={PieLegendStyles.label}>
-      <div className={PieLegendStyles.colorBox} style={{backgroundColor: backgroundColor, border: `1px solid ${borderColor}`}}></div>  
+      {!removeSubstrateMode ? (
+        <div 
+          onMouseEnter={() => setIsHoveringColorBox(true)} 
+          onMouseLeave={() => setIsHoveringColorBox(false)} 
+          className={PieLegendStyles.colorBox} style={{backgroundColor: backgroundColor, border: `1px solid ${borderColor}`}}
+        >
+          {isHoveringColorBox && (
+            <div className={PieLegendStyles.colorPicker}>
+              <HexColorPicker onChange={(color) => handleColorChange(dataIndex, color)} color={backgroundColor}/>
+            </div>
+          )}
+        </div>
+      ) : (
+        <button className={PieLegendStyles.deleteLabelIcon} onClick={()=>handleRemoveLabel(dataIndex)}>
+          <FontAwesomeIcon icon={faXmark}/>
+        </button>
+      )}
+
       {isNewOrEditing ? (
         <input 
           type='text'

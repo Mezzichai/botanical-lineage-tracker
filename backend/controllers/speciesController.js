@@ -251,18 +251,30 @@ const createSpecies = tryCatch(async function(req, res, next) {
     res.status(400).send({ error: "Please complete all required fields" });
     return;
   }
+
   const clean = DOMPurify.sanitize(req.body.descriptionHTML);
   const ADD_SPECIES = `INSERT INTO species (id, name, images, description_delta, description_html, light_values, substrate_values, water_values)
-                          VALUES ($1, $2, $3, $4, $5, COALESCE($6::jsonb, '[{"hours": 1, "month": "January"}, {"hours": 1, "hours": "February"}, {"hours": 1, "month": "March"}, {"hours": 1, "month": "April"}, {"hours": 1, "month": "May"}, {"hours": 1, "month": "June"}, {"hours": 1, "month": "July"}, {"hours": 1, "month": "August"}, {"hours": 1, "month": "September"}, {"hours": 1, "month": "October"}, {"hours": 1, "month": "November"}, {"hours": 1, "month": "December"}]'::jsonb), COALESCE($7::jsonb, '[{"percent": "50", "substrate": "pumice"}, {"percent": "50", "substrate": "soil"}]'::jsonb), COALESCE($8::jsonb, '[{"water_count": 1, "month": "January"}, {"water_count": 1, "month": "February"}, {"water_count": 1, "month": "March"}, {"water_count": 1, "month": "April"}, {"water_count": 1, "month": "May"}, {"water_count": 1, "month": "June"}, {"water_count": 1, "month": "July"}, {"water_count": 1, "month": "August"}, {"water_count": 1, "month": "September"}, {"water_count": 1, "month": "October"}, {"water_count": 1, "month": "November"}, {"water_count": 1, "month": "December"}]'::jsonb))`
+                          VALUES ($1, 
+                                  $2, 
+                                  $3, 
+                                  $4, 
+                                  $5,
+                                  COALESCE($6::jsonb, '[{"hours": 1, "month": "January"}, {"hours": 1, "hours": "February"}, {"hours": 1, "month": "March"}, {"hours": 1, "month": "April"}, {"hours": 1, "month": "May"}, {"hours": 1, "month": "June"}, {"hours": 1, "month": "July"}, {"hours": 1, "month": "August"}, {"hours": 1, "month": "September"}, {"hours": 1, "month": "October"}, {"hours": 1, "month": "November"}, {"hours": 1, "month": "December"}]'::jsonb), 
+                                  COALESCE($7::jsonb, '[{"percent": "50", "substrate": "pumice", "color": "#1a3b52"}, {"percent": "50", "substrate": "soil", "color": "#ab691e"}]'::jsonb), 
+                                  COALESCE($8::jsonb, '[{"water_count": 1, "month": "January"}, {"water_count": 1, "month": "February"}, {"water_count": 1, "month": "March"}, {"water_count": 1, "month": "April"}, {"water_count": 1, "month": "May"}, {"water_count": 1, "month": "June"}, {"water_count": 1, "month": "July"}, {"water_count": 1, "month": "August"}, {"water_count": 1, "month": "September"}, {"water_count": 1, "month": "October"}, {"water_count": 1, "month": "November"}, {"water_count": 1, "month": "December"}]'::jsonb))`
                           
+                                  console.log(req.body.substrate_values)
   const addSpeciesResult = await makeQuery(ADD_SPECIES, 
     req.params.nextId,
     req.body.name,
     JSON.stringify(req.files),
     isJsonString(req.body.descriptionDelta) ? req.body.descriptionDelta : JSON.stringify(req.body.descriptionDelta),
     clean,
+
+    
     req.body.light_values.length ? JSON.stringify(req.body.light_values) : null,
-    req.body.substrate_values.length ? JSON.stringify(req.body.substrate_values) : null,
+    //vvv do the same for the other object props  vvvv
+    isJsonString(req.body.substrate_values) ? req.body.substrate_values : JSON.stringify(req.body.substrate_values),
     req.body.water_values.length ? JSON.stringify(req.body.water_values) : null,
   )
   res.send(addSpeciesResult.rowCount > 0).status(200)

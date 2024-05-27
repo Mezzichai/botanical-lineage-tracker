@@ -62,7 +62,7 @@ const InfoCard:React.FC = () => {
   const {data: specificIndividualInfo} = useGetSpecficIndividualInfoQuery({speciesId: speciesId, groupId: groupId || "", individualId: cardId || ""}, {skip: !(catagory === "individual" && isOpen)});
   const [descriptionDelta, setDescriptionDelta] = useState<DeltaStatic | undefined>();
   const [descriptionHTML, setDescriptionHTML] = useState("");
-  const [substrateValues, setSubstrateValues] = useState<SubstrateEntry[]>([]);
+  const [substrateValues, setSubstrateValues] = useState<SubstrateEntry[]>([{percent: 50, substrate: "pumice", color: "#1a3b52"}, {percent: 50, substrate: "soil", color: "#ab691e"}]);
   const [waterValues, setWaterValues] = useState<WaterEntry[]>([]);
   const [lightValues, setLightValues] = useState<SubstrateEntry[]>([]);
 
@@ -111,8 +111,8 @@ const InfoCard:React.FC = () => {
     }
   }, [isCreateGroupLoading, isEditGroupLoading, isCreateIndividualLoading, isEditIndividualLoading, isCreateSpeciesLoading, isEditSpeciesLoading])
 
-  const handleChangeSubstrate = useCallback(() => {
-
+  const handleChangeSubstrate = useCallback((substrate_values: SubstrateEntry[]) => {
+    setSubstrateValues(substrate_values)
   }, [])
 
   const  handleChangeWater = useCallback(() => {
@@ -155,6 +155,11 @@ const InfoCard:React.FC = () => {
   } 
 
   const handleConfirm = async () => {
+
+    function filterSubstrates(substrates:SubstrateEntry[]) {
+      return substrates.filter(value => value.percent > 0)
+    }
+
     try {
       const descriptionString = JSON.stringify(descriptionDelta || {});
       const dataForm = new FormData();
@@ -166,11 +171,10 @@ const InfoCard:React.FC = () => {
           const file = dataURLtoFile(image, `image${index + 1}.jpeg`)
           dataForm.append(`images`, file);
         })
-        console.log(parents)
 
       dataForm.set("descriptionDelta", descriptionString);
       dataForm.set("descriptionHTML", descriptionHTML);
-      dataForm.set("substrate_values", substrateValues?.length ? JSON.stringify(substrateValues) : "");
+      dataForm.set("substrate_values", substrateValues?.length ? JSON.stringify(filterSubstrates(substrateValues)) : "");
       dataForm.set("light_values", lightValues?.length ? JSON.stringify(lightValues) : "");
       dataForm.set("water_values", waterValues?.length ? JSON.stringify(waterValues) : "");
       dataForm.set("parents", JSON.stringify(parents));

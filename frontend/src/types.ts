@@ -41,7 +41,8 @@ export type Parent = {
 
 export type SubstrateEntry = {
   substrate: string;
-  percentage: number
+  percent: number
+  color: string
 }
 
 export type WaterEntry = {
