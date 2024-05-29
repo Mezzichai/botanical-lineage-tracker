@@ -45,7 +45,7 @@ const getIndividualInfo = tryCatch(async function(req, res, next) {
                                                 species.water_values AS species_water_values, 
                                                 COUNT(individual_plant.id) AS individuals_count
                                                 FROM species
-                                              LEFT JOIN individual_plant ON individual_plant.species_id = species_id
+                                              LEFT JOIN individual_plant ON individual_plant.species_id = species.id
                                               WHERE species.id = $1
                                               GROUP BY
                                                 species.name, 
@@ -99,19 +99,21 @@ const getIndividualInfo = tryCatch(async function(req, res, next) {
     if (req.params.groupId === "undefined") {
       const speciesDefaultsResult = await makeQuery(GET_NEW_INDIVIDUAL_DEFAULTS_SPECIES, req.params.speciesId)
       const generatedName = generateIndividualName(speciesDefaultsResult.rows[0].species_name, speciesDefaultsResult.rows[0].species_id, Number(speciesDefaultsResult.rows[0].individuals_count) || 0)
-      speciesDefaultsResult.rows[0].name = generatedName;
+      speciesDefaultsResult.rows[0].generatedName = generatedName;
       res.json(speciesDefaultsResult.rows[0]).status(200)
     } else {
       const groupAndSpeciesDefaultsResult = await makeQuery(GET_NEW_INDIVIDUAL_DEFAULTS_GROUP_AND_SPECIES, req.params.groupId)
       const generatedName = generateIndividualName(groupAndSpeciesDefaultsResult.rows[0].species_name, Number(groupAndSpeciesDefaultsResult.rows[0].individuals_count) || 0)
-      groupAndSpeciesDefaultsResult.rows[0].name = generatedName
+      groupAndSpeciesDefaultsResult.rows[0].generatedName = generatedName
       res.json(groupAndSpeciesDefaultsResult.rows[0]).status(200)
     }
   } else {
     const getMothersResult = await makeQuery(GET_MOTHER, req.params.individualId);
     const getFathersResult = await makeQuery(GET_FATHER, req.params.individualId);
     const individualResult = await makeQuery(GET_INDIVIDUAL, req.params.individualId);
+    const generatedName = generateIndividualName(individualResult.rows[0].species_name, individualResult.rows[0].species_id, Number(individualResult.rows[0].individuals_count) || 0)
     
+    individualResult.rows[0].generatedName = generatedName
     individualResult.rows[0].parents = {mother: getMothersResult.rows[0], father: getFathersResult.rows[0] || null};
     res.send(individualResult.rows[0]).status(200)
   }
