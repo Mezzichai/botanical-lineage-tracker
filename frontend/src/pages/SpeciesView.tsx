@@ -21,7 +21,7 @@ const Species = () => {
     data,
     isLoading,
   } = useGetSpeciesQuery({speciesId: speciesIdParam})
-  const handleInfoClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => {
+  const handleInfoClick = (id: string, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation()
     dispatch(toggleInfoCardOn({catagory: "species", itemId: id}))
   }

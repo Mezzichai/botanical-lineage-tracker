@@ -9,11 +9,11 @@ type Props = {
  id?: string
 }
 
-const ItemCardInfo:React.FC<Props> = ({name, onClick=() =>{}, id}) => {
+const ItemCardInfo:React.FC<Props> = ({name, onClick=() =>{}, id=""}) => {
   return (
     <span className={CardStyles.cardInfo}>
       <p>{name}</p>
-      <button onClick={(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => onClick(id || "", e)} aria-label={`item-${id || "new"}-info`}>
+      <button onClick={(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => onClick(id, e)} aria-label={`item-${id || "new"}-info`}>
         <FontAwesomeIcon icon={faInfo}/>
       </button>
   </span>

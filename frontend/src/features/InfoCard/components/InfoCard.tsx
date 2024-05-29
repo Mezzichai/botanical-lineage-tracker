@@ -82,9 +82,10 @@ const InfoCard:React.FC = () => {
       setDescriptionHTML(fetchedInfo.description_html || "")
       setSubstrateValues(fetchedInfo.substrate_values || fetchedInfo.group_substrate_values || fetchedInfo.species_substrate_values)
       setWaterValues(fetchedInfo.water_values || fetchedInfo.group_water_values || fetchedInfo.species_water_values)
+      console.log(fetchedInfo)
       setParents(prevParents => {
-        return fetchedInfo?.mother 
-        ? {mother: fetchedInfo.mother, father: fetchedInfo.father} 
+        return fetchedInfo?.parents
+        ? {mother: fetchedInfo.parents.mother, father: fetchedInfo.parents.father} 
         : newNodeParents 
         ? newNodeParents 
         : prevParents
@@ -230,6 +231,8 @@ const InfoCard:React.FC = () => {
   if (typeof Number(speciesId) !== "number") {
     tabs = ["Info", "Substrate", "Water"]
   }
+
+
 
   return (
     <div className={`${InfoCardStyles.cardContainer} ${isOpen ? InfoCardStyles.showNewCard : InfoCardStyles.hideCard}`}>

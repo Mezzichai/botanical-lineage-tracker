@@ -112,12 +112,12 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
   };
 
 
-  let hoverTimeout:NodeJS.Timeout;
+  // let hoverTimeout:NodeJS.Timeout;
 
   const handleHover = (id?: string) => {
-    if (hoverTimeout) {
-      clearTimeout(hoverTimeout)
-    }
+    // if (hoverTimeout) {
+    //   clearTimeout(hoverTimeout)
+    // }
  // if (!isExpandAnimating && !isContractAnimating) {
     preHoverOrActiveLiWidth.current = childrenRef.current?.offsetWidth || 0
     setHoveredNodeId(id || "")

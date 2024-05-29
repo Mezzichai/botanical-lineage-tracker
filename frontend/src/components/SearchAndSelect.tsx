@@ -57,7 +57,7 @@ const SearchAndSelect:React.FC<Props> = ({data, handleChangeQuery, query, handle
     </div>
     {dropDownState &&
       <ul className={SearchAndSelectStyles.resultContainer}>
-        {data.length && query ? (
+        {data && query ? (
           data.map((element, index)=>
             <li 
               className={hoveredResultIndex === index ? SearchAndSelectStyles.activeResult : ""} 
