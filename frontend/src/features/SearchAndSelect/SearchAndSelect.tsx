@@ -1,18 +1,21 @@
 import { faChevronDown, faChevronRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState } from 'react'
-import SearchAndSelectStyles from '../styles/searchAndSelectStyles.module.css'
+import SearchAndSelectStyles from './searchAndSelectStyles.module.css'
 
 
 type Props = {
   data: {id: string, name: string, images: string[]}[],
-  handleChangeQuery: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  handleChangeQuery: (value: string) => void,
   query: string,
-  handleChangeSelected: (item: {id: string, name: string, image: string}) => void
+  handleChangeSelected: (item: {id: string, name: string}) => void,
+  toggleDropDown: () => void,
+  dropDownState: boolean
+  placeholder?: string
+  styles: string
 }
-const SearchAndSelect:React.FC<Props> = ({data, handleChangeQuery, query, handleChangeSelected}) => {
+const SearchAndSelect:React.FC<Props> = ({data, handleChangeQuery, query, handleChangeSelected, toggleDropDown, dropDownState, placeholder, styles}) => {
   const [hoveredResultIndex, setHoveredResultIndex] = useState(0)
-  const [dropDownState, setDropDownState] = useState(true)
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (dropDownState) {
@@ -37,32 +40,28 @@ const SearchAndSelect:React.FC<Props> = ({data, handleChangeQuery, query, handle
     }
   };
 
-  const handleSelect = (id: string, name: string, image: string) => {
-    handleChangeSelected({id, name, image})
-    setDropDownState(false)
-  }
-
   return (
-  <div className={SearchAndSelectStyles.selectionContainer} tabIndex={0} onKeyDown={(e) => handleKeyDown(e)}>
+  <div className={`${SearchAndSelectStyles.selectionContainer} ${styles}`} tabIndex={0} onKeyDown={(e) => handleKeyDown(e)}>
     <div className={SearchAndSelectStyles.selectionControls}>
       <input
         className={SearchAndSelectStyles.input}
-        onChange={handleChangeQuery}
+        onChange={(e)=> handleChangeQuery(e.target.value)}
         type='text'
+        placeholder={placeholder}
         value={query}
       />
-      <button className={SearchAndSelectStyles.dropDownButton} onClick={() => setDropDownState(prevState => !prevState)}>
+      <button className={SearchAndSelectStyles.dropDownButton} onClick={toggleDropDown}>
         <FontAwesomeIcon icon={dropDownState ? faChevronDown : faChevronRight}/>
       </button>
     </div>
     {dropDownState &&
       <ul className={SearchAndSelectStyles.resultContainer}>
-        {data && query ? (
+        {data?.length && query ? (
           data.map((element, index)=>
             <li 
               className={hoveredResultIndex === index ? SearchAndSelectStyles.activeResult : ""} 
               data-id={element.id} 
-              onClick={() => handleSelect(element.id, element.name, element.images[0])}
+              onClick={() => handleChangeSelected({id: element.id, name: element.name})}
             >
               {element.name}
             </li>

@@ -226,7 +226,7 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
                         styles={`
                           ${LineageTreeStyles.nodeContent} 
                           ${isParentBeingHovered ? LineageTreeStyles.parentFocused : ""} 
-                          ${!activeIdOfAggregates ? LineageTreeStyles.aggregateNode : LineageTreeStyles.activeNodeOfAggregates} 
+                          ${!activeIdOfAggregates ? LineageTreeStyles.aggregateNode : ""} 
                         `}
                       >
                         <>
@@ -262,7 +262,8 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
                             () => displayNewInfoCard(
                               {name: node.name, image: node.images[0], id: node.id},
                               {name: node.mates[activeMateIndex[0]]?.name, image: node.mates[activeMateIndex[0]]?.images?.[0], id: node.mates[activeMateIndex[0]]?.id}
-                            )}
+                            )
+                          }
                         >
                           <FontAwesomeIcon icon={faPlus} />
                         </button>
@@ -290,7 +291,7 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
         : children.map((node, index) => (
           <li 
             className={`${LineageTreeStyles.child} fadeInElement`} 
-            key={node.id + index} 
+            key={node.id + index}
             ref={childrenRef}
           >
             <div className={`

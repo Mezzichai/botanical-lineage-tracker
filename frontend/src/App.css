@@ -99,6 +99,11 @@ div .fadeOutElement {
   white-space: pre;
 }
 
+input {
+ border: 1px solid black;
+ border-radius: 2px;
+}
+
 textarea:focus, input:focus{
   outline: none;
 }

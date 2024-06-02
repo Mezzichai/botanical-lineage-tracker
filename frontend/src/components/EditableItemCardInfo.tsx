@@ -4,7 +4,7 @@ import { faCheck, faEdit } from '@fortawesome/free-solid-svg-icons'
 import CardStyles from '../styles/cardAndListStyles.module.css'
 import { useParams } from "@tanstack/react-router";
 import { useGetQueriedIndividualsQuery } from "../api/apiSlice";
-import SearchAndSelect from "../components/SearchAndSelect";
+import SearchAndSelect from "../features/SearchAndSelect/SearchAndSelect";
 import { LeanLineageNode } from "../types";
 type Props = {
   name: string,

@@ -70,6 +70,10 @@
   text-overflow: ellipsis
 }
 
+.cardInfo div div {
+  height: 1.4rem;
+}
+
 .largeCardSize p {
   font-size: 1.3rem
 }

@@ -6,7 +6,6 @@
 .selectionControls {
   display: flex;
   padding: .2rem .2rem .2rem .2rem;
-  height: 1.4rem;
   width: 100%;
   color: black;
   white-space: nowrap;
@@ -20,7 +19,7 @@
 
 .input {
   border: none;
-  font-size: 1rem;
+  font-size: .8rem;
   height: 100%;
   width: 100%;
   color: black;

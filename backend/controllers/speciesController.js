@@ -15,6 +15,7 @@ const getSpecies = tryCatch(async function(req, res, next) {
                             ORDER BY date DESC`;
 
   const result = await makeQuery(GET_ALL_SPECIES)
+  console.log(result.rows)
   return res.json(result.rows).status(200)
 })
 
@@ -40,9 +41,9 @@ const getIndividualInfo = tryCatch(async function(req, res, next) {
   const GET_NEW_INDIVIDUAL_DEFAULTS_SPECIES = `SELECT 
                                                 species.name AS species_name, 
                                                 species.id AS species_id, 
-                                                species.substrate_values AS species_substrate_values, 
-                                                species.light_values AS species_light_values, 
-                                                species.water_values AS species_water_values, 
+                                                species.substrate_values AS substrate_values, 
+                                                species.light_values AS light_values, 
+                                                species.water_values AS water_values, 
                                                 COUNT(individual_plant.id) AS individuals_count
                                                 FROM species
                                               LEFT JOIN individual_plant ON individual_plant.species_id = species.id
@@ -57,14 +58,11 @@ const getIndividualInfo = tryCatch(async function(req, res, next) {
   const GET_NEW_INDIVIDUAL_DEFAULTS_GROUP_AND_SPECIES = `SELECT 
                                                           species_group.name AS group_name, 
                                                           species_group.id AS group_id, 
-                                                          species_group.substrate_values AS group_substrate_values, 
-                                                          species_group.light_values AS group_light_values, 
-                                                          species_group.water_values AS group_water_values,
+                                                          species_group.substrate_values AS substrate_values, 
+                                                          species_group.light_values AS light_values, 
+                                                          species_group.water_values AS water_values,
                                                           species.name AS species_name, 
                                                           species.id AS species_id, 
-                                                          species.substrate_values AS species_substrate_values, 
-                                                          species.light_values AS species_light_values, 
-                                                          species.water_values AS species_water_values,
                                                           COUNT(individual_plant.id) AS individuals_count
                                                         FROM species_group
                                                         LEFT JOIN species ON species.id = species_group.species_id
@@ -217,11 +215,84 @@ const getSpeciesMembers = tryCatch(async function(req, res, next) {
 
 
 const getSpeciesMembersFlat = tryCatch(async function(req, res, next) {
-  const GET_INDIVIDUALS = `SELECT * FROM individual_plant WHERE species_id = $1 LIMIT 100`
+  for (key in req.query) {
+    req.query[key] = decodeURI(req.query[key])
+  }
+  const {minAge, maxAge, motherId, fatherId, minWater, maxWater, minLight, maxLight, artificialConditions, needsFertilizer, needsWater, isClone} = req.query
+
+    const GET_INFO = `
+      WITH value_averages AS (
+        SELECT
+          ip.id,
+          AVG(CAST((wv.value->>'water_count') AS INTEGER)) AS avg_water_count,
+          AVG(CAST((lv.value->>'hours') AS INTEGER)) AS avg_light_count
+        FROM
+          individual_plant ip
+        LEFT JOIN jsonb_array_elements(ip.water_values) AS wv(value) ON true
+        LEFT JOIN jsonb_array_elements(ip.light_values) AS lv(value) ON true
+        WHERE
+          wv.value->>'water_count' ~ '^[0-9]+$'
+          AND lv.value->>'hours' ~ '^[0-9]+$'
+        GROUP BY
+          ip.id
+      )
+      SELECT 
+        EXTRACT(EPOCH FROM (NOW() - ip.germination_date)) AS age,
+        ip.*,
+        father.id AS father_id,
+        mother.id AS mother_id,
+        va.avg_water_count,
+        va.avg_light_count
+      FROM individual_plant ip
+      JOIN value_averages va ON ip.id = va.id
+      LEFT JOIN child_parent_pair cpp ON ip.id = cpp.individual_plant_id
+      LEFT JOIN parent_pair pp ON cpp.parent_pair_id = pp.id
+      LEFT JOIN individual_plant father ON father.id = pp.father_id
+      LEFT JOIN individual_plant mother ON mother.id = pp.father_id
+      WHERE 
+        ip.species_id = $1
+        AND (EXTRACT(EPOCH FROM (NOW() - ip.germination_date)) > $2 OR $2 IS NULL)
+        AND (EXTRACT(EPOCH FROM (NOW() - ip.germination_date)) < $3 OR $3 IS NULL)
+        AND (va.avg_water_count >= $4 OR $4 IS NULL)
+        AND (va.avg_water_count <= $5 OR $5 IS NULL)
+        AND (va.avg_light_count >= $6 OR $6 IS NULL)
+        AND (va.avg_light_count <= $7 OR $7 IS NULL)
+        AND (mother_id = $8 OR $8 IS NULL)
+        AND (father_id = $9 OR $9 IS NULL)
+        AND (ip.is_artificial_conditions = $10 OR $10 IS NULL)
+        AND (ip.is_clone = $11 OR $11 IS NULL);
+      `
   const speciesId = Number(req.params.speciesId);
-  const plants = await makeQuery(GET_INDIVIDUALS, speciesId);
-  res.send(plants.rows).status(200);
-})
+  const minAgeParam = Number(minAge) > 0 ? Number(minAge) : null;
+  const maxAgeParam = Number(maxAge) > 0 ? Number(maxAge) : null;
+  const minWaterParam = Number(minWater) > 0 ? Number(minWater) : null;
+  const maxWaterParam = Number(maxWater) > 0 ? Number(maxWater) : null;
+  const minLightParam = Number(minLight) > 0 ? Number(minLight) : null;
+  const maxLightParam = Number(maxLight) > 0 ? Number(maxLight) : null;
+  const artificialConditionsParam = artificialConditions ? artificialConditions : null;
+  const isCloneParam = isClone ? isClone : null;
+
+  const plants = await makeQuery(GET_INFO,
+    speciesId,
+    minAgeParam,
+    maxAgeParam,
+    minWaterParam,
+    maxWaterParam,
+    minLightParam,
+    maxLightParam,
+    motherId ? Number(motherId) : null,
+    fatherId ? Number(fatherId) : null,
+    artificialConditionsParam,
+    isCloneParam
+  );
+
+  console.log(plants.rows)
+  res.status(200).send(plants.rows);
+
+
+ 
+
+});
 
 
 
@@ -279,19 +350,26 @@ const createSpecies = tryCatch(async function(req, res, next) {
                                   $3, 
                                   $4, 
                                   $5,
-                                  COALESCE($6::jsonb, '[{"hours": 1, "month": "January"}, {"hours": 1, "hours": "February"}, {"hours": 1, "month": "March"}, {"hours": 1, "month": "April"}, {"hours": 1, "month": "May"}, {"hours": 1, "month": "June"}, {"hours": 1, "month": "July"}, {"hours": 1, "month": "August"}, {"hours": 1, "month": "September"}, {"hours": 1, "month": "October"}, {"hours": 1, "month": "November"}, {"hours": 1, "month": "December"}]'::jsonb), 
-                                  COALESCE($7::jsonb, '[{"percent": "50", "substrate": "pumice", "color": "#1a3b52"}, {"percent": "50", "substrate": "soil", "color": "#ab691e"}]'::jsonb), 
+                                  COALESCE($6::jsonb, '[{"hours": 1, "month": "January"}, {"hours": 1, "month": "February"}, {"hours": 1, "month": "March"}, {"hours": 1, "month": "April"}, {"hours": 1, "month": "May"}, {"hours": 1, "month": "June"}, {"hours": 1, "month": "July"}, {"hours": 1, "month": "August"}, {"hours": 1, "month": "September"}, {"hours": 1, "month": "October"}, {"hours": 1, "month": "November"}, {"hours": 1, "month": "December"}]'::jsonb), 
+                                  COALESCE($7::jsonb, '[{"percent": 50, "substrate": "pumice", "color": "#1a3b52"}, {"percent": 50, "substrate": "soil", "color": "#ab691e"}]'::jsonb), 
                                   COALESCE($8::jsonb, '[{"water_count": 1, "month": "January"}, {"water_count": 1, "month": "February"}, {"water_count": 1, "month": "March"}, {"water_count": 1, "month": "April"}, {"water_count": 1, "month": "May"}, {"water_count": 1, "month": "June"}, {"water_count": 1, "month": "July"}, {"water_count": 1, "month": "August"}, {"water_count": 1, "month": "September"}, {"water_count": 1, "month": "October"}, {"water_count": 1, "month": "November"}, {"water_count": 1, "month": "December"}]'::jsonb))`
-                          
   const addSpeciesResult = await makeQuery(ADD_SPECIES, 
     req.params.nextId,
     req.body.name,
     JSON.stringify(req.files),
     isJsonString(req.body.descriptionDelta) ? req.body.descriptionDelta : JSON.stringify(req.body.descriptionDelta),
     clean,
-    isJsonString(req.body.light_values) ? req.body.light_values : JSON.stringify(req.body.light_values),
-    isJsonString(req.body.substrate_values) ? req.body.substrate_values : JSON.stringify(req.body.substrate_values),
-    isJsonString(req.body.water_values) ? req.body.water_values : JSON.stringify(req.body.water_values),
+    !req.body.light_values ? null : 
+      isJsonString(req.body.light_values) ? req.body.light_values : 
+      JSON.stringify(req.body.light_values)
+    ,
+    !req.body.substrate_values ? null : 
+      isJsonString(req.body.substrate_values) ? req.body.substrate_values : 
+      JSON.stringify(req.body.substrate_values)
+    ,
+    !req.body.water_values ? null :
+      isJsonString(req.body.water_values) ? req.body.water_values : 
+      JSON.stringify(req.body.water_values)
   )
   res.send(addSpeciesResult.rowCount > 0).status(200)
 })
@@ -371,7 +449,7 @@ const editSpecies = tryCatch(async function(req, res, next) {
                           description_html = COALESCE($4, description_html),
                           light_values = COALESCE($5, light_values),
                           substrate_values = COALESCE($5, substrate_values),
-                          water_values = COALESCE($6, water_values),
+                          water_values = COALESCE($6, water_values)
                         WHERE id = $7`;
 
   let {name, descriptionDelta, descriptionHTML, substrate_values, light_values, water_values, parents, groupId, existing_images} = req.body;

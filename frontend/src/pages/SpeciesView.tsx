@@ -7,7 +7,7 @@ import ItemCard from '../components/ItemCard'
 import CardStyles from '../styles/cardAndListStyles.module.css'
 import ItemCardInfo from '../components/ItemCardInfo'
 import { useDispatch } from 'react-redux'
-import { toggleInfoCardOn } from '../features/InfoCard/InfoCardSlice'
+import { changeCatagories, toggleInfoCardOn } from '../features/InfoCard/InfoCardSlice'
 
 const Species = () => {
   const { speciesIdParam, groupIdParam } = useParams({ strict: false})
@@ -15,6 +15,8 @@ const Species = () => {
   const navigate = useNavigate({ from: '/' })
   const handleSpeciesClick = (id: string) => {
     navigate({ to: `/$speciesId`, params: {speciesId: id}})
+    dispatch(changeCatagories({catagory: "species"}))
+
   }
 
   const {

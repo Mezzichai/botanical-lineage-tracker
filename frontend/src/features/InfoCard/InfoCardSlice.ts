@@ -40,6 +40,10 @@ const infoCardSlice = createSlice({
     toggleInfoCardEditModeOn(state) {
       state.isInfoCardNewOrEditing = true
     },
+    changeCatagories(state, actions) {
+      state.catagory = actions.payload.catagory
+    },
+    
   }
 })
 
@@ -47,6 +51,7 @@ export const {
   toggleInfoCardOn,
   toggleInfoCardOff,
   toggleInfoCardEditModeOn,
+  changeCatagories
 } = infoCardSlice.actions
 
 export const selectIsInfoCardOpen = (state: { infoCard: { isOpen:boolean; }; }) => state.infoCard.isOpen;
@@ -54,6 +59,5 @@ export const selectIsInfoNewOrEditing = (state: { infoCard: { isInfoCardNewOrEdi
 export const selectCatagory = (state: { infoCard: { catagory: "group" | "species" | "individual"; }; }) => state.infoCard.catagory;
 export const selectId = (state: { infoCard: { itemId: string }; }) => state.infoCard.itemId;
 export const selectParents = (state: { infoCard: { parents: {father: LeanLineageNode, mother: LeanLineageNode} } }) => state.infoCard.parents;
-
 
 export default infoCardSlice.reducer

@@ -23,7 +23,7 @@ export type Mate = {
 
 export type LeanLineageNode = {
   name: string;
-  image: string;
+  image?: string;
   id: string;
 };
 

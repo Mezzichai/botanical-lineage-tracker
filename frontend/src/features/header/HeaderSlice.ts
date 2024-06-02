@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { LeanLineageNode } from '../../types'
+import { isObjectLiteral } from '../../utils/isObjectLiteral'
 
 type initialState = {
   filters: {
@@ -9,9 +10,9 @@ type initialState = {
     hasArtificialConditions: boolean,
     mother: LeanLineageNode,
     father: LeanLineageNode,
-    waterFrequencyRange: {low?: number, high?: number},
-    ageRange: {low?: number, high?: number},
-    lightRange: {low?: number, high?: number},
+    waterRange: {minWater?: number, maxWater?: number},
+    ageRange: {minAge?: number, maxAge?: number},
+    lightRange: {minLight?: number, maxLight?: number},
   },
   query: ""
 }
@@ -24,20 +25,21 @@ const initialState = {
     hasArtificialConditions: false,
     mother: {},
     father: {},
-    waterFrequencyRange: {},
-    ageRange: {},
-    lightRange: {},
+    waterRange: {minWater: 0, maxWater: 0},
+    ageRange: {minAge: 0, maxAge: 0},
+    lightRange: {minLight: 0, maxLight: 0},
   },
   query: ""
 }
 
 
 const headerSlice = createSlice({
-  name: "infoCard",
+  name: "header",
   initialState,
   reducers: {
     changeFilters(state, actions) {
-      state.filters = actions.payload.query
+      const key = Object.keys(actions.payload)[0];
+      state.filters[key] = actions.payload
     },
     clearFilters(state) {
       state.filters = initialState.filters
@@ -48,14 +50,33 @@ const headerSlice = createSlice({
   }
 })
 
+function selectFlatEntriesFromFilters(filters) {
+  const flatEntries: string[] = [];
+  function recurseForFlatEntries(entries) {
+    entries.forEach((entry)=> {
+      if (isObjectLiteral(entry[1])) {
+        return recurseForFlatEntries(Object.entries(entry[1]))
+      } else {
+        flatEntries.push(entry)
+      }
+    });
+  }
+  recurseForFlatEntries(Object.entries(filters))
+  console.log(flatEntries)
+
+  console.log(flatEntries.map(pair => pair[0] + "=" + pair[1]).join("&"))
+  return flatEntries.map(pair => pair[0] + "=" + pair[1]).join("&")
+}
+
 export const {
     changeFilters,
     clearFilters,
     changeQuery
 } = headerSlice.actions
 
-export const selectFilters = (state: { filters: initialState }) => state.filters;
-export const selectQuery = (state: { query: string}) => state.query;
+export const selectFilters = (state: { header: initialState}) => state.header.filters;
+export const selectQueryParamNoramalizedFilters = (state: { header: { filters: unknown } }) => selectFlatEntriesFromFilters(state.header.filters)
+export const selectQuery = (state: { header: { query: unknown } }) => state.header.query;
 
 
 export default headerSlice.reducer

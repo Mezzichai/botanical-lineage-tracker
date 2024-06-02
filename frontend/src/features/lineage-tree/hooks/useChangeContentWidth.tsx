@@ -25,6 +25,7 @@ const useChangeContentWidth = (container: React.RefObject<HTMLLIElement>, widthT
       })
 
       container.current.addEventListener('transitionend', function transitionEndHandler(e) { 
+        console.log("dwadwadawadwwwww")
         if (container.current) {
           container.current.removeEventListener('transitionend', transitionEndHandler);   
           isAnimating.current = false;

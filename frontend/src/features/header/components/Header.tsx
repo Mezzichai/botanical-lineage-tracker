@@ -4,21 +4,25 @@ import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SearchBar from './SearchBar';
 import { useNavigate, useParams } from '@tanstack/react-router';
+import { useGetSpecificGroupInfoQuery, useGetSpecificSpeciesInfoQuery } from '../../../api/apiSlice';
+
 
 const Header: React.FC = () => {
-
   const { speciesId, groupId} = useParams({ strict: false});
 
+
+  const {data: specificSpeciesInfo} = useGetSpecificSpeciesInfoQuery({speciesId: speciesId}, {skip: !(speciesId && !groupId)});
+  const {data: specificGroupInfo} = useGetSpecificGroupInfoQuery({speciesId: speciesId, groupId: groupId || ""}, {skip: !(speciesId && groupId)});
   const navigate = useNavigate({ from: '/' });
 
   const handleGoBack = () => {
     if (speciesId && groupId) {
-      navigate({ to: `/$speciesId`, params: {speciesId}})
+      navigate({ to: `/$speciesId`, params: {speciesId}});
     } else if (speciesId) {
-      navigate({ to: `/`})
+      navigate({ to: `/`});
     }
   };
-
+  
   return (
     <>
       <div className={headerStyles.viewHeader}>
@@ -26,11 +30,13 @@ const Header: React.FC = () => {
           {(speciesId || groupId) ?
             <FontAwesomeIcon icon={faChevronLeft} onClick={handleGoBack}/>
           : null}
-          {speciesId ? 
-            speciesId : 
-          groupId ?
-            groupId :
-          "Species"
+          {!speciesId ? 
+            "Species" :
+          specificSpeciesInfo ? 
+            specificSpeciesInfo.name : 
+          specificGroupInfo ?
+            specificGroupInfo.name :
+            null
           }
         </div>
         <SearchBar />

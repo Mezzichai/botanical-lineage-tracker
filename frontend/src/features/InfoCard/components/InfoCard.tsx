@@ -23,7 +23,6 @@ import { Group, LeanLineageNode, SubstrateEntry, WaterEntry } from '../../../typ
 
 
 
-//cannot use keys to reset this component, too many possible collisions
 const InfoCard:React.FC = () => {
   const modules = {
     toolbar: [
@@ -82,7 +81,8 @@ const InfoCard:React.FC = () => {
       setDescriptionHTML(fetchedInfo.description_html || "")
       setSubstrateValues(fetchedInfo.substrate_values || fetchedInfo.group_substrate_values || fetchedInfo.species_substrate_values)
       setWaterValues(fetchedInfo.water_values || fetchedInfo.group_water_values || fetchedInfo.species_water_values)
-      console.log(fetchedInfo)
+      setLightValues(fetchedInfo.light_values || fetchedInfo.group_light_values || fetchedInfo.species_light_values)
+
       setParents(prevParents => {
         return fetchedInfo?.parents
         ? {mother: fetchedInfo.parents.mother, father: fetchedInfo.parents.father} 
@@ -92,10 +92,10 @@ const InfoCard:React.FC = () => {
       })
       setGroup({name: fetchedInfo.group_name, id: fetchedInfo.group_id})
       setImages(fetchedInfo.images || [])
-      handleNameChange(fetchedInfo.name || '')
+      handleNameChange(fetchedInfo.generatedName || fetchedInfo.name || '')
       speciesInfo.current = {name: fetchedInfo?.species_name, id: fetchedInfo?.species_id}
       prevCardId.current = cardId
-      generatedIndividualNameRef.current = fetchedInfo?.name
+      generatedIndividualNameRef.current = fetchedInfo?.generatedName
     }
   }, [specificGroupInfo, specificIndividualInfo, specificSpeciesInfo, cardId, isOpen, newNodeParents])
 
@@ -172,7 +172,6 @@ const InfoCard:React.FC = () => {
           const file = dataURLtoFile(image, `image${index + 1}.jpeg`)
           dataForm.append(`images`, file);
         })
-
       dataForm.set("descriptionDelta", descriptionString);
       dataForm.set("descriptionHTML", descriptionHTML);
       dataForm.set("substrate_values", substrateValues?.length ? JSON.stringify(filterSubstrates(substrateValues)) : "");

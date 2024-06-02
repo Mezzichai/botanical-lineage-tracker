@@ -27,7 +27,7 @@ export const apiSlice = createApi({
       providesTags: ['Individuals']
     }),
     getFlatIndividuals: builder.query({
-      query: params => `/${params.speciesId}/flat`,
+      query: params => encodeURI(`/${params.speciesId}/flat?${params.queryParams}`),
       providesTags: ['Individuals']
     }),
     getSpecificGroupInfo: builder.query({
