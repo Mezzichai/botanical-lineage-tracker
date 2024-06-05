@@ -81,11 +81,6 @@ const SearchFilters = () => {
               handleChangeSelected={handleSelectMother}
               styles={SearchBarStyles.filterSearchDivInput}
             />
-            {/* <input
-              className={SearchBarStyles.filterSearchInput}
-              value={filters.mother.motherName}
-              onChange={(e) => handleFilterChange({father: {...filters.father, fatherName: e.target.value}})}
-            /> */}
             and
               <SearchAndSelect 
                 placeholder={'search parent'} 
@@ -97,11 +92,6 @@ const SearchFilters = () => {
                 handleChangeSelected={handleSelectFather}
                 styles={SearchBarStyles.filterSearchDivInput}
               />
-            {/* <input
-              className={SearchBarStyles.filterSearchInput}
-              value={filters.mother.fatherName}
-              onChange={(e) => handleFilterChange({mother: {...filters.mother, motherName: e.target.value}})}
-            /> */}
           </div>
         </div>
 
@@ -112,18 +102,20 @@ const SearchFilters = () => {
               className={SearchBarStyles.filterSearchInput}
               type="number"
               min={0}
+              step={0.1}
               placeholder='min frequency'
               value={filters.waterRange.minWater}
-              onChange={(e) => handleFilterChange({waterRange: {...filters.waterRange, waterMin: e.target.value}})}
+              onChange={(e) => handleFilterChange({waterRange: {...filters.waterRange, minWater: e.target.value}})}
             />
              and
             <input
               className={SearchBarStyles.filterSearchInput}
               type="number"
               min={0}
+              step={0.1}
               placeholder='max frequency'
               value={filters.waterRange.maxWater}
-              onChange={(e) => handleFilterChange({waterRange: {...filters.waterRange, waterMax: e.target.value}})}
+              onChange={(e) => handleFilterChange({waterRange: {...filters.waterRange, maxWater: e.target.value}})}
             />
           </div>
         </div>
@@ -137,18 +129,20 @@ const SearchFilters = () => {
               className={SearchBarStyles.filterSearchInput}
               type="number"
               min={0}
+              step={0.1}
               placeholder='min years'
               value={filters.ageRange.minAge}
-              onChange={(e) => handleFilterChange({ageRange: {...filters.ageRange, ageMin: e.target.value}})}
+              onChange={(e) => handleFilterChange({ageRange: {...filters.ageRange, minAge: e.target.value}})}
             />
             and
             <input
               className={SearchBarStyles.filterSearchInput}
               type="number"
               min={0}
+              step={0.1}
               placeholder='max years'
               value={filters.ageRange.maxAge}
-              onChange={(e) => handleFilterChange({ageRange: {...filters.ageRange, ageMax: e.target.value}})}
+              onChange={(e) => handleFilterChange({ageRange: {...filters.ageRange, maxAge: e.target.value}})}
             />
           </div>
         </div>
@@ -162,7 +156,7 @@ const SearchFilters = () => {
               min={0}
               placeholder='max hours'
               value={filters.lightRange.minLight}
-              onChange={(e) => handleFilterChange({lightRange: {...filters.lightRange, lightMin: e.target.value}})}
+              onChange={(e) => handleFilterChange({lightRange: {...filters.lightRange, minLight: e.target.value}})}
             />
              and
             <input
@@ -171,7 +165,7 @@ const SearchFilters = () => {
               min={0}
               placeholder='min hours'
               value={filters.lightRange.maxLight}
-              onChange={(e) => handleFilterChange({lightRange: {...filters.lightRange, lightMax: e.target.value}})}
+              onChange={(e) => handleFilterChange({lightRange: {...filters.lightRange, maxLight: e.target.value}})}
             />
           </div>
         </div>

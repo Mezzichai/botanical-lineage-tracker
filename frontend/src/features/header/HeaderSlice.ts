@@ -39,7 +39,8 @@ const headerSlice = createSlice({
   reducers: {
     changeFilters(state, actions) {
       const key = Object.keys(actions.payload)[0];
-      state.filters[key] = actions.payload
+      console.log(actions.payload[key])
+      state.filters[key] = actions.payload[key]
     },
     clearFilters(state) {
       state.filters = initialState.filters

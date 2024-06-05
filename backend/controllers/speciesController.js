@@ -8,6 +8,7 @@ const generateIndividualName = require("../utils/generateIndividualName");
 const window = new JSDOM('').window;
 const DOMPurify = createDOMPurify(window);
 
+const SECONDS_IN_A_YEAR = 31536000;
 //query
 const getSpecies = tryCatch(async function(req, res, next) {
   const GET_ALL_SPECIES = `SELECT * 
@@ -220,57 +221,61 @@ const getSpeciesMembersFlat = tryCatch(async function(req, res, next) {
   }
   const {minAge, maxAge, motherId, fatherId, minWater, maxWater, minLight, maxLight, artificialConditions, needsFertilizer, needsWater, isClone} = req.query
 
-    const GET_INFO = `
-      WITH value_averages AS (
-        SELECT
-          ip.id,
-          AVG(CAST((wv.value->>'water_count') AS INTEGER)) AS avg_water_count,
-          AVG(CAST((lv.value->>'hours') AS INTEGER)) AS avg_light_count
-        FROM
-          individual_plant ip
-        LEFT JOIN jsonb_array_elements(ip.water_values) AS wv(value) ON true
-        LEFT JOIN jsonb_array_elements(ip.light_values) AS lv(value) ON true
-        WHERE
-          wv.value->>'water_count' ~ '^[0-9]+$'
-          AND lv.value->>'hours' ~ '^[0-9]+$'
-        GROUP BY
-          ip.id
-      )
-      SELECT 
-        EXTRACT(EPOCH FROM (NOW() - ip.germination_date)) AS age,
-        ip.*,
-        father.id AS father_id,
-        mother.id AS mother_id,
-        va.avg_water_count,
-        va.avg_light_count
-      FROM individual_plant ip
-      JOIN value_averages va ON ip.id = va.id
-      LEFT JOIN child_parent_pair cpp ON ip.id = cpp.individual_plant_id
-      LEFT JOIN parent_pair pp ON cpp.parent_pair_id = pp.id
-      LEFT JOIN individual_plant father ON father.id = pp.father_id
-      LEFT JOIN individual_plant mother ON mother.id = pp.father_id
-      WHERE 
-        ip.species_id = $1
-        AND (EXTRACT(EPOCH FROM (NOW() - ip.germination_date)) > $2 OR $2 IS NULL)
-        AND (EXTRACT(EPOCH FROM (NOW() - ip.germination_date)) < $3 OR $3 IS NULL)
-        AND (va.avg_water_count >= $4 OR $4 IS NULL)
-        AND (va.avg_water_count <= $5 OR $5 IS NULL)
-        AND (va.avg_light_count >= $6 OR $6 IS NULL)
-        AND (va.avg_light_count <= $7 OR $7 IS NULL)
-        AND (mother_id = $8 OR $8 IS NULL)
-        AND (father_id = $9 OR $9 IS NULL)
-        AND (ip.is_artificial_conditions = $10 OR $10 IS NULL)
-        AND (ip.is_clone = $11 OR $11 IS NULL);
-      `
+  const GET_INFO = `
+    WITH value_averages AS (
+      SELECT
+        ip.id,
+        AVG(CAST((wv.value->>'water_count') AS INTEGER)) AS avg_water_count,
+        AVG(CAST((lv.value->>'hours') AS INTEGER)) AS avg_light_count
+      FROM
+        individual_plant ip
+      LEFT JOIN jsonb_array_elements(ip.water_values) AS wv(value) ON true
+      LEFT JOIN jsonb_array_elements(ip.light_values) AS lv(value) ON true
+      WHERE
+        wv.value->>'water_count' ~ '^[0-9]+$'
+        AND lv.value->>'hours' ~ '^[0-9]+$'
+      GROUP BY
+        ip.id
+    )
+    SELECT 
+      EXTRACT(EPOCH FROM (NOW() - ip.germination_date)) AS age,
+      ip.*,
+      father.id AS father_id,
+      mother.id AS mother_id,
+      va.avg_water_count,
+      va.avg_light_count
+    FROM individual_plant ip
+    JOIN value_averages va ON ip.id = va.id
+    LEFT JOIN child_parent_pair cpp ON ip.id = cpp.individual_plant_id
+    LEFT JOIN parent_pair pp ON cpp.parent_pair_id = pp.id
+    LEFT JOIN individual_plant father ON father.id = pp.father_id
+    LEFT JOIN individual_plant mother ON mother.id = pp.father_id
+    WHERE 
+      ip.species_id = $1
+      AND (EXTRACT(EPOCH FROM (NOW() - ip.germination_date)) > $2 OR $2 IS NULL)
+      AND (EXTRACT(EPOCH FROM (NOW() - ip.germination_date)) < $3 OR $3 IS NULL)
+      AND (va.avg_water_count >= $4 OR $4 IS NULL)
+      AND (va.avg_water_count <= $5 OR $5 IS NULL)
+      AND (va.avg_light_count >= $6 OR $6 IS NULL)
+      AND (va.avg_light_count <= $7 OR $7 IS NULL)
+      AND (mother_id = $8 OR $8 IS NULL)
+      AND (father_id = $9 OR $9 IS NULL)
+      AND (ip.is_artificial_conditions = $10 OR $10 IS NULL)
+      AND (ip.is_clone = $11 OR $11 IS NULL);
+  `
+    
+
   const speciesId = Number(req.params.speciesId);
-  const minAgeParam = Number(minAge) > 0 ? Number(minAge) : null;
-  const maxAgeParam = Number(maxAge) > 0 ? Number(maxAge) : null;
+  const minAgeParam = Number(minAge) > 0 ? Math.round(parseFloat(minAge) * SECONDS_IN_A_YEAR) : null;
+  const maxAgeParam = Number(maxAge) > 0 ? Math.round(parseFloat(maxAge) * SECONDS_IN_A_YEAR) : null;
   const minWaterParam = Number(minWater) > 0 ? Number(minWater) : null;
   const maxWaterParam = Number(maxWater) > 0 ? Number(maxWater) : null;
   const minLightParam = Number(minLight) > 0 ? Number(minLight) : null;
   const maxLightParam = Number(maxLight) > 0 ? Number(maxLight) : null;
   const artificialConditionsParam = artificialConditions ? artificialConditions : null;
   const isCloneParam = isClone ? isClone : null;
+  const motherIdParam = motherId ? Number(motherId) : null;
+  const fatherIdParam = fatherId ? Number(fatherId) : null;
 
   const plants = await makeQuery(GET_INFO,
     speciesId,
@@ -280,18 +285,12 @@ const getSpeciesMembersFlat = tryCatch(async function(req, res, next) {
     maxWaterParam,
     minLightParam,
     maxLightParam,
-    motherId ? Number(motherId) : null,
-    fatherId ? Number(fatherId) : null,
+    motherIdParam,
+    fatherIdParam,
     artificialConditionsParam,
     isCloneParam
   );
-
-  console.log(plants.rows)
   res.status(200).send(plants.rows);
-
-
- 
-
 });
 
 

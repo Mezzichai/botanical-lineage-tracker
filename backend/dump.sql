@@ -58,7 +58,7 @@ CREATE TABLE individual_plant (
   id serial PRIMARY KEY,
   name varchar(50) NOT NULL,
   images jsonb,
-  germination_date TIMESTAMP,
+  germination_date TIMESTAMP DEFAULT NOW(),
   death_date TIMESTAMP,
   is_clone boolean DEFAULT false NOT NULL,
   is_artificial_conditions boolean DEFAULT false NOT NULL,
