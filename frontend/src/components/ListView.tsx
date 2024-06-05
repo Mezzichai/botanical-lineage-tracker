@@ -8,9 +8,9 @@ type Props = {
   catagory: "group" | "species" | "individual";
   children: ReactNode;
   styles: string
-
+  sizeStyles: string
 }
-const ListView:React.FC<Props> = ({catagory, children, styles}) => {
+const ListView:React.FC<Props> = ({catagory, children, styles, sizeStyles}) => {
   const dispatch = useDispatch();
   const handleNewItem = () => {
     dispatch(toggleInfoCardOn({isInfoCardNewOrEditing: true, catagory}));
@@ -20,7 +20,7 @@ const ListView:React.FC<Props> = ({catagory, children, styles}) => {
   return (
     <div className={`${CardStyles.listContainer}`} id={styles}>
       {children}
-      <div className={CardStyles.addItemContainer}>
+      <div className={`${CardStyles.addItemContainer} ${sizeStyles}`}>
         <button aria-label={"add-new-item"} className={CardStyles.addBtn} onClick={handleNewItem}>
           <FontAwesomeIcon icon={faPlus} /> 
           Add {catagory}

@@ -35,7 +35,7 @@ const Species = () => {
         loading...
       </div>
     ) : (
-      <ListView catagory={'species'} styles={CardStyles.speciesListContainer}>
+      <ListView catagory={'species'} styles={CardStyles.speciesListContainer} sizeStyles={CardStyles.largeCardSize}>
         {data.map((item, index: number) => (
           <ItemCard 
             key={index + String(item.id)} 

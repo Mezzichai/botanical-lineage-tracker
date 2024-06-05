@@ -26,9 +26,15 @@ const LineageListView = () => {
     return <div className={CardStyles.listContainer}>Loading...</div>
   } 
   return (
-    <ListView catagory='individual' styles={CardStyles.individualsListContainer}>
+    <ListView catagory='individual' styles={CardStyles.individualsListContainer} sizeStyles={CardStyles.smallCardSize}>
       {data.map((item: LineageNode, index: number) => (
-        <ItemCard key={index + String(item.id)} handleClick={() => handleIndividualClick()} id={item.id} image={item.images[0]} imageDimensions={{width: 176}} sizeStyles={CardStyles.smallCardSize}>
+        <ItemCard 
+          key={index + String(item.id)} 
+          handleClick={() => handleIndividualClick()} 
+          id={item.id} image={item.images[0]} 
+          imageDimensions={{width: 176}} 
+          sizeStyles={CardStyles.smallCardSize}
+        >
           <ItemCardInfo name={item.name}/>
         </ItemCard>
       ))}
