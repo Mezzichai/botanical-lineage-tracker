@@ -1,6 +1,6 @@
 import { useLayoutEffect } from 'react'
 
-const useChangeContentWidth = (container: React.RefObject<HTMLLIElement>, widthToTransitionFrom: number, conditionToRun: boolean, dependencies: Array<string>, isAnimating) => {
+const useChangeContentWidth = (container: React.RefObject<HTMLLIElement>, widthToTransitionFrom: number, conditionToRun: boolean, dependencies: Array<string | number>, isAnimating: React.MutableRefObject<boolean>) => {
   useLayoutEffect(() => {
     if (conditionToRun && container.current) {
       isAnimating.current = true;
@@ -24,8 +24,7 @@ const useChangeContentWidth = (container: React.RefObject<HTMLLIElement>, widthT
         });
       })
 
-      container.current.addEventListener('transitionend', function transitionEndHandler(e) { 
-        console.log("dwadwadawadwwwww")
+      container.current.addEventListener('transitionend', function transitionEndHandler() { 
         if (container.current) {
           container.current.removeEventListener('transitionend', transitionEndHandler);   
           isAnimating.current = false;

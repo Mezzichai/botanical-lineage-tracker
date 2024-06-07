@@ -6,7 +6,7 @@ import ButtonWithHoverLabel from '../../../components/ButtonWithHoverLabel'
 import SearchFilters from './SearchFilters'
 import { useParams } from '@tanstack/react-router'
 import { useDispatch, useSelector } from 'react-redux'
-import { changeQuery, selectFilters, selectQuery } from '../HeaderSlice'
+import { changeQuery, selectAppliedFilterCount, selectQuery } from '../HeaderSlice'
 
 
 const SearchBar = () => {
@@ -14,11 +14,9 @@ const SearchBar = () => {
   const searchRef = useRef(null);
   const dispatch = useDispatch();
   const query = useSelector(selectQuery);
-  const filters = useSelector(selectFilters);
-
+  const appliedFilterCount = useSelector(selectAppliedFilterCount)
   const { speciesId } = useParams({ strict: false});
 
-  const [searchInput, setSearchInput] = useState('');
   const [filtersVisibility, setFilterVisibility] = useState<boolean>(false);
 
   //  const handleConfirmSearch = () => {
@@ -61,12 +59,12 @@ const SearchBar = () => {
           >
             <FontAwesomeIcon icon={faSliders}/>
           </button>
-          {/* {filters.length > 0
+          {appliedFilterCount > 0
           && 
-          <div className={SearchBarStyles.filterCount} onClick={toggleFilters}>
-            {filters.length}
-          </div>
-          }  */}
+            <div className={SearchBarStyles.filterCount} onClick={toggleFilters}>
+              {appliedFilterCount}
+            </div>
+          } 
         </ButtonWithHoverLabel>
       ) : (
         <div className={SearchBarStyles.btn}>

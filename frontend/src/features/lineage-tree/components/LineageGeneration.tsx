@@ -278,8 +278,8 @@ const LineageGeneration: React.FC<Props> = forwardRef(({children, displayInfoCar
                 shouldUnmount={shouldActiveNodeChildrenUnmount}
                 children={
                   getHoveredNode()?.mates[activeMateIndex[0]]?.children.length ? 
-                  getHoveredNode()?.mates[activeMateIndex[0]].children : 
-                  getActiveNode()?.mates[activeMateIndex[0]].children 
+                  getHoveredNode()?.mates[activeMateIndex[0]].children as LineageNode[]: 
+                  getActiveNode()?.mates[activeMateIndex[0]].children as LineageNode[]
                 }
                 isParentBeingHovered={isParentBeingHovered || Boolean(hoveredNodeId)}
                 displayInfoCard={displayInfoCard}

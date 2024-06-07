@@ -1,3 +1,4 @@
-export function isObjectLiteral(value:unknown) {
-  return value !== null && typeof value === 'object' && value.constructor === Object;
+
+export function isObjectLiteral<T>(value:T ) {
+  return value !== null && typeof value === 'object' && value?.constructor === Object;
 }

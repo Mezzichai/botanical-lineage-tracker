@@ -165,7 +165,7 @@ const SearchFilters = () => {
               min={0}
               placeholder='min hours'
               value={filters.lightRange.maxLight}
-              onChange={(e) => handleFilterChange({lightRange: {...filters.lightRange, maxLight: e.target.value}})}
+              onChange={(e) => handleFilterChange({lightRange: {...filters.lightRange, max: e.target.value}})}
             />
           </div>
         </div>

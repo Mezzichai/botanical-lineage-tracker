@@ -9,7 +9,6 @@ const window = new JSDOM('').window;
 const DOMPurify = createDOMPurify(window);
 
 const SECONDS_IN_A_YEAR = 31536000;
-//query
 const getSpecies = tryCatch(async function(req, res, next) {
   const GET_ALL_SPECIES = `SELECT * 
                             FROM species 
@@ -219,7 +218,7 @@ const getSpeciesMembersFlat = tryCatch(async function(req, res, next) {
   for (key in req.query) {
     req.query[key] = decodeURI(req.query[key])
   }
-  const {minAge, maxAge, motherId, fatherId, minWater, maxWater, minLight, maxLight, artificialConditions, needsFertilizer, needsWater, isClone} = req.query
+  const {minAge, maxAge, motherId, fatherId, minWater, maxWater, minLight, maxLight, artificialConditions, needsFertilizer, needsWater, isClone, query} = req.query
 
   const GET_INFO = `
     WITH value_averages AS (
@@ -261,7 +260,8 @@ const getSpeciesMembersFlat = tryCatch(async function(req, res, next) {
       AND (mother_id = $8 OR $8 IS NULL)
       AND (father_id = $9 OR $9 IS NULL)
       AND (ip.is_artificial_conditions = $10 OR $10 IS NULL)
-      AND (ip.is_clone = $11 OR $11 IS NULL);
+      AND (ip.is_clone = $11 OR $11 IS NULL)
+      AND (LOWER(ip.name) LIKE LOWER($12) OR $12 IS NULL)
   `
     
 
@@ -273,9 +273,10 @@ const getSpeciesMembersFlat = tryCatch(async function(req, res, next) {
   const minLightParam = Number(minLight) > 0 ? Number(minLight) : null;
   const maxLightParam = Number(maxLight) > 0 ? Number(maxLight) : null;
   const artificialConditionsParam = artificialConditions ? artificialConditions : null;
-  const isCloneParam = isClone ? isClone : null;
+  const isCloneParam = isClone === "true" ? isClone : null;
   const motherIdParam = motherId ? Number(motherId) : null;
   const fatherIdParam = fatherId ? Number(fatherId) : null;
+  const queryParam = query.trim() ? `%${query}%` : null
 
   const plants = await makeQuery(GET_INFO,
     speciesId,
@@ -288,7 +289,8 @@ const getSpeciesMembersFlat = tryCatch(async function(req, res, next) {
     motherIdParam,
     fatherIdParam,
     artificialConditionsParam,
-    isCloneParam
+    isCloneParam,
+    queryParam
   );
   res.status(200).send(plants.rows);
 });

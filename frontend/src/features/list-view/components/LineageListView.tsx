@@ -12,7 +12,6 @@ const LineageListView = () => {
   const { speciesId } = useParams({ strict: false})
   const filtersQueryParams = useSelector(selectQueryParamNoramalizedFilters)
 
-  console.log(filtersQueryParams)
   const {
     data,
     isLoading,

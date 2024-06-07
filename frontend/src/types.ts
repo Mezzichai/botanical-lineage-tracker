@@ -27,6 +27,12 @@ export type LeanLineageNode = {
   id: string;
 };
 
+
+export type FilterEntry = [string, string | number | boolean | FilterEntry];
+
+export type FlatEntry = [string, string | number | boolean];
+
+
 export type Species = {
   name: string;
   images: string[];
