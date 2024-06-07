@@ -39,28 +39,16 @@ const MiniLineageTree:React.FC<Props> = ({mother, father, child, handleChangePar
       <ul className={MiniLineageTreeStyles.subUlContainer}>
         <li className={MiniLineageTreeStyles.subLiContainer}>
           <div className={MiniLineageTreeStyles.parentsContainer}>
-            <div>
-              {/* <span className={InfoCardStyles.group}>
-                (
-                  <span>focus node</span>
-                )
-              </span> */}
-              <ItemCard
-                image={mother?.image} 
-                id={mother?.id || ""} 
-                imageDimensions={{width: 176}}
-                sizeStyles={CardStyles.smallCardSize}
-              >
-                <EditableTreeNode key={mother.name + Date.now()} name={mother?.name || "???"} handleChangeNode={handleChangeMother}/>
-              </ItemCard>
+            <ItemCard
+              image={mother?.image} 
+              id={mother?.id || ""} 
+              imageDimensions={{width: 176}}
+              sizeStyles={CardStyles.smallCardSize}
+            >
+              <EditableTreeNode key={mother.name + Date.now()} name={mother?.name || "???"} handleChangeNode={handleChangeMother}/>
+            </ItemCard>
 
-            </div>
             <div className={`${LineageTreeStyles.fatherContainer} fadeInElement`}>
-              {/* <span className={InfoCardStyles.group}>
-                (
-                  <span>focus node</span>
-                )
-              </span> */}
               <ItemCard 
                 image={father?.image} 
                 id={father?.id || ""} 
@@ -73,22 +61,15 @@ const MiniLineageTree:React.FC<Props> = ({mother, father, child, handleChangePar
           </div>
           <ul className={MiniLineageTreeStyles.subUlContainer}>
             <li className={MiniLineageTreeStyles.subLiContainer}>
-              <div>
-                {/* <span className={InfoCardStyles.group}>
-                  (
-                    <span>focus node</span>
-                  )
-                </span> */}
-                <ItemCard
-                  handleClick={child?.id ? () => displayInfoCard(child.id) : () => {}} 
-                  image={child.image} 
-                  id={child?.id || ""} 
-                  imageDimensions={{width: 176}}
-                  sizeStyles={CardStyles.smallCardSize}
-                >
-                  <ItemCardInfo name={child?.name || "???"}/>
-                </ItemCard>
-              </div>
+              <ItemCard
+                handleClick={child?.id ? () => displayInfoCard(child.id) : () => {}} 
+                image={child.image} 
+                id={child?.id || ""} 
+                imageDimensions={{width: 176}}
+                sizeStyles={CardStyles.smallCardSize}
+              >
+                <ItemCardInfo name={child?.name || "???"}/>
+              </ItemCard>
             </li>
           </ul>
         </li>

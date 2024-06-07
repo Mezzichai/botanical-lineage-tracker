@@ -30,10 +30,11 @@
 
 .resultContainer  {
   top: 1.30rem;
-  position: absolute;
+  position:absolute;
   list-style: none;
   max-height: 9rem;
   width: 100%;
+  z-index: 1;
   color: black;
   background-color: white;
   border: 1px solid black;

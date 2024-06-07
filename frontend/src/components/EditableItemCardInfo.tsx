@@ -5,34 +5,45 @@ import CardStyles from '../styles/cardAndListStyles.module.css'
 import { useParams } from "@tanstack/react-router";
 import { useGetQueriedIndividualsQuery } from "../api/apiSlice";
 import SearchAndSelect from "../features/SearchAndSelect/SearchAndSelect";
-import { LeanLineageNode } from "../types";
+import useSearchAndSelect from "../features/SearchAndSelect/useSearchAndSelect";
 type Props = {
   name: string,
-  handleChangeNode: (item: LeanLineageNode) => void,
+  handleChangeNode: (item: {name: string, id: string}) => void,
 }
 
 
 
 const EditableItemCardInfo: React.FC<Props> = ({name, handleChangeNode}) => {
   const [isSearching, setIsSearching] = useState<boolean>(false)
-  const [parentQuery, setParentQuery] = useState<string>(name)
-
   const { speciesId } = useParams({ strict: false})
-
-  const {data: queryResults} = useGetQueriedIndividualsQuery({speciesId: speciesId, query: parentQuery}, {skip: Boolean(!parentQuery)});
 
   const toggleSearch = () => {
     setIsSearching(prev => !prev)
+    changeQuery(name)
   }
 
-  const changeQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setParentQuery(event.target.value)
-  }
+  const {
+    query: parentQuery, 
+    changeQuery: changeQuery, 
+    toggleDropDown: toggleParentDropDown,
+    dropDown: dropDown,
+    handleSelectItem: handleSelectParent
+  } = useSearchAndSelect(name, handleChangeNode)
+
+  const {data: queryResults} = useGetQueriedIndividualsQuery({speciesId: speciesId, query: parentQuery}, {skip: Boolean(!parentQuery)});
+
 
   return ( 
     <span className={`${CardStyles.cardInfo}`}>
       {isSearching ? (
-        <SearchAndSelect data={queryResults} handleChangeQuery={changeQuery} query={parentQuery} handleChangeSelected={handleChangeNode}/>
+        <SearchAndSelect 
+          data={queryResults} 
+          toggleDropDown={toggleParentDropDown} 
+          dropDownState={dropDown} 
+          handleChangeQuery={changeQuery} 
+          query={parentQuery} 
+          handleChangeSelected={handleSelectParent}
+        />
       ) : (
         <p>{parentQuery}</p>
       )}

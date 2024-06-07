@@ -5,14 +5,14 @@ import SearchAndSelectStyles from './searchAndSelectStyles.module.css'
 
 
 type Props = {
-  data: {id: string, name: string, images: string[]}[],
+  data: {id: string, name: string}[],
   handleChangeQuery: (value: string) => void,
   query: string,
   handleChangeSelected: (item: {id: string, name: string}) => void,
   toggleDropDown: () => void,
   dropDownState: boolean
   placeholder?: string
-  styles: string
+  styles?: string
 }
 const SearchAndSelect:React.FC<Props> = ({data, handleChangeQuery, query, handleChangeSelected, toggleDropDown, dropDownState, placeholder, styles}) => {
   const [hoveredResultIndex, setHoveredResultIndex] = useState(0)

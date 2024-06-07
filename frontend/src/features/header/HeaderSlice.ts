@@ -102,7 +102,6 @@ export const {
 export const selectFilters = (state: { header: initialState }) => state.header.filters;
 export const selectAppliedFilterCount = (state: { header: initialState }) => countTruthyFilters(state.header.filters)
 export const selectQueryParamNoramalizedFilters = (state: { header: initialState }) => selectQueryParams(state.header)
-
 export const selectQuery = (state: { header: { query: string } }) => state.header.query;
 
 
