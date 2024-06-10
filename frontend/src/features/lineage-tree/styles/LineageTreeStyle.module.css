@@ -12,9 +12,9 @@
 .emptyTreeContainer {
   height: 100vh;
   display: flex;
-  justify-content: center; /* Centers horizontally */
-  align-items: center; /* Centers vertically */
-  text-align: center; /* Centers text inside */
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .emptyTreeContainer > div {
@@ -72,12 +72,13 @@
   position: relative;
   display: flex;
   justify-content: center;
+  transition: width linear .3s;
 }
 
 
 .treeContainer > ul {
   text-decoration: none;
-  transition: width .3s;
+  /* transition: width linear .3s; */
 	list-style-type: none;
   padding-top: 0px;
   position: relative;
@@ -86,9 +87,8 @@
 }
 
 .treeContainer ul li {
-  width: auto;
   text-decoration: none;
-  transition: width .3s;
+  /* transition: width .3s; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -97,10 +97,6 @@
   position: relative;
 	padding: 20px 0 0 0;
 }
-
-/* .aggregateChildren > ul {
-  width: auto;
-} */
 
 .child {
   animation: fade-in .5s;
@@ -231,10 +227,16 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
   transition: all 0.3s;
 } */
 
-.aggregateNode:hover {
+/* .aggregateNode:hover {
   transform: translateY(-50%) scale(1.1);
   z-index: 999;
+} */
 
+
+
+.aggregateNodeContainer:hover .aggregateNode {
+  transform: translateY(-40%);
+  z-index: 999;
 }
 
 .child:hover {
