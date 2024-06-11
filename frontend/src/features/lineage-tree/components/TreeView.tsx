@@ -9,7 +9,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { useGetNestedIndividualsQuery } from '../../../api/apiSlice'
 import { useParams } from '@tanstack/react-router'
 import CardStyles from '../../../styles/cardAndListStyles.module.css'
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+
 
 const TreeView: React.FC = () => {
   const { speciesId } = useParams({ strict: false})
@@ -23,6 +23,7 @@ const TreeView: React.FC = () => {
   const dispatch = useDispatch()
 
   const displayInfoCard = (id: string) => {
+    console.log("id", id)
     dispatch(toggleInfoCardOn({itemId: id, catagory: "individual"}))
   }
 
@@ -33,7 +34,7 @@ const TreeView: React.FC = () => {
   if (isLoading || !root) {
     return (<div className={CardStyles.listContainer}>Loading...</div>)
   }
-  console.log(root)
+
   return (
     <>
       {root[0]?.id
@@ -47,12 +48,12 @@ const TreeView: React.FC = () => {
       //   minPositionX={-1000}
       //   maxPositionX={1000}
       // >
-        // <TransformComponent wrapperClass={LineageTreeStyles.panContainer} contentClass={LineageTreeStyles.treeContainer}>
-          <div className={LineageTreeStyles.treeContainer}>
-              <LineageGeneration children={root} displayInfoCard={displayInfoCard} displayNewInfoCard={displayNewInfoCard}/>
-          </div>
-      //   {/* </TransformComponent>
-      // </TransformWrapper> */}
+      //   <TransformComponent wrapperClass={LineageTreeStyles.panContainer} contentClass={LineageTreeStyles.treeContainer}>
+      //   </TransformComponent>
+      // </TransformWrapper>
+        <div className={LineageTreeStyles.treeContainer}>
+          <LineageGeneration children={root} displayInfoCard={displayInfoCard} displayNewInfoCard={displayNewInfoCard}/>
+        </div>
       :  
       <div className={LineageTreeStyles.emptyTreeContainer}>
         <div>

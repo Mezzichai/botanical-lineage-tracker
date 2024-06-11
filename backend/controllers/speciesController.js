@@ -15,7 +15,6 @@ const getSpecies = tryCatch(async function(req, res, next) {
                             ORDER BY date DESC`;
 
   const result = await makeQuery(GET_ALL_SPECIES)
-  console.log(result.rows)
   return res.json(result.rows).status(200)
 })
 
@@ -501,42 +500,34 @@ const editSpeciesIndividual = tryCatch(async function(req, res, next) {
                            WHERE id = $10`;
 
   const GET_PARENT_PAIR = `SELECT * FROM parent_pair
-                            WHERE mother_id = $1 AND (father_id = $2 OR $2 IS NULL)`;
+                             WHERE mother_id = $1 AND (father_id = $2 OR $2 IS NULL)`;
+
+  const GET_PARENT_CHILD_PAIR = `SELECT child_parent_pair.* FROM child_parent_pair 
+                                  JOIN individual_plant ON individual_plant.id = child_parent_pair.individual_plant_id 
+                                  WHERE individual_plant.id = $1`
+  
+  const ADD_PARENTS = `INSERT INTO parent_pair (mother_id, father_id)
+                         VALUES ($1, $2)`
                             
+  const DELETE_OLD_PARENT_CHILD_PAIR = `DELETE FROM child_parent_pair 
+                                         WHERE id = $1`
+
+  const ADD_PARENT_CHILD_PAIR = `INSERT INTO child_parent_pair (individual_plant_id, parent_pair_id) 
+                                   VALUES ($1, $2)`
 
   let getParentPairResult = await makeQuery(GET_PARENT_PAIR, parents.mother?.id, parents.father?.id);
 
   if (getParentPairResult.rowCount <= 0) {
-    const ADD_PARENTS = `INSERT INTO parent_pair (mother_id, father_id)
-                          VALUES ($1, $2)`
-    
-    if (parents.mother?.id) {
-      await makeQuery(ADD_PARENTS, parents.mother?.id, parents.father?.id);
-    }
-
-    getParentPairResult = await makeQuery(GET_PARENT_PAIR, parents.mother?.id, parents.father?.id);
-
-    const GET_PARENT_CHILD_PAIR = `SELECT * FROM child_parent_pair 
-                                    JOIN individual_plant ON individual_plant.id = children_parent_pair.individual_plant_id 
-                                    WHERE indivdual_plant.id = $1`
     const getParentChildPairResult = await makeQuery(GET_PARENT_CHILD_PAIR, req.params.individualId);
 
-    const DELETE_OLD_PARENT_CHILD_PAIR = `DELETE FROM child_parent_pair 
-                                            WHERE id = $2`
-    await makeQuery(DELETE_OLD_PARENT_CHILD_PAIR, getParentPairResult.rows[0]?.id, getParentChildPairResult.rows[0]?.id);
-    
-    const ADD_PARENT_CHILD_PAIR = `INSERT INTO child_parent_pair (individual_plant_id, parent_pair_id) 
-                                    VALUES ($1, $2)`
-    await makeQuery(ADD_PARENT_CHILD_PAIR, req.params.individualId, getParentPairResult.rows[0]?.id || null);
-
-
-    const GET_PARENT_PAIR_ID = `SELECT id FROM parent_pair WHERE mother_id = $1  AND (father_id = $2 OR $2 IS NULL)`;
-    let getParentPairIdResult;
+    await makeQuery(DELETE_OLD_PARENT_CHILD_PAIR, getParentChildPairResult.rows[0]?.id);
 
     if (parents.mother?.id) {
-      getParentPairIdResult = await makeQuery(GET_PARENT_PAIR_ID, parents.mother?.id, parents.father?.id || null)
-    } 
-    await makeQuery(ADD_PARENT_CHILD_PAIR, req.params.individualId, getParentPairIdResult?.rows[0]?.id || null) 
+      await makeQuery(ADD_PARENTS, parents.mother.id, parents.father?.id || null);
+    }
+    getParentPairResult = await makeQuery(GET_PARENT_PAIR, parents.mother?.id, parents.father?.id || null);
+
+    await makeQuery(ADD_PARENT_CHILD_PAIR, req.params.individualId, getParentPairResult.rows[0]?.id || null);
   }
 
   existing_images = JSON.parse(existing_images);
@@ -544,7 +535,6 @@ const editSpeciesIndividual = tryCatch(async function(req, res, next) {
   const images = [...req.files, ...existing_images].sort((a, b) => {
     const imageANumber = a.match(imageNameRegex);
     const imageBNumber = b.match(imageNameRegex);
-    
     if (imageANumber && imageBNumber) {
       return imageANumber - imageBNumber
     } else {

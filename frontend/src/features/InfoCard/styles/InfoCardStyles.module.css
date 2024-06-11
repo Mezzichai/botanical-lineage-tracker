@@ -1,5 +1,7 @@
 .cardContainer {
   position:fixed;
+  display: flex;
+  flex-direction: column;
   width: 25rem;
   height: 100vh;
   top: 0;
@@ -10,6 +12,9 @@
 @media screen and (max-width: 500px) {
   .cardContainer {
     position:fixed;
+    display: flex;
+    flex-direction: column;
+
     width: 100%;
     height: 100vh;
     top: 0;
@@ -93,9 +98,8 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 17rem;
-  overflow-x: visible;
-
+  height: 100%;
+  overflow-y: auto;
 }
 
 

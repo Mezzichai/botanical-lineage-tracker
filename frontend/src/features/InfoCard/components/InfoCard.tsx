@@ -77,12 +77,12 @@ const InfoCard:React.FC = () => {
   useEffect(() => {
     if (((specificSpeciesInfo || specificGroupInfo || specificIndividualInfo) && isOpen)) {
       const fetchedInfo = specificSpeciesInfo || specificGroupInfo || specificIndividualInfo;
+      console.log(fetchedInfo)
       setDescriptionDelta(fetchedInfo.description_delta || "")
       setDescriptionHTML(fetchedInfo.description_html || "")
       setSubstrateValues(fetchedInfo.substrate_values || fetchedInfo.group_substrate_values || fetchedInfo.species_substrate_values)
       setWaterValues(fetchedInfo.water_values || fetchedInfo.group_water_values || fetchedInfo.species_water_values)
       setLightValues(fetchedInfo.light_values || fetchedInfo.group_light_values || fetchedInfo.species_light_values)
-
       setParents(prevParents => {
         return fetchedInfo?.parents
         ? {mother: fetchedInfo.parents.mother, father: fetchedInfo.parents.father} 
@@ -92,7 +92,7 @@ const InfoCard:React.FC = () => {
       })
       setGroup({name: fetchedInfo.group_name, id: fetchedInfo.group_id})
       setImages(fetchedInfo.images || [])
-      handleNameChange(fetchedInfo.generatedName || fetchedInfo.name || '')
+      handleNameChange(fetchedInfo.name || fetchedInfo.generatedName || "")
       speciesInfo.current = {name: fetchedInfo?.species_name, id: fetchedInfo?.species_id}
       prevCardId.current = cardId
       generatedIndividualNameRef.current = fetchedInfo?.generatedName

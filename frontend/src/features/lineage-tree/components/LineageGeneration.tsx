@@ -180,9 +180,6 @@ const LineageGeneration: React.FC<Props> = ({children, displayInfoCard, displayN
                         </div>
                       )}
 
-                      <span className={`${LineageTreeStyles.pseudoContainer}`}>
-                      </span>
-
                       <ItemCard 
                         key={index+node.mates[activeMateIndex[0]]?.id}
                         image={node.mates[activeMateIndex[0]]?.images?.[0]} 

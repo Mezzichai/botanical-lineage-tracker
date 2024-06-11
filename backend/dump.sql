@@ -98,6 +98,6 @@ CREATE TABLE parent_pair (
 
 CREATE TABLE child_parent_pair (
   individual_plant_id integer REFERENCES individual_plant(id) ON DELETE CASCADE,
-  parent_pair_id integer REFERENCES parent_pair(id) ON DELETE CASCADE,
+  parent_pair_id integer REFERENCES parent_pair(id) ON DELETE CASCADE NOT NULL,
   id serial PRIMARY KEY
 );
