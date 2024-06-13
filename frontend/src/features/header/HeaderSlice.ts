@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { isObjectLiteral } from '../../utils/isObjectLiteral'
 
 type Filters = {
+  isDead: boolean;
   isClone: boolean, 
   needsWater: boolean,
   needsFertilizer: boolean,
@@ -11,6 +12,7 @@ type Filters = {
   waterRange: {minWater?: number, maxWater?: number},
   ageRange: {minAge?: number, maxAge?: number},
   lightRange: {minLight?: number, maxLight?: number}
+
 }
 
 type FilterEntry = [string, string | number | boolean | FilterEntry];
@@ -26,6 +28,7 @@ type initialState = {
 const initialState = {
   filters: {
     isClone: false, 
+    isDead: false,
     needsWater: false,
     needsFertilizer: false,
     hasArtificialConditions: false,

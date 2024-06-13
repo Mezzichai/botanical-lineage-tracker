@@ -54,16 +54,20 @@ const SearchFilters = () => {
           <label htmlFor={"clone"}>Clone</label>
         </div>
         <div>
+          <input type={"checkbox"} id={"artificial-conditions"} value={filters.hasArtificialConditions ? 1 : 0} onChange={() => handleFilterChange({hasArtificialConditions: !filters.hasArtificialConditions})}/>
+          <label htmlFor={"artificial-conditions"}>Artificial conditions</label>
+        </div>
+        <div>
+          <input type={"checkbox"} id={"dead"} value={filters.isDead ? 1 : 0} onChange={() => handleFilterChange({isDead: !filters.isDead})}/>
+          <label htmlFor={"dead"}>Dead</label>
+        </div>
+        <div>
           <input type={"checkbox"} id={"needs water"} value={filters.needsWater ? 1 : 0} onChange={() => handleFilterChange({hasArtificialConditions: !filters.needsWater})}/>
           <label htmlFor={"needs-water"}>Needs water</label>
         </div>
         <div>
           <input type={"checkbox"} id={"needs-fertilizer"} value={filters.needsFertilizer ? 1 : 0} onChange={() => handleFilterChange({hasArtificialConditions: !filters.needsFertilizer})}/>
           <label htmlFor={"needs-fertilizer"}>Needs fertilizer</label>
-        </div>
-        <div>
-          <input type={"checkbox"} id={"artificial-conditions"} value={filters.hasArtificialConditions ? 1 : 0} onChange={() => handleFilterChange({hasArtificialConditions: !filters.hasArtificialConditions})}/>
-          <label htmlFor={"artificial-conditions"}>Artificial conditions</label>
         </div>
       </div>
 
