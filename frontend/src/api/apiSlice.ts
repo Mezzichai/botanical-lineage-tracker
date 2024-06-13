@@ -47,7 +47,6 @@ export const apiSlice = createApi({
       providesTags: ["cardInfo"]
     }),
 
-
     createSpecies: builder.mutation({
       query: speciesInfo => ({
         url: `/`,
@@ -72,8 +71,6 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["Groups", "cardInfo"]
     }),
-
-
     editSpecies: builder.mutation({
       query: speciesInfo => ({
         url: `/${speciesInfo.params.speciesId}`,

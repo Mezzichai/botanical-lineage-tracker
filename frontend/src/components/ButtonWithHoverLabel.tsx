@@ -4,10 +4,11 @@ type Props = {
   children: ReactNode,
   label: string
   positioningStyles?: string, 
+  labelHoveringPositionStyles?: string,
   id?: string,
 }
 
-const ButtonWithHoverLabel: React.FC<Props> = ({positioningStyles, children, label}) => {
+const ButtonWithHoverLabel: React.FC<Props> = ({positioningStyles, labelHoveringPositionStyles, children, label}) => {
   const [isHovering, setIsHovering] = useState(false);
   return (
     <div
@@ -17,7 +18,7 @@ const ButtonWithHoverLabel: React.FC<Props> = ({positioningStyles, children, lab
     >
       {children}
       {isHovering &&
-        <div className={`fadeInElementQuick buttonLabel`}>
+        <div className={`fadeInElementQuick buttonLabel ${labelHoveringPositionStyles}`} >
           {label}
         </div>
       }

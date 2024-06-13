@@ -5,6 +5,7 @@ const { JSDOM } = require('jsdom');
 const deleteFolderAndContents = require("../utils/deleteFolderAndContents");
 const isJsonString = require("../utils/isJsonString");
 const generateIndividualName = require("../utils/generateIndividualName");
+const { convertToSeconds, convertToPostgresTimestamp } = require("../utils/convertToPostgresTimestamp");
 const window = new JSDOM('').window;
 const DOMPurify = createDOMPurify(window);
 
@@ -217,7 +218,7 @@ const getSpeciesMembersFlat = tryCatch(async function(req, res, next) {
   for (key in req.query) {
     req.query[key] = decodeURI(req.query[key])
   }
-  const {minAge, maxAge, motherId, fatherId, minWater, maxWater, minLight, maxLight, artificialConditions, needsFertilizer, needsWater, isClone, query} = req.query
+  const {minAge, maxAge, motherId, fatherId, minWater, maxWater, minLight, maxLight, artificialConditions, needsFertilizer, needsWater, isClone, query, isArtificialConditions, isDead} = req.query
 
   const GET_INFO = `
     WITH value_averages AS (
@@ -260,7 +261,11 @@ const getSpeciesMembersFlat = tryCatch(async function(req, res, next) {
       AND (father_id = $9 OR $9 IS NULL)
       AND (ip.is_artificial_conditions = $10 OR $10 IS NULL)
       AND (ip.is_clone = $11 OR $11 IS NULL)
-      AND (LOWER(ip.name) LIKE LOWER($12) OR $12 IS NULL)
+      AND (
+        ($12 = true AND ip.death_data IS NOT NULL) OR
+        ($12 = false AND ip.death_data IS NULL)
+      )      
+      AND (LOWER(ip.name) LIKE LOWER($13) OR $13 IS NULL)
   `
     
 
@@ -271,8 +276,10 @@ const getSpeciesMembersFlat = tryCatch(async function(req, res, next) {
   const maxWaterParam = Number(maxWater) > 0 ? Number(maxWater) : null;
   const minLightParam = Number(minLight) > 0 ? Number(minLight) : null;
   const maxLightParam = Number(maxLight) > 0 ? Number(maxLight) : null;
-  const artificialConditionsParam = artificialConditions ? artificialConditions : null;
-  const isCloneParam = isClone === "true" ? isClone : null;
+  const isCloneParam = isClone === "true" ? true : false;
+  const isArtificialParam = isArtificialConditions === "true" ? true : false;
+  const isDeadParam = isDead === "true" ? true : false;
+
   const motherIdParam = motherId ? Number(motherId) : null;
   const fatherIdParam = fatherId ? Number(fatherId) : null;
   const queryParam = query.trim() ? `%${query}%` : null
@@ -287,8 +294,9 @@ const getSpeciesMembersFlat = tryCatch(async function(req, res, next) {
     maxLightParam,
     motherIdParam,
     fatherIdParam,
-    artificialConditionsParam,
+    isArtificialParam,
     isCloneParam,
+    isDeadParam,
     queryParam
   );
   res.status(200).send(plants.rows);
@@ -397,8 +405,8 @@ const createSpeciesIndividual = tryCatch(async function(req, res, next) {
   }
  
   const clean = DOMPurify.sanitize(req.body.descriptionHTML);
-  const ADD_INDIVIDUAL = `INSERT INTO individual_plant (id, name, images, description_delta, description_html, light_values, substrate_values, water_values, group_id, species_id)
-                           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`;
+  const ADD_INDIVIDUAL = `INSERT INTO individual_plant (id, name, images, description_delta, description_html, light_values, substrate_values, water_values, group_id, species_id, is_clone, is_artificial_conditions, death_date)
+                           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`;
   
   const addIndividualResult = await makeQuery(ADD_INDIVIDUAL, 
     req.params.nextId,
@@ -410,7 +418,10 @@ const createSpeciesIndividual = tryCatch(async function(req, res, next) {
     isJsonString(req.body.substrate_values) ? req.body.substrate_values : JSON.stringify(req.body.substrate_values),
     isJsonString(req.body.water_values) ? req.body.water_values : JSON.stringify(req.body.water_values),
     req.params.groupId !== "undefined" ? req.params.groupId : null,
-    req.params.speciesId
+    req.params.speciesId,
+    req.params.isClone === "true" ? true : false,
+    req.params.isArtificialConditions === "true" ? true : false,
+    req.params.isDead === "true" ? convertToPostgresTimestamp(Date.now()) : null,
   )
 
   const ADD_PARENT_CHILD_PAIR = `INSERT INTO child_parent_pair (individual_plant_id, parent_pair_id) 
@@ -484,7 +495,7 @@ const editSpecies = tryCatch(async function(req, res, next) {
 
 
 const editSpeciesIndividual = tryCatch(async function(req, res, next) {
-  let {name, descriptionDelta, descriptionHTML, substrate_values, light_values, water_values, groupId, existing_images, isClone = true} = req.body;
+  let {name, descriptionDelta, descriptionHTML, substrate_values, light_values, water_values, groupId, existing_images, isClone, isArtificialConditions, isDead} = req.body;
   const parents = JSON.parse(req.body.parents)
   const EDIT_INDIVIDUAL = `UPDATE individual_plant
                            SET 
@@ -495,9 +506,11 @@ const editSpeciesIndividual = tryCatch(async function(req, res, next) {
                             substrate_values = COALESCE($5, substrate_values),
                             light_values = COALESCE($6, light_values),
                             water_values = COALESCE($7, water_values),
-                            is_clone = COALESCE($8, is_clone),
-                            group_id = COALESCE($9, group_id)
-                           WHERE id = $10`;
+                            group_id = COALESCE($8, group_id),
+                            is_clone = COALESCE($9, is_clone),
+                            is_artificial_conditions = COALESCE($10, is_artificial_conditions),
+                            death_date = COALESCE($11, death_date)
+                           WHERE id = $12`;
 
   const GET_PARENT_PAIR = `SELECT * FROM parent_pair
                              WHERE mother_id = $1 AND (father_id = $2 OR $2 IS NULL)`;
@@ -543,7 +556,7 @@ const editSpeciesIndividual = tryCatch(async function(req, res, next) {
   })
 
   const clean = DOMPurify.sanitize(descriptionHTML);
-
+  
   const editIndividualResult = await makeQuery(EDIT_INDIVIDUAL, 
     name, 
     JSON.stringify(images),
@@ -552,8 +565,10 @@ const editSpeciesIndividual = tryCatch(async function(req, res, next) {
     isJsonString(substrate_values) ? substrate_values : JSON.stringify(substrate_values),
     isJsonString(light_values) ? light_values : JSON.stringify(light_values),
     isJsonString(water_values) ? water_values : JSON.stringify(water_values),
-    isClone,
     groupId,
+    isClone === "true" ? true : false,
+    isArtificialConditions === "true" ? true : false,
+    isDead === "true" ? convertToPostgresTimestamp(Date.now()) : null,
     req.params.individualId
   );
   res.send(editIndividualResult.rowCount > 0).status(200);

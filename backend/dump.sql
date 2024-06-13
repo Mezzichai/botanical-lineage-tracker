@@ -59,7 +59,7 @@ CREATE TABLE individual_plant (
   name varchar(50) NOT NULL,
   images jsonb,
   germination_date TIMESTAMP DEFAULT NOW(),
-  death_date TIMESTAMP,
+  death_date TIMESTAMP DEFAULT NULL,
   is_clone boolean DEFAULT false NOT NULL,
   is_artificial_conditions boolean DEFAULT false NOT NULL,
   description_delta jsonb NOT NULL,

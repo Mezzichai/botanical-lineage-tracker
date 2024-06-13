@@ -64,6 +64,10 @@ const InfoCard:React.FC = () => {
   const [substrateValues, setSubstrateValues] = useState<SubstrateEntry[]>([{percent: 50, substrate: "pumice", color: "#1a3b52"}, {percent: 50, substrate: "soil", color: "#ab691e"}]);
   const [waterValues, setWaterValues] = useState<WaterEntry[]>([]);
   const [lightValues, setLightValues] = useState<SubstrateEntry[]>([]);
+  const [isDead, setIsDead] = useState<boolean>(false);
+  const [isClone, setIsClone] = useState<boolean>(false);
+  const [isArtificialConditions, setIsArtificialConditions] = useState<boolean>(false);
+
 
   const [parents, setParents] = useState<{mother: LeanLineageNode, father: LeanLineageNode}>({mother: newNodeParents.mother, father: newNodeParents.father});
   const [group, setGroup] = useState<Group>({id: "", name: ""})
@@ -77,7 +81,6 @@ const InfoCard:React.FC = () => {
   useEffect(() => {
     if (((specificSpeciesInfo || specificGroupInfo || specificIndividualInfo) && isOpen)) {
       const fetchedInfo = specificSpeciesInfo || specificGroupInfo || specificIndividualInfo;
-      console.log(fetchedInfo)
       setDescriptionDelta(fetchedInfo.description_delta || "")
       setDescriptionHTML(fetchedInfo.description_html || "")
       setSubstrateValues(fetchedInfo.substrate_values || fetchedInfo.group_substrate_values || fetchedInfo.species_substrate_values)
@@ -92,6 +95,10 @@ const InfoCard:React.FC = () => {
       })
       setGroup({name: fetchedInfo.group_name, id: fetchedInfo.group_id})
       setImages(fetchedInfo.images || [])
+      setIsClone(fetchedInfo.is_clone)
+      setIsArtificialConditions(fetchedInfo.is_artificial_conditions)
+      setIsDead(Boolean(fetchedInfo.death_date))
+
       handleNameChange(fetchedInfo.name || fetchedInfo.generatedName || "")
       speciesInfo.current = {name: fetchedInfo?.species_name, id: fetchedInfo?.species_id}
       prevCardId.current = cardId
@@ -156,7 +163,6 @@ const InfoCard:React.FC = () => {
   } 
 
   const handleConfirm = async () => {
-
     function filterSubstrates(substrates:SubstrateEntry[]) {
       return substrates.filter(value => value.percent > 0)
     }
@@ -178,6 +184,9 @@ const InfoCard:React.FC = () => {
       dataForm.set("light_values", lightValues?.length ? JSON.stringify(lightValues) : "");
       dataForm.set("water_values", waterValues?.length ? JSON.stringify(waterValues) : "");
       dataForm.set("parents", JSON.stringify(parents));
+      dataForm.set("isClone", String(isClone));
+      dataForm.set("isArtificialConditions", String(isArtificialConditions));
+      dataForm.set("isDead", String(isDead));
 
       if (catagory === "individual") {
         if (!cardId) {
@@ -224,6 +233,19 @@ const InfoCard:React.FC = () => {
   const handleDescriptionChange = (content: React.SetStateAction<string>, _delta: DeltaStatic, _source: string, editor: ReactQuill.UnprivilegedEditor) => {
     setDescriptionDelta(editor.getContents())
     setDescriptionHTML(content)
+  }
+
+  const toggleIsArtificialConditions = () => {
+    setIsArtificialConditions(prevState => !prevState)
+
+  }
+
+  const toggleIsClone = () => {
+    setIsClone(prevState => !prevState)
+  }
+
+  const toggleIsDead = () => {
+    setIsDead(prevState => !prevState)
   }
   
   let tabs = ["Info", "Substrate", "Water", "Relatives"]
@@ -277,7 +299,24 @@ const InfoCard:React.FC = () => {
           </button>
         )}
 
-        <CatagorySpecificInfo handleGenerateIndividualName={handleGenerateIndividualName} name={name} images={images} setImages={setImages} group={group} setGroup={setGroup} handleNameChange={handleNameChange} isNameValid={isNameValid} catagory={catagory} species={speciesInfo.current}/>
+        <CatagorySpecificInfo 
+          handleGenerateIndividualName={handleGenerateIndividualName} 
+          isClone={isClone}
+          isArtificialConditions={isArtificialConditions}
+          isDead={isDead}
+          toggleIsArtificialConditions={toggleIsArtificialConditions}
+          toggleIsClone={toggleIsClone}
+          toggleIsDead={toggleIsDead}
+          name={name} 
+          images={images} 
+          setImages={setImages} 
+          group={group}
+          setGroup={setGroup} 
+          handleNameChange={handleNameChange} 
+          isNameValid={isNameValid} 
+          catagory={catagory} 
+          species={speciesInfo.current}
+        />
         <div className={TabStyles.tabContainer}>
           {tabs.map(tab => 
             <Tab handleTabClick={handleTabClick} tabName={tab} activeTab={activeTab} key={tab}/> 

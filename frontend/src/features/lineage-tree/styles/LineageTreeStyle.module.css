@@ -399,8 +399,6 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
   transform: rotate(-25deg);
 }
 
-
-
 .addChildPosition {
   position: absolute;
   bottom: -32px;
@@ -408,16 +406,13 @@ ul li:first-child::before, .treeContainer ul li:last-child::after{
   z-index: 998;
 }
 
-
-
 .addFirstChildPosition {
   position: absolute;
   bottom: 31px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 999;
+  /* z-index: 999; */
 }
-
 
 .addChild {
   display: flex;
