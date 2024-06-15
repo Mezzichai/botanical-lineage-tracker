@@ -1,6 +1,10 @@
 import LineageTreeStyles from '../styles/LineageTreeStyle.module.css'
 import LineageGeneration from './LineageGeneration'
+<<<<<<< HEAD
 import {TransformWrapper, TransformComponent} from "react-zoom-pan-pinch"
+=======
+
+>>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
 import {LeanLineageNode} from '../../../types'
 import { useDispatch } from 'react-redux'
 import { toggleInfoCardOn } from '../../InfoCard/InfoCardSlice'
@@ -27,7 +31,11 @@ const TreeView: React.FC = () => {
     dispatch(toggleInfoCardOn({itemId: id, catagory: "individual"}))
   }
 
+<<<<<<< HEAD
   const displayNewInfoCard = (mother?: LeanLineageNode, father?: LeanLineageNode) => {
+=======
+  const displayNewInfoCard = (mother: LeanLineageNode, father: LeanLineageNode) => {
+>>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
     dispatch(toggleInfoCardOn({mother, father, catagory: "individual", isInfoCardNewOrEditing: true}))
   }
 
@@ -39,6 +47,7 @@ const TreeView: React.FC = () => {
     <>
       {root[0]?.id
       ? 
+<<<<<<< HEAD
       <TransformWrapper
         initialScale={1}
         maxScale={2}
@@ -60,11 +69,32 @@ const TreeView: React.FC = () => {
         </TransformComponent>
       </TransformWrapper>
      
+=======
+      // <TransformWrapper
+      //   initialScale={1}
+      //   maxScale={2}
+      //   minScale={.7}
+      //   centerOnInit={true}
+      //   centerZoomedOut={false}
+      //   minPositionX={-1000}
+      //   maxPositionX={1000}
+      // >
+      //   <TransformComponent wrapperClass={LineageTreeStyles.panContainer} contentClass={LineageTreeStyles.treeContainer}>
+      //   </TransformComponent>
+      // </TransformWrapper>
+        <div className={LineageTreeStyles.treeContainer}>
+          <LineageGeneration children={root} displayInfoCard={displayInfoCard} displayNewInfoCard={displayNewInfoCard}/>
+        </div>
+>>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
       :  
       <div className={LineageTreeStyles.emptyTreeContainer}>
         <div>
           <div>No plants found!</div>
+<<<<<<< HEAD
           <button onClick={() => displayNewInfoCard()}>
+=======
+          <button onClick={() => displayNewInfoCard({}, {})}>
+>>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
             <FontAwesomeIcon icon={faPlus}/>
             Create a root plant
           </button>

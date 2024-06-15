@@ -10,12 +10,17 @@ import { routeTree } from './routeTree.gen'
 
 describe("individuals", () => {
   const router = createRouter({ routeTree })
+<<<<<<< HEAD
   it("individuals display on tree", async () => {
+=======
+  it("individuals display", async () => {
+>>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
     render(
       <Provider store={store}>
         <RouterProvider router={router} />
       </Provider>
     )
+<<<<<<< HEAD
 
     await waitFor(() => {
       expect(screen.queryAllByLabelText(/item-[\d]+$/).length).toBe(0)
@@ -76,12 +81,17 @@ describe("individuals", () => {
 
 
 
+=======
+  });
+
+>>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
   it("add individual", async () => {
     render(
       <Provider store={store}>
         <RouterProvider router={router} />
       </Provider>
     )
+<<<<<<< HEAD
 
     const species = screen.getAllByLabelText(/item-[\d]+$/)
     fireEvent.click(species)
@@ -114,12 +124,17 @@ describe("individuals", () => {
 
 
 
+=======
+  });
+
+>>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
   it("edit individual", async () => {
     render(
       <Provider store={store}>
         <RouterProvider router={router} />
       </Provider>
     )
+<<<<<<< HEAD
 
     const species = screen.getAllByLabelText(/item-[\d]+$/)
     fireEvent.click(species)
@@ -154,12 +169,17 @@ describe("individuals", () => {
 
 
 
+=======
+  });
+
+>>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
   it("remove individual", async () => {
     render(
       <Provider store={store}>
         <RouterProvider router={router} />
       </Provider>
     )
+<<<<<<< HEAD
 
     const species = screen.getAllByLabelText(/item-[\d]+$/)
     fireEvent.click(species)
@@ -184,5 +204,7 @@ describe("individuals", () => {
     await waitFor(() => {
       expect(screen.queryAllByLabelText(/item-[\d]+$/).length).toBe(0)
     })
+=======
+>>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
   });
 }) 

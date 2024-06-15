@@ -1,9 +1,14 @@
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import { SubstrateEntry } from '../../../types';
+<<<<<<< HEAD
 import SubstrateLegendLabel from './SubstrateLegendLabel';
 import PieLegendStyles from "../styles/PieLegendStyles.module.css"
 import InfoCardStyles from '../styles/InfoCardStyles.module.css'
+=======
+import LegendLabel from './LegendLabel';
+import PieLegendStyles from "../styles/PieLegendStyles.module.css"
+>>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
 import { useSelector } from 'react-redux';
 import { selectIsInfoNewOrEditing } from '../InfoCardSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -98,7 +103,11 @@ const SubstrateChart:React.FC<Props> = ({substrateValues, handleChangeSubstrate}
     <div className={PieLegendStyles.pieChart}>
       <ul className={`${isNewOrEditing ? PieLegendStyles.substrateLegendGrid : PieLegendStyles.substrateLegend}`}>
         {chartData.labels.length > 0 && chartData.labels.map((label, index) => (
+<<<<<<< HEAD
           <SubstrateLegendLabel 
+=======
+          <LegendLabel 
+>>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
             removeSubstrateMode={removeSubstrateMode}
             handleColorChange={handleColorChange}
             combinedPercent={substrateValues.map(value=>value.percent).reduce((acc, item) => acc + item, 0)}
@@ -140,7 +149,11 @@ const SubstrateChart:React.FC<Props> = ({substrateValues, handleChangeSubstrate}
         </>
       )}
       {isNewOrEditing && <div>Remaining space: {remainingPercent}%</div>}
+<<<<<<< HEAD
       <div className={InfoCardStyles.chart}>
+=======
+      <div className={PieLegendStyles.chart}>
+>>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
         <Pie 
           data={chartData}
           options={pieOptions}

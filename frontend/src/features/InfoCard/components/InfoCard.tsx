@@ -123,7 +123,7 @@ const InfoCard:React.FC = () => {
     setSubstrateValues(substrate_values)
   }, [])
 
-  const  handleChangeWater = useCallback((water_values: WaterEntry[]) => {
+  const handleChangeWater = useCallback((water_values: WaterEntry[]) => {
     setWaterValues(water_values)
   }, [])
   

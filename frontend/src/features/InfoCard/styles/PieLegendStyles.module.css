@@ -7,6 +7,13 @@
   font-size: .8rem;
 }
 
+<<<<<<< HEAD
+=======
+.chart {
+  padding: 0 1rem
+}
+
+>>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
 .substrateLegendGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
