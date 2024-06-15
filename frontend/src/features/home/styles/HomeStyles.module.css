@@ -1,0 +1,61 @@
+.homeContainer {
+  padding-top: 3.8rem;
+  height: 100vh;
+}
+
+.speciesContainer {
+  padding: .7rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 1rem;
+}
+
+
+.speciesCard {
+  flex-direction: column;
+  width: auto;
+  height: min-content;
+  background-color: rgb(170, 224, 224);
+  display: flex;
+  border: 1px solid black;
+  overflow: hidden;
+  border-radius: 5px;
+  
+}
+
+
+.speciesCard svg {
+  font-size: .7rem;
+}
+
+.speciesCard button {
+  border-radius: 25px;
+  padding:.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: rgb(227, 227, 227);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.speciesCard img {
+  width: min-content;
+  object-fit: cover;
+  width: 300px;
+  height: 250px;
+}
+
+.speciesCardInfo {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f0f0f0;
+  padding: 1rem 1rem;
+}
+
+.speciesCardInfo p {
+  font-size: 1.1rem;
+}
+
