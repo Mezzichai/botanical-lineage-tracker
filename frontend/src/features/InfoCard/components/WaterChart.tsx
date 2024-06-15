@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React from 'react';
 import {
   Chart as ChartJS,
@@ -112,18 +111,6 @@ const WaterChart:React.FC<Props> = ({waterValues, handleChangeWater}) => {
         />
       </div>
     </div>
-=======
-import React from 'react'
-import { WaterEntry } from '../../../types'
-
-type Props = {
-  waterPoints: WaterEntry[], 
-  handleChangeWater: () => void
-}
-const WaterChart:React.FC<Props> = ({waterPoints, handleChangeWater}) => {
-  return (
-    <div>WaterChart</div>
->>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
   )
 }
 
