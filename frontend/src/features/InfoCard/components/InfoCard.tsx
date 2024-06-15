@@ -157,7 +157,7 @@ const InfoCard:React.FC = () => {
       }
       dispatch(toggleInfoCardOn({catagory: catagory, itemId: id}))
     }
-  } 
+  }
 
   const handleConfirm = async () => {
     function filterSubstrates(substrates:SubstrateEntry[]) {
