@@ -7,6 +7,7 @@ import {useRef, useState } from "react"
 import { HexColorPicker } from "react-colorful";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
+import useClickOutside from "../../../hooks/useClickOutside"
 
 type Props = {
   label: string,
@@ -24,7 +25,7 @@ type Props = {
 
 const SubstrateLegendLabel:React.FC<Props> = ({handleLabelValueChange, handleLabelChange, handleRemoveLabel, handleColorChange, label, value, backgroundColor, borderColor, dataIndex, combinedPercent, removeSubstrateMode}) => {
   const isNewOrEditing = useSelector(selectIsInfoNewOrEditing)
-  const [isInValidAmount, setIsInvalidAmount] = useState<boolean>(false)
+  const [wasInValidAmount, setWasInValidAmount] = useState<boolean>(false)
   const [isHoveringColorBox, setIsHoveringColorBox] = useState<boolean>(false)
 
   const fieldRef = useRef<HTMLInputElement>(null)
@@ -35,15 +36,18 @@ const SubstrateLegendLabel:React.FC<Props> = ({handleLabelValueChange, handleLab
   const handleValueChange = (eventValue: string) => {
     const newValue = Number(eventValue)
     if (((combinedPercent - value) + newValue) <= 100) {
-      setIsInvalidAmount(false)
+      setWasInValidAmount(false)
       handleLabelValueChange(dataIndex, newValue)
     } else {
-      setIsInvalidAmount(true)
-      if (fieldRef.current) {
-        fieldRef.current.focus()
-      }
+      setWasInValidAmount(true)
     }
   }
+
+  const onClickOutsideInput = () => {
+    setWasInValidAmount(false)
+  }
+
+  useClickOutside(fieldRef, onClickOutsideInput)
 
   return (
     <li className={PieLegendStyles.label}>
@@ -91,7 +95,7 @@ const SubstrateLegendLabel:React.FC<Props> = ({handleLabelValueChange, handleLab
             className={PieLegendStyles.percentInput}
           />
           &nbsp;%
-          {(isInValidAmount && document.activeElement === fieldRef.current) &&
+          {(wasInValidAmount && document.activeElement === fieldRef.current) &&
             <InfoBox message='max percentage reached' styles={InfoCardStyles.instructions} />
           }
         </>

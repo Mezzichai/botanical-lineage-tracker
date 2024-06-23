@@ -12,13 +12,11 @@ type Filters = {
   waterRange: {minWater?: number, maxWater?: number},
   ageRange: {minAge?: number, maxAge?: number},
   lightRange: {minLight?: number, maxLight?: number}
-
 }
 
 type FilterEntry = [string, string | number | boolean | FilterEntry];
 
 type FlatEntry = [string, string | number | boolean];
-
 
 type initialState = {
   filters: Filters
@@ -40,7 +38,6 @@ const initialState = {
   },
   query: ""
 }
-
 
 const headerSlice = createSlice({
   name: "header",

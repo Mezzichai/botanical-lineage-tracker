@@ -1,9 +1,6 @@
 import { HttpResponse, http } from 'msw'
 import speciesItems from './data/speciesItems'
-<<<<<<< HEAD
 import individualsItems from './data/individualsItems'
-=======
->>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
 
 
 
@@ -19,11 +16,7 @@ export const handlers = [
   }),
 
   http.post("/", () => {
-<<<<<<< HEAD
     speciesItems.push({id: 1, name: "item 1"})
-=======
-    speciesItems.push({id: "1", name: "item 1"})
->>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
     return new HttpResponse("success", {status: 200})
   }),
 
@@ -37,7 +30,6 @@ export const handlers = [
     return new HttpResponse("success", {status: 200})
   })
 ]
-<<<<<<< HEAD
 
   // individual routes
   http.get("/:speciesId", () => {
@@ -58,24 +50,6 @@ export const handlers = [
     speciesItems[0] = {}
     return new HttpResponse("success", {status: 200})
   })
-=======
-//   // individual routes
-//   http.get("/:speciesId", () => {
-//     return HttpResponse.json(filteredNotes)
-//   }),
-
-//   http.post("/:speciesId/:groupId", () => {
-//     return new HttpResponse("success", {status: 200})
-//   }),
- 
-//   http.patch("/:speciesId/:individualId", async ({request, params}) => {
-//     return new HttpResponse("success", {status: 200})
-//   }),
-
-//   http.delete("/:speciesId/:IndividualId", () => {
-//     return new HttpResponse("success", {status: 200})
-//   }),
->>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
 
 
 

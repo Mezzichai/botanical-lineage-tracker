@@ -19,10 +19,6 @@
     "@testing-library/jest-dom": "^6.4.2",
     "chart.js": "^4.4.2",
     "concurrently": "^8.2.2",
-<<<<<<< HEAD
-    "faker": "^6.6.6",
-=======
->>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
     "framer-motion": "^11.2.10",
     "immer": "^10.0.4",
     "lodash": "^4.17.21",

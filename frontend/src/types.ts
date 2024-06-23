@@ -53,11 +53,7 @@ export type SubstrateEntry = {
 
 export type WaterEntry = {
   month: string;
-<<<<<<< HEAD
  water_count: number
-=======
-  waterings: number
->>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
 }
 
 export type Group =  {

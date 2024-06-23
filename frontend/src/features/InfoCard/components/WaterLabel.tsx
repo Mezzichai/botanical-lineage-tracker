@@ -1,8 +1,8 @@
-import WateringStyles from "../styles/WateringStyles.module.css"
 import InfoBox from "../../../components/InfoBox"
 import InfoCardStyles from '../styles/InfoCardStyles.module.css'
 import {useRef, useState } from "react"
 import ChartStyles from '../styles/ChartStyles.module.css'
+import useClickOutside from "../../../hooks/useClickOutside"
 
 type Props = {
   label: string,
@@ -14,16 +14,23 @@ type Props = {
 }
 
 const WaterLabel:React.FC<Props> = ({handleLabelValueChange, label, value, dataIndex}) => {
-  const [isInValidAmount, setIsInvalidAmount] = useState<boolean>(false)
+  const [wasInvalidAmount, setWasInvalidAmount] = useState<boolean>(false)
   const fieldRef = useRef<HTMLInputElement>(null)
+
+
+  const onClickOutsideInput = () => {
+    setWasInvalidAmount(false)
+  }
+
+  useClickOutside(fieldRef, onClickOutsideInput)
 
   const handleValueChange = (eventValue: string) => {
     const newValue = Number(eventValue)
     if (newValue <= 100) {
-      setIsInvalidAmount(false)
+      setWasInvalidAmount(false)
       handleLabelValueChange(dataIndex, newValue)
     } else {
-      setIsInvalidAmount(true)
+      setWasInvalidAmount(true)
       if (fieldRef.current) {
         fieldRef.current.focus()
       }
@@ -35,22 +42,21 @@ const WaterLabel:React.FC<Props> = ({handleLabelValueChange, label, value, dataI
       <div className={ChartStyles.labelName}>
         {label}
       </div>
-      <>
-        -
-        <input 
-          ref={fieldRef}
-          type='number'
-          placeholder="waterings"
-          max={100}
-          min={0}
-          value={value}
-          onChange={(e) => handleValueChange(e.target.value)}
-          className={ChartStyles.wateringsInput}
-        />
-        {(isInValidAmount && document.activeElement === fieldRef.current) &&
-          <InfoBox message="you can't water more than 100 times a month" styles={InfoCardStyles.instructions} />
-        }
-      </>
+      -
+      <input 
+        ref={fieldRef}
+        type='number'
+        placeholder="waterings"
+        max={100}
+        min={0}
+        value={value}
+        onChange={(e) => handleValueChange(e.target.value)}
+        className={ChartStyles.wateringsInput}
+      />
+      {(wasInvalidAmount && document.activeElement === fieldRef.current) &&
+        <InfoBox message="you can't water more than 100 times a month" styles={InfoCardStyles.instructions} />
+      }
+
     
     </li>
   )

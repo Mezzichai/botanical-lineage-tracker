@@ -2,7 +2,7 @@
 import '../App.css'
 import { useGetSpecificGroupIndividualsQuery } from '../api/apiSlice'
 import ListView from '../components/ListView'
-import { useNavigate, useParams } from '@tanstack/react-router'
+import { useParams } from '@tanstack/react-router'
 import ItemCard from '../components/ItemCard'
 import CardStyles from '../styles/cardAndListStyles.module.css'
 

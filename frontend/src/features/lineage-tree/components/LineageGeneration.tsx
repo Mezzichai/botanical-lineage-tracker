@@ -159,10 +159,7 @@ const LineageGeneration: React.FC<Props> = ({children, displayInfoCard, displayN
               ${LineageTreeStyles.child}
               ${isParentBeingHovered ? LineageTreeStyles.parentFocused : ""}
             `}
-<<<<<<< HEAD
             style={{ willChange: 'width, opacity' }}
-=======
->>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
           >
             <div 
               className={`${activeIdOfAggregates && !getActiveNode()?.mates?.[activeMateIndex[0]]?.children.length ? LineageTreeStyles.hasNoChildren : LineageTreeStyles.parentsContainer}`}
@@ -318,10 +315,7 @@ const LineageGeneration: React.FC<Props> = ({children, displayInfoCard, displayN
               }
             }}
             className={`${LineageTreeStyles.child} fadeInElement`} 
-<<<<<<< HEAD
             style={{ willChange: 'width, opacity' }}
-=======
->>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
             ref={childrenRef}
           >
             <div className={`

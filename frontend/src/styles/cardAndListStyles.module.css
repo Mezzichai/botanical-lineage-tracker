@@ -7,6 +7,8 @@
 
 }
 
+
+
 #individualsListContainer {
   padding-top: 9.5rem;
   grid-template-columns: repeat(auto-fit, minmax(176px, 176px));

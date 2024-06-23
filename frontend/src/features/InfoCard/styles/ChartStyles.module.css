@@ -1,7 +1,5 @@
-.substrateLegendGrid {
+.labelsGrid {
   display: grid;
-  flex-wrap: wrap;
-  justify-content: center;
   grid-template-columns: repeat(2, 1fr);
   gap: .5rem;
 }
@@ -18,4 +16,5 @@
   align-items: center;
   justify-content: right;
   position: relative;
+  gap: .2rem
 }

@@ -30,6 +30,8 @@ type Props = {
   handleChangeWater: (water_values: WaterEntry[]) => void
 }
 
+
+
 function constructChartData(waterValues: WaterEntry[]) {
   const structure: {
     labels: string[];
@@ -69,7 +71,7 @@ const WaterChart:React.FC<Props> = ({waterValues, handleChangeWater}) => {
     scales: {
       y: {
         beginAtZero: true,
-        max: Math.ceil(highestValue * 1.5),
+        max: Math.min(Math.ceil(highestValue * 1.5), 100),
       },
     },
     plugins: {
@@ -91,7 +93,7 @@ const WaterChart:React.FC<Props> = ({waterValues, handleChangeWater}) => {
   return (
     <div className={InfoCardStyles.chart}>
       {isNewOrEditing && 
-        <ul className={ChartStyles.substrateLegendGrid}>
+        <ul className={ChartStyles.labelsGrid}>
           {chartData.labels.length > 0 && chartData.labels.map((label, index) => (
             <WaterLabel
               dataIndex={index}

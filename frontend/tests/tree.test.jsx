@@ -19,11 +19,8 @@ describe("individuals", () => {
     )
   });
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
   it("add individual", async () => {
     render(
       <Provider store={store}>
@@ -32,11 +29,8 @@ describe("individuals", () => {
     )
   });
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
   it("edit tree individual", async () => {
     render(
       <Provider store={store}>
@@ -45,11 +39,8 @@ describe("individuals", () => {
     )
   });
 
-<<<<<<< HEAD
 
   
-=======
->>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
   it("remove tree individual", async () => {
     render(
       <Provider store={store}>

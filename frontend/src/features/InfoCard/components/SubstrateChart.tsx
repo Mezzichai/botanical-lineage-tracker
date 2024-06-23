@@ -9,6 +9,7 @@ import { selectIsInfoNewOrEditing } from '../InfoCardSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
+import ChartStyles from '../styles/ChartStyles.module.css'
 
 type Props = {
   substrateValues: SubstrateEntry[], 
@@ -96,7 +97,7 @@ const SubstrateChart:React.FC<Props> = ({substrateValues, handleChangeSubstrate}
 
   return (
     <div className={PieLegendStyles.pieChart}>
-      <ul className={`${isNewOrEditing ? PieLegendStyles.substrateLegendGrid : PieLegendStyles.substrateLegend}`}>
+      <ul className={`${isNewOrEditing ? ChartStyles.labelsGrid : PieLegendStyles.substrateLegend}`}>
         {chartData.labels.length > 0 && chartData.labels.map((label, index) => (
           <SubstrateLegendLabel 
             removeSubstrateMode={removeSubstrateMode}

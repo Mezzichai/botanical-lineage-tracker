@@ -381,7 +381,6 @@
   right: 0;
   left: initial !important;
   transform: initial !important
-<<<<<<< HEAD
 }
 
 .chart {
@@ -393,8 +392,6 @@
   padding: 0 1rem;
   display: flex;
   
-  height: 22rem;
-  max-height: 22rem;
-=======
->>>>>>> 456fd0ff0aea78244730fbd1fb016d73f6a72be8
+  height: 20rem;
+  max-height: 20rem;
 }

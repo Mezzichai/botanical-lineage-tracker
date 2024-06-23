@@ -31,7 +31,7 @@ const Species = () => {
   return (
   <>
     {(isLoading || !data) ? (
-      <div className={CardStyles.listContainer}>
+      <div className={"loadingContainer"}>
         loading...
       </div>
     ) : (

@@ -104,12 +104,12 @@ const DragAndDrop:React.FC<Props> = ({images, setImages}) => {
           <div className={DragDropStyles.uploads}>
             <div className={DragDropStyles.row}>
               {images.slice(0,3).map((image, index) => (
-              <Upload handleRemoveFile={handleRemoveFile} index={index} image={image}/>
+              <Upload key={index+ Date.now()} handleRemoveFile={handleRemoveFile} index={index} image={image}/>
               ))}
             </div>
             <div className={DragDropStyles.row}>
               {images.slice(3).map((image, index) => (
-              <Upload handleRemoveFile={handleRemoveFile} index={index} image={image} key={index}/>
+              <Upload key={index+ Date.now()} handleRemoveFile={handleRemoveFile} index={index} image={image}/>
               ))}
             </div>
             {info && 
