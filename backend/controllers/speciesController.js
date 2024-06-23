@@ -458,9 +458,9 @@ const editSpecies = tryCatch(async function(req, res, next) {
                           description_delta = COALESCE($3, description_delta),
                           description_html = COALESCE($4, description_html),
                           light_values = COALESCE($5, light_values),
-                          substrate_values = COALESCE($5, substrate_values),
-                          water_values = COALESCE($6, water_values)
-                        WHERE id = $7`;
+                          substrate_values = COALESCE($6, substrate_values),
+                          water_values = COALESCE($7, water_values)
+                        WHERE id = $8`;
 
   let {name, descriptionDelta, descriptionHTML, substrate_values, light_values, water_values, parents, groupId, existing_images} = req.body;
   const speciesId = req.params.speciesId;
